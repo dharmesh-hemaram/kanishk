@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "581893535411",
+    "firebase_url": "https://cars-trade.firebaseio.com",
+    "project_id": "cars-trade",
+    "storage_bucket": "cars-trade.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581893535411:android:378a4fbf980550e5b362c6",
+        "android_client_info": {
+          "package_name": "com.dhruv.techapps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581893535411-ns40lj2f7111qph32du7immmgi5664gp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmuqs6cFbHniFPz_RvzC5LrDdpGo7-bP0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581893535411-ns40lj2f7111qph32du7immmgi5664gp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
