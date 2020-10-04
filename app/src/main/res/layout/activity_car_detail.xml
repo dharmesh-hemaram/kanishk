@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.smarteist.autoimageslider.SliderView
         android:id="@+id/imageSlider"
@@ -26,9 +26,9 @@
     <include
         android:id="@+id/carTextLayout"
         layout="@layout/include_car_name"
-        android:layout_height="40dp"
         android:layout_width="match_parent"
-        android:layout_below="@id/imageSlider"/>
+        android:layout_height="40dp"
+        android:layout_below="@id/imageSlider" />
 
     <TextView
         style="@style/TextAppearance.AppCompat.Medium"
@@ -41,68 +41,80 @@
         android:id="@+id/carDetailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="1"
+        android:layout_below="@id/carTextLayout"
         android:padding="10dp"
-        android:layout_below="@id/carTextLayout">
+        android:stretchColumns="1">
+
         <TableRow>
+
             <TextView
                 style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Price" />
+
             <TextView
                 android:id="@+id/carPrice"
                 style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:textStyle="bold"
                 tools:text="5 lakh" />
         </TableRow>
+
         <TableRow>
+
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Year" />
+
             <TextView
                 android:id="@+id/carYear"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 tools:text="2019" />
         </TableRow>
+
         <TableRow>
+
             <TextView
-                android:layout_width="wrap_content"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Reg Number" />
+
             <TextView
                 android:id="@+id/carRegistrationNumber"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 tools:text="MH12ND3109" />
         </TableRow>
+
         <TableRow>
+
             <TextView
+                style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:text="KM" />
+
             <TextView
                 android:id="@+id/carKM"
-                android:layout_width="wrap_content"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 tools:text="50,000" />
         </TableRow>
     </TableLayout>
@@ -118,29 +130,29 @@
         android:id="@+id/biddingForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
-        android:gravity="center_vertical"
         android:background="@drawable/border_y"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:weightSum="1.0">
 
         <EditText
             android:id="@+id/fieldBiddingAmount"
             android:layout_width="0dp"
-            android:layout_weight="0.8"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:layout_weight="0.8"
+            android:hint="Place a bid..."
             android:inputType="numberDecimal"
-            android:hint="Place a bid..."/>
+            android:maxLines="1" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonCarBidding"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
-            android:layout_weight="0.2"
             android:layout_height="wrap_content"
-            android:text="Bid"/>
+            android:layout_weight="0.2"
+            android:text="Bid" />
 
     </LinearLayout>
 

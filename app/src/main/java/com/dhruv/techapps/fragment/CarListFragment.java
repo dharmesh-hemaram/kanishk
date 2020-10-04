@@ -20,7 +20,6 @@ import com.dhruv.techapps.viewholder.CarViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +30,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageReference;
 
 public abstract class CarListFragment extends Fragment {
 
@@ -45,11 +43,12 @@ public abstract class CarListFragment extends Fragment {
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
 
-    public CarListFragment() {}
+    public CarListFragment() {
+    }
 
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_all_cars, container, false);
 
@@ -93,11 +92,9 @@ public abstract class CarListFragment extends Fragment {
                 final DatabaseReference postRef = getRef(position);
 
 
-
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
-                Log.d(TAG,postKey);
-                /*FirebaseStorage.getInstance().getReference("images/"+postKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                FirebaseStorage.getInstance().getReference("images/"+postKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
                         if(listResult.getItems().size() > 0){
@@ -111,13 +108,12 @@ public abstract class CarListFragment extends Fragment {
                             });
                         }
                     }
-                });*/
+                });
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Launch PostDetailActivity
                         Intent intent = new Intent(getActivity(), CarDetailActivity.class);
-                        Log.d(TAG,postKey);
                         intent.putExtra(CarDetailActivity.EXTRA_POST_KEY, postKey);
                         startActivity(intent);
                     }

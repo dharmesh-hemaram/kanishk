@@ -3,7 +3,6 @@ package com.dhruv.techapps.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import com.smarteist.autoimageslider.SliderViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SliderAdapterExample extends        SliderViewAdapter<SliderAdapterExample.SliderAdapterVH> {
+public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample.SliderAdapterVH> {
 
     private Context context;
     private List<Bitmap> mSliderItems = new ArrayList<Bitmap>();

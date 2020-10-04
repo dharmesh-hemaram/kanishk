@@ -5,10 +5,13 @@ import com.google.firebase.database.Query;
 
 public class MyTopCarsFragment extends CarListFragment {
 
-    public MyTopCarsFragment() {}
+    public MyTopCarsFragment() {
+    }
 
     @Override
     public Query getQuery(DatabaseReference databaseReference) {
+
+
         // [START my_top_posts_query]
         // My top posts by number of stars
         String myUserId = getUid();

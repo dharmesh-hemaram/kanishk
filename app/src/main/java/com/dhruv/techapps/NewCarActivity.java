@@ -13,20 +13,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dhruv.techapps.adapter.ImageViewAdapter;
 import com.dhruv.techapps.databinding.ActivityNewCarBinding;
-import com.dhruv.techapps.models.Brand;
 import com.dhruv.techapps.models.Car;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
@@ -79,15 +75,15 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data.getClipData() != null) {
-                    Log.d(TAG,"getClipData");
-                    imageViewAdapter = new ImageViewAdapter(data.getClipData(),getContentResolver());
-                    binding.fieldImages.setLayoutManager(new GridLayoutManager(this , 3));
+                    Log.d(TAG, "getClipData");
+                    imageViewAdapter = new ImageViewAdapter(data.getClipData(), getContentResolver());
+                    binding.fieldImages.setLayoutManager(new GridLayoutManager(this, 3));
                     binding.fieldImages.setAdapter(imageViewAdapter); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
 
                 } else if (data.getData() != null) {
-                    Log.d(TAG,"getData");
-                    imageViewAdapter = new ImageViewAdapter(data.getData(),getContentResolver());
-                    binding.fieldImages.setLayoutManager(new GridLayoutManager(this , 1));
+                    Log.d(TAG, "getData");
+                    imageViewAdapter = new ImageViewAdapter(data.getData(), getContentResolver());
+                    binding.fieldImages.setLayoutManager(new GridLayoutManager(this, 1));
                     binding.fieldImages.setAdapter(imageViewAdapter); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
                 }
             }
@@ -97,7 +93,7 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-        Log.d(TAG,parentView.getId()+"~"+ position);
+        Log.d(TAG, parentView.getId() + "~" + position);
         switch (parentView.getId()) {
             case R.id.fieldBrand:
                 brandId = position;
@@ -138,13 +134,11 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
         binding.fieldType.setOnItemSelectedListener(this);
 
 
-
         //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item,  DataHolder.getInstance().getBrands());
+        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, DataHolder.getInstance().getBrands());
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         binding.fieldBrand.setAdapter(aa);
-
 
 
         //Creating the ArrayAdapter instance having the country list
@@ -178,7 +172,7 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
         final String mobileNumber = binding.fieldMobileNumber.getText().toString();
         final String owners = "1";
 
-        if(imageViewAdapter == null){
+        if (imageViewAdapter == null) {
             Toast.makeText(this, "Please select images...", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -231,7 +225,7 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
     // [START write_fan_out]
     private void writeNewPost(String userId, String year, String price, String regNum, String km, String owners, String color, String mobile, String insurance) {
         String key = mDatabase.child("cars").push().getKey();
-        Car car = new Car(userId, brandId, modelId, variantId, year, price, regNum, km, owners, color, typeId, mobile, insurance);
+        Car car = new Car(userId, brandId+","+modelId+","+variantId, year, price, regNum, km, owners, color, typeId, mobile, insurance);
         Map<String, Object> postValues = car.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         Log.d(TAG, key);
@@ -240,14 +234,14 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
 
         mDatabase.updateChildren(childUpdates);
 
-        if(imageViewAdapter.uri != null){
+        if (imageViewAdapter.uri != null) {
             Uri uri = imageViewAdapter.uri;
-            mStorage.child(key+"/"+uri.getLastPathSegment()).putFile(uri);
-        }else{
+            mStorage.child(key + "/" + uri.getLastPathSegment()).putFile(uri);
+        } else {
             ClipData clipData = imageViewAdapter.clipData;
-            for(int index = 0;index < clipData.getItemCount();index++){
+            for (int index = 0; index < clipData.getItemCount(); index++) {
                 Uri uri = clipData.getItemAt(index).getUri();
-                mStorage.child(key+"/"+uri.getLastPathSegment()).putFile(uri);
+                mStorage.child(key + "/" + uri.getLastPathSegment()).putFile(uri);
             }
         }
 

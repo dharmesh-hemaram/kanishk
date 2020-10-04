@@ -1,7 +1,6 @@
 package com.dhruv.techapps.fragment;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.dhruv.techapps.R;
@@ -41,11 +39,6 @@ public class UserDialogFragment extends DialogFragment implements TextView.OnEdi
         // getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         return view;
-    }
-
-    // 1. Defines the listener interface with a method passing back data result.
-    public interface EditNameDialogListener {
-        void onFinishEditDialog(String inputText);
     }
 
     // ...
@@ -81,5 +74,10 @@ public class UserDialogFragment extends DialogFragment implements TextView.OnEdi
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
+    }
+
+    // 1. Defines the listener interface with a method passing back data result.
+    public interface EditNameDialogListener {
+        void onFinishEditDialog(String inputText);
     }
 }

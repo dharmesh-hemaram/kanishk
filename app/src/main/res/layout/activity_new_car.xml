@@ -9,32 +9,31 @@
         android:id="@+id/fieldBrand"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
 
     <Spinner
         android:id="@+id/fieldModel"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/fieldBrand"
-        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
 
     <Spinner
         android:id="@+id/fieldVariant"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/fieldModel"
-        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true" />
-
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
 
 
     <EditText
@@ -97,10 +96,10 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/fieldColor"
-        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
 
     <EditText
         android:id="@+id/fieldMobileNumber"
@@ -110,19 +109,20 @@
         android:autofillHints="Mobile Number"
         android:hint="Mobile Number"
         android:inputType="number" />
+
     <Button
         android:id="@+id/fieldImageSelect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fieldMobileNumber"
-        android:text="Select Images"/>
+        android:text="Select Images" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fieldImages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
         android:layout_below="@id/fieldImageSelect"
+        android:clipToPadding="false"
         android:padding="5dp"
         android:scrollbars="horizontal"
         tools:listitem="@layout/item_image" />
@@ -131,9 +131,9 @@
         android:id="@+id/fabSubmitPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_baseline_done_24"/>
+        android:src="@drawable/ic_baseline_done_24" />
 
 </RelativeLayout>

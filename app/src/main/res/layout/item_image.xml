@@ -2,8 +2,8 @@
     android:id="@+id/fieldImageContainer"
     android:layout_width="wrap_content"
     android:layout_height="100dp"
-    android:gravity="center"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/fieldImage"

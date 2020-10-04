@@ -34,19 +34,6 @@ public class BidAdapter extends RecyclerView.Adapter<BidAdapter.BidViewHolder> {
 
     private DecimalFormat currencyFormat;
 
-    static class BidViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView authorView;
-        public TextView amountView;
-
-        public BidViewHolder(View itemView) {
-            super(itemView);
-
-            authorView = itemView.findViewById(R.id.bidAuthor);
-            amountView = itemView.findViewById(R.id.bidAmount);
-        }
-    }
-
     public BidAdapter(final Context context, DatabaseReference ref) {
         mContext = context;
         mDatabaseReference = ref;
@@ -173,6 +160,19 @@ public class BidAdapter extends RecyclerView.Adapter<BidAdapter.BidViewHolder> {
     public void cleanupListener() {
         if (mChildEventListener != null) {
             mDatabaseReference.removeEventListener(mChildEventListener);
+        }
+    }
+
+    static class BidViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView authorView;
+        public TextView amountView;
+
+        public BidViewHolder(View itemView) {
+            super(itemView);
+
+            authorView = itemView.findViewById(R.id.bidAuthor);
+            amountView = itemView.findViewById(R.id.bidAmount);
         }
     }
 

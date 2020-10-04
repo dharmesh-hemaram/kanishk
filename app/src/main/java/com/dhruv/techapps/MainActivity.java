@@ -18,19 +18,34 @@ package com.dhruv.techapps;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.dhruv.techapps.databinding.ActivityMainBinding;
 import com.dhruv.techapps.fragment.MyTopCarsFragment;
 import com.dhruv.techapps.fragment.RecentCarsFragment;
+import com.dhruv.techapps.fragment.UserDialogFragment;
+import com.dhruv.techapps.models.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class  MainActivity extends BaseActivity {
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainActivity extends BaseActivity implements UserDialogFragment.EditNameDialogListener {
 
     private static final String TAG = "MainActivity";
 
@@ -80,6 +95,26 @@ public class  MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference().child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (user == null) {
+                    getUserInfo();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -96,6 +131,25 @@ public class  MainActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void getUserInfo() {
+        FragmentManager fm = getSupportFragmentManager();
+        UserDialogFragment myDialogFragment = new UserDialogFragment();
+        myDialogFragment.show(fm, "fragment_edit_name");
+    }
+
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        User user = new User();
+        user.username = inputText;
+        user.phone = mUser.getPhoneNumber();
+        Map<String, Object> postValues = user.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+        Log.d(TAG, childUpdates.toString());
+        childUpdates.put("/users/" + mUser.getUid(), postValues);
+        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
     }
 
 }

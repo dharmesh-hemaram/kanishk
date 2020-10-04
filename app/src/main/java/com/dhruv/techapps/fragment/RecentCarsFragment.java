@@ -5,7 +5,8 @@ import com.google.firebase.database.Query;
 
 public class RecentCarsFragment extends CarListFragment {
 
-    public RecentCarsFragment() {}
+    public RecentCarsFragment() {
+    }
 
     @Override
     public Query getQuery(DatabaseReference databaseReference) {

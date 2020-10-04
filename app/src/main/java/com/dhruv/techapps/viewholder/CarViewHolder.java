@@ -1,10 +1,12 @@
 package com.dhruv.techapps.viewholder;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.dhruv.techapps.DataHolder;
 import com.dhruv.techapps.R;
 import com.dhruv.techapps.models.Car;
 
@@ -29,7 +31,7 @@ public class CarViewHolder extends RecyclerView.ViewHolder {
         variantView = itemView.findViewById(R.id.carVariant);
         priceView = itemView.findViewById(R.id.carPrice);
         kmView = itemView.findViewById(R.id.carKM);
-        yearView= itemView.findViewById(R.id.carYear);
+        yearView = itemView.findViewById(R.id.carYear);
         imageView = itemView.findViewById(R.id.carImage);
     }
 
@@ -43,12 +45,16 @@ public class CarViewHolder extends RecyclerView.ViewHolder {
         DecimalFormat currencyFormat = new DecimalFormat("₹ #,###", symbols);
         DecimalFormat decimalFormat = new DecimalFormat("#,###", symbols);
 
+        String[] name = car.brand.split(",");
+        String brand = DataHolder.getInstance().getBrands()[Integer.parseInt(name[0])];
+        String model = DataHolder.getInstance().getModels(Integer.parseInt(name[0]))[Integer.parseInt(name[1])];
+        String variant = DataHolder.getInstance().getVariants(Integer.parseInt(name[0]),Integer.parseInt(name[1]))[Integer.parseInt(name[2])];
 
-        brandView.setText(car.getBrandName());
-        modalView.setText(car.getModelName());
-        variantView.setText(car.getVariantName());
+        brandView.setText(brand);
+        modalView.setText(model);
+        variantView.setText(variant);
         priceView.setText(currencyFormat.format(car.price));
-        kmView.setText("Km: "+decimalFormat.format(car.km));
-        yearView.setText("Year: "+String.valueOf(car.year));
+        kmView.setText("Km: " + decimalFormat.format(car.km));
+        yearView.setText("Year: " + String.valueOf(car.year));
     }
 }
