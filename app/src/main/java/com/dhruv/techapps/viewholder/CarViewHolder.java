@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.R;
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.models.Car;
 
 import java.text.DecimalFormat;
@@ -22,6 +22,7 @@ public class CarViewHolder extends RecyclerView.ViewHolder {
     public TextView kmView;
     public TextView yearView;
     public ImageView imageView;
+    public TextView regView;
 
     public CarViewHolder(View itemView) {
         super(itemView);
@@ -32,6 +33,7 @@ public class CarViewHolder extends RecyclerView.ViewHolder {
         priceView = itemView.findViewById(R.id.carPrice);
         kmView = itemView.findViewById(R.id.carKM);
         yearView = itemView.findViewById(R.id.carYear);
+        regView = itemView.findViewById(R.id.carRegistrationNumber);
         imageView = itemView.findViewById(R.id.carImage);
     }
 
@@ -48,11 +50,12 @@ public class CarViewHolder extends RecyclerView.ViewHolder {
         String[] name = car.brand.split(",");
         String brand = DataHolder.getInstance().getBrands()[Integer.parseInt(name[0])];
         String model = DataHolder.getInstance().getModels(Integer.parseInt(name[0]))[Integer.parseInt(name[1])];
-        String variant = DataHolder.getInstance().getVariants(Integer.parseInt(name[0]),Integer.parseInt(name[1]))[Integer.parseInt(name[2])];
+        String variant = DataHolder.getInstance().getVariants(Integer.parseInt(name[0]), Integer.parseInt(name[1]))[Integer.parseInt(name[2])];
 
         brandView.setText(brand);
         modalView.setText(model);
         variantView.setText(variant);
+        regView.setText(car.reg.toUpperCase());
         priceView.setText(currencyFormat.format(car.price));
         kmView.setText("Km: " + decimalFormat.format(car.km));
         yearView.setText("Year: " + String.valueOf(car.year));

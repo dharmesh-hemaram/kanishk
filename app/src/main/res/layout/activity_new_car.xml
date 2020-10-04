@@ -5,15 +5,20 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
+
+    <Button
+        android:id="@+id/fieldImageSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+
+        android:text="Select Images" />
+
     <Spinner
         android:id="@+id/fieldBrand"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
+        android:layout_below="@+id/fieldImageSelect" />
 
     <Spinner
         android:id="@+id/fieldModel"
@@ -61,7 +66,7 @@
         android:layout_below="@+id/fieldYear"
         android:autofillHints="Registration Number"
         android:hint="Registration Number"
-        android:inputType="text"
+        android:inputType="textCapCharacters"
         tools:ignore="TextFields" />
 
     <EditText
@@ -110,18 +115,12 @@
         android:hint="Mobile Number"
         android:inputType="number" />
 
-    <Button
-        android:id="@+id/fieldImageSelect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fieldMobileNumber"
-        android:text="Select Images" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fieldImages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fieldImageSelect"
+        android:layout_below="@id/fieldMobileNumber"
         android:clipToPadding="false"
         android:padding="5dp"
         android:scrollbars="horizontal"

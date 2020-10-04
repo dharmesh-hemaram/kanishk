@@ -33,8 +33,6 @@ import com.dhruv.techapps.fragment.MyTopCarsFragment;
 import com.dhruv.techapps.fragment.RecentCarsFragment;
 import com.dhruv.techapps.fragment.UserDialogFragment;
 import com.dhruv.techapps.models.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

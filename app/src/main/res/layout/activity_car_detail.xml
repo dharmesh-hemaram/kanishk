@@ -23,25 +23,11 @@
         app:sliderScrollTimeInSec="1"
         app:sliderStartAutoCycle="true" />
 
-    <include
-        android:id="@+id/carTextLayout"
-        layout="@layout/include_car_name"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@id/imageSlider" />
-
-    <TextView
-        style="@style/TextAppearance.AppCompat.Medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imageSlider"
-        tools:text="Price" />
-
     <TableLayout
         android:id="@+id/carDetailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/carTextLayout"
+        android:layout_below="@id/imageSlider"
         android:padding="10dp"
         android:stretchColumns="1">
 
@@ -97,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
+                android:textAllCaps="true"
                 tools:text="MH12ND3109" />
         </TableRow>
 
@@ -117,6 +104,60 @@
                 android:layout_marginLeft="10dp"
                 tools:text="50,000" />
         </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Color" />
+
+            <TextView
+                android:id="@+id/carColor"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                tools:text="50,000" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type" />
+
+            <TextView
+                android:id="@+id/carType"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                tools:text="50,000" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Insurance" />
+
+            <TextView
+                android:id="@+id/carIns"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                tools:text="50,000" />
+        </TableRow>
     </TableLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -124,6 +165,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/carDetailLayout"
+        android:layout_marginTop="10dp"
         tools:listitem="@layout/item_bid" />
 
     <LinearLayout

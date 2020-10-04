@@ -227,7 +227,7 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
     // [START write_fan_out]
     private void writeNewPost(String userId, String year, String price, String regNum, String km, String owners, String color, String mobile, String insurance) {
         String key = mDatabase.child("cars").push().getKey();
-        Car car = new Car(userId, brandId+","+modelId+","+variantId, year, price, regNum, km, owners, color, typeId, mobile, insurance);
+        Car car = new Car(userId, brandId + "," + modelId + "," + variantId, year, price, regNum, km, owners, color, typeId, mobile, insurance);
         Map<String, Object> postValues = car.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         Log.d(TAG, key);

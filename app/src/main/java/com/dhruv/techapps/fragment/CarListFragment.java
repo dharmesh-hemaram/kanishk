@@ -94,10 +94,10 @@ public abstract class CarListFragment extends Fragment {
 
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
-                FirebaseStorage.getInstance().getReference("images/"+postKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                FirebaseStorage.getInstance().getReference("images/" + postKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
-                        if(listResult.getItems().size() > 0){
+                        if (listResult.getItems().size() > 0) {
                             final long ONE_MEGABYTE = 1024 * 1024;
                             listResult.getItems().get(0).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dhruv.techapps.adapter.BidAdapter;
 import com.dhruv.techapps.adapter.SliderAdapterExample;
+import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityCarDetailBinding;
 import com.dhruv.techapps.models.Bid;
@@ -32,7 +33,7 @@ import java.text.DecimalFormatSymbols;
 public class CarDetailActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_POST_KEY = "post_key";
-    private static final String TAG = "PostDetailActivity";
+    private static final String TAG = "CarDetailActivity";
     private DatabaseReference mCarReference;
     private DatabaseReference mBiddingsReference;
     private ValueEventListener mPostListener;
@@ -40,6 +41,7 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
     private BidAdapter mAdapter;
     private ActivityCarDetailBinding binding;
     private SliderAdapterExample adapter;
+    private Car car;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,18 +80,15 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 String carKey = dataSnapshot.getKey();
-                Car car = dataSnapshot.getValue(Car.class);
+                car = dataSnapshot.getValue(Car.class);
 
 
                 String[] name = car.brand.split(",");
                 String brand = DataHolder.getInstance().getBrands()[Integer.parseInt(name[0])];
                 String model = DataHolder.getInstance().getModels(Integer.parseInt(name[0]))[Integer.parseInt(name[1])];
-                String variant = DataHolder.getInstance().getVariants(Integer.parseInt(name[0]),Integer.parseInt(name[1]))[Integer.parseInt(name[2])];
+                String variant = DataHolder.getInstance().getVariants(Integer.parseInt(name[0]), Integer.parseInt(name[1]))[Integer.parseInt(name[2])];
 
-                binding.carTextLayout.carBrand.setText(brand);
-                binding.carTextLayout.carModel.setText(model);
-                binding.carTextLayout.carVariant.setText(variant);
-
+                setTitle(brand + " " + getResources().getString(R.string.dot) + " " + model + " " + getResources().getString(R.string.dot) + " " + variant);
 
                 // [START_EXCLUDE]
                 DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -97,30 +96,33 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
                 symbols.setDecimalSeparator('.');
 
                 DecimalFormat currencyFormat = new DecimalFormat("₹ #,###", symbols);
+                DecimalFormat decimalFormat = new DecimalFormat("#,###", symbols);
                 binding.carPrice.setText(currencyFormat.format(car.price));
                 binding.carYear.setText(String.valueOf(car.year));
-
+                binding.carRegistrationNumber.setText(car.reg);
+                binding.carKM.setText(decimalFormat.format(car.km));
+                binding.carType.setText(Common.TYPES[car.type]);
+                binding.carIns.setText(car.ins);
+                binding.carColor.setText(car.color);
 
                 // [END_EXCLUDE]
 
-                Log.d(TAG, mPostKey);
-                FirebaseStorage.getInstance().getReference("/images/"+mPostKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                FirebaseStorage.getInstance().getReference("/images/" + mPostKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
-                        Log.d(TAG,"here>>"+listResult.getItems().size());
                         if (listResult.getItems().size() > 0) {
-
-
                             final long ONE_MEGABYTE = 1024 * 1024;
-                            listResult.getItems().get(0).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    Log.d(TAG,"here"+bitmap.toString());
-                                    adapter.addItem(bitmap);
-                                }
-                            });
-                        }else{
+                            for (int i = 0; i < listResult.getItems().size(); i++) {
+                                listResult.getItems().get(i).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                        Log.d(TAG, "here" + bitmap.toString());
+                                        adapter.addItem(bitmap);
+                                    }
+                                });
+                            }
+                        } else {
                             binding.imageSlider.findViewById(R.id.imageSlider).setVisibility(View.GONE);
                         }
                     }
@@ -171,32 +173,61 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private Double getMaxPrice() {
+        if (mAdapter.mBids.size() > 0) {
+            Double maxPrice = 0d;
+            for (int i = 0; i < mAdapter.mBids.size(); i++) {
+                if (Double.compare(mAdapter.mBids.get(i).amount, maxPrice) > 0) {
+                    maxPrice = mAdapter.mBids.get(i).amount;
+                }
+            }
+            return maxPrice;
+        } else {
+            return car.price;
+        }
+    }
+
     private void postBidding() {
         final String uid = getUid();
-        FirebaseDatabase.getInstance().getReference().child("users").child(uid)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user information
-                        User user = dataSnapshot.getValue(User.class);
-                        String authorName = user.username;
-                        // Create new comment object
-                        Double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
-                        Bid bid = new Bid(uid, authorName, biddingAmount);
+        Double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
+        Double maxPrice = getMaxPrice();
+        if(Double.compare(biddingAmount,maxPrice) > 0){
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference()
+                    .child("users")
+                    .child(uid)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user information
+                            User user = dataSnapshot.getValue(User.class);
+                            String authorName = user.username;
+                            // Create new comment object
+                            Double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
+                            Bid bid = new Bid(uid, authorName, biddingAmount);
 
-                        // Push the comment, it will appear in the list
-                        mBiddingsReference.push().setValue(bid);
+                            // Push the comment, it will appear in the list
+                            mBiddingsReference.push().setValue(bid);
 
-                        // Clear the field
-                        binding.fieldBiddingAmount.setText(null);
-                    }
+                            // Clear the field
+                            binding.fieldBiddingAmount.setText(null);
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+        }else{
+            Log.d(TAG,"Bidding error");
+            Toast.makeText(this,"Bidding price should be higher",Toast.LENGTH_LONG).show();
+        }
+
     }
 
 
 }
+
+
+

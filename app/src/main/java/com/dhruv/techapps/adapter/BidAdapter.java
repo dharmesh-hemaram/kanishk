@@ -25,13 +25,11 @@ import java.util.List;
 public class BidAdapter extends RecyclerView.Adapter<BidAdapter.BidViewHolder> {
 
     private static final String TAG = "BidAdapter";
+    public List<Bid> mBids = new ArrayList<>();
     private Context mContext;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildEventListener;
-
     private List<String> mBidIds = new ArrayList<>();
-    private List<Bid> mBids = new ArrayList<>();
-
     private DecimalFormat currencyFormat;
 
     public BidAdapter(final Context context, DatabaseReference ref) {
