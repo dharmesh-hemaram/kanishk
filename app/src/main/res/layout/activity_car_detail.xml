@@ -3,35 +3,126 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.smarteist.autoimageslider.SliderView
+        android:id="@+id/imageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:sliderAnimationDuration="600"
+        app:sliderAutoCycleDirection="back_and_forth"
+        app:sliderAutoCycleEnabled="true"
+        app:sliderIndicatorAnimationDuration="600"
+        app:sliderIndicatorGravity="center_horizontal|bottom"
+        app:sliderIndicatorMargin="15dp"
+        app:sliderIndicatorOrientation="horizontal"
+        app:sliderIndicatorPadding="3dp"
+        app:sliderIndicatorRadius="2dp"
+        app:sliderIndicatorSelectedColor="#5A5A5A"
+        app:sliderIndicatorUnselectedColor="#FFF"
+        app:sliderScrollTimeInSec="1"
+        app:sliderStartAutoCycle="true" />
 
     <include
         android:id="@+id/carTextLayout"
         layout="@layout/include_car_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true" />
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:layout_below="@id/imageSlider"/>
 
-    <include
-        android:id="@+id/carNameLayout"
-        layout="@layout/include_car_text"
+    <TextView
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/carTextLayout"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp" />
+        android:layout_below="@id/imageSlider"
+        tools:text="Price" />
+
+    <TableLayout
+        android:id="@+id/carDetailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1"
+        android:padding="10dp"
+        android:layout_below="@id/carTextLayout">
+        <TableRow>
+            <TextView
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price" />
+            <TextView
+                android:id="@+id/carPrice"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                tools:text="5 lakh" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Year" />
+            <TextView
+                android:id="@+id/carYear"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                tools:text="2019" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_height="wrap_content"
+                android:text="Reg Number" />
+            <TextView
+                android:id="@+id/carRegistrationNumber"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                tools:text="MH12ND3109" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:text="KM" />
+            <TextView
+                android:id="@+id/carKM"
+                android:layout_width="wrap_content"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                tools:text="50,000" />
+        </TableRow>
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCarBids"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/carDetailLayout"
+        tools:listitem="@layout/item_bid" />
 
     <LinearLayout
         android:id="@+id/biddingForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/carNameLayout"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/border_y"
         android:weightSum="1.0">
 
         <EditText
@@ -41,7 +132,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:inputType="numberDecimal"
-            android:hint="Write a comment..."/>
+            android:hint="Place a bid..."/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonCarBidding"
@@ -49,15 +140,8 @@
             android:layout_width="0dp"
             android:layout_weight="0.2"
             android:layout_height="wrap_content"
-            android:text="Post"/>
+            android:text="Bid"/>
 
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerCarBiddings"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/biddingForm"
-        tools:listitem="@layout/item_offer" />
 
 </RelativeLayout>

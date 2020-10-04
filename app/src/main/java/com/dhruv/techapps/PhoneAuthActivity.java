@@ -1,17 +1,27 @@
 package com.dhruv.techapps;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.dhruv.techapps.databinding.ActivityPhoneAuthBinding;
+import com.dhruv.techapps.fragment.UserDialogFragment;
+import com.dhruv.techapps.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
@@ -21,11 +31,18 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class PhoneAuthActivity extends AppCompatActivity implements
-        View.OnClickListener {
+        View.OnClickListener, UserDialogFragment.EditNameDialogListener {
 
     private static final String TAG = "PhoneAuthActivity";
 
@@ -323,11 +340,37 @@ public class PhoneAuthActivity extends AppCompatActivity implements
             mBinding.phoneAuthFields.setVisibility(View.VISIBLE);
             mBinding.signedInButtons.setVisibility(View.GONE);
         } else {
+
+            Log.d(TAG,user.getUid());
             // Signed in
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-            //mBinding.detail.setText(getString(R.string.firebase_status_fmt, user.getUid()));
+            FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    if(user == null){
+                        getUserInfo();
+                    }else{
+                        startMainActivity();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
+    }
+
+    public void getUserInfo(){
+        FragmentManager fm = getSupportFragmentManager();
+        UserDialogFragment myDialogFragment = new UserDialogFragment();
+        myDialogFragment.show(fm, "fragment_edit_name");
+    }
+
+    public void startMainActivity(){
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     private boolean validatePhoneNumber() {
@@ -378,5 +421,32 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 signOut();
                 break;
         }
+    }
+
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        Log.d(TAG,inputText);
+
+        String userKey = FirebaseDatabase.getInstance().getReference().child("users").push().getKey();
+
+        User user = new User();
+        user.username = inputText;
+        user.phone = mAuth.getCurrentUser().getPhoneNumber();
+        Map<String, Object> postValues = user.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+        Log.d(TAG,childUpdates.toString());
+        childUpdates.put("/users/" + mAuth.getCurrentUser().getUid(), postValues);
+        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG,"updated Username");
+                startMainActivity();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG,e.getMessage());
+            }
+        });
     }
 }

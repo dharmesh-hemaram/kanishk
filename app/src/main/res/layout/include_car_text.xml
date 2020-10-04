@@ -3,28 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/carPrice"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
         android:textStyle="bold"
-        tools:text="My First Post" />
+        tools:text="5 lakh" />
+
+    <TextView
+        android:id="@+id/carYear"
+        style="@style/Base.TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        tools:text="2019" />
 
     <TextView
         android:id="@+id/carRegistrationNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        tools:text="MH12ND3109" />
 
     <TextView
         android:id="@+id/carKM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" />
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        tools:text="50,000" />
 
 </LinearLayout>

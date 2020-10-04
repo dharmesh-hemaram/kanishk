@@ -4,17 +4,17 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 // [START comment_class]
 @IgnoreExtraProperties
-public class Bidding {
+public class Bid {
 
     public String uid;
     public String author;
     public Double amount;
 
-    public Bidding() {
+    public Bid() {
         // Default constructor required for calls to DataSnapshot.getValue(Comment.class)
     }
 
-    public Bidding(String uid, String author, Double text) {
+    public Bid(String uid, String author, Double amount) {
         this.uid = uid;
         this.author = author;
         this.amount = amount;

@@ -1,6 +1,8 @@
 package com.dhruv.techapps.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,8 @@ import com.dhruv.techapps.models.Car;
 import com.dhruv.techapps.viewholder.CarViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 
 public abstract class CarListFragment extends Fragment {
 
@@ -85,13 +92,32 @@ public abstract class CarListFragment extends Fragment {
             protected void onBindViewHolder(CarViewHolder viewHolder, int position, final Car model) {
                 final DatabaseReference postRef = getRef(position);
 
+
+
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
+                Log.d(TAG,postKey);
+                /*FirebaseStorage.getInstance().getReference("images/"+postKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        if(listResult.getItems().size() > 0){
+                            final long ONE_MEGABYTE = 1024 * 1024;
+                            listResult.getItems().get(0).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    viewHolder.imageView.setImageBitmap(bitmap);
+                                }
+                            });
+                        }
+                    }
+                });*/
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Launch PostDetailActivity
                         Intent intent = new Intent(getActivity(), CarDetailActivity.class);
+                        Log.d(TAG,postKey);
                         intent.putExtra(CarDetailActivity.EXTRA_POST_KEY, postKey);
                         startActivity(intent);
                     }

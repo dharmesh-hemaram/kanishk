@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.dhruv.techapps.databinding.ActivityMainBinding;
-import com.dhruv.techapps.fragment.MyCarsFragment;
 import com.dhruv.techapps.fragment.MyTopCarsFragment;
 import com.dhruv.techapps.fragment.RecentCarsFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,13 +45,10 @@ public class  MainActivity extends BaseActivity {
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             private final Fragment[] mFragments = new Fragment[]{
                     new RecentCarsFragment(),
-                    new MyCarsFragment(),
                     new MyTopCarsFragment(),
             };
             private final String[] mFragmentNames = new String[]{
-                    getString(R.string.heading_recent),
-                    getString(R.string.heading_my_posts),
-                    getString(R.string.heading_my_top_posts)
+                    getString(R.string.heading_recent), getString(R.string.heading_my_top_posts)
             };
 
             @Override

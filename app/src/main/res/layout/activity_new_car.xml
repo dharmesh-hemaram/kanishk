@@ -9,7 +9,6 @@
         android:id="@+id/fieldBrand"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/fieldImageSelect"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
@@ -111,15 +110,12 @@
         android:autofillHints="Mobile Number"
         android:hint="Mobile Number"
         android:inputType="number" />
-
     <Button
         android:id="@+id/fieldImageSelect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fieldMobileNumber"
-        android:layout_weight="0"
-        android:text="Select Images"
-        android:layout_gravity="center"/>
+        android:text="Select Images"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fieldImages"
@@ -130,8 +126,6 @@
         android:padding="5dp"
         android:scrollbars="horizontal"
         tools:listitem="@layout/item_image" />
-
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSubmitPost"

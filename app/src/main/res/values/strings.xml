@@ -15,8 +15,7 @@
     <string name="hint_email">email</string>
     <string name="sign_in">Sign In</string>
     <string name="heading_recent">Recent</string>
-    <string name="heading_my_posts">My Posts</string>
-    <string name="heading_my_top_posts">My Top Posts</string>
+    <string name="heading_my_top_posts">My Bids</string>
 
     <string name="label_phone_auth">Phone Number Authentication</string>
     <string name="desc_phone_auth">Use a phone number to authenticate with Firebase.</string>
@@ -117,4 +116,7 @@
 
     <string name="error_sign_in_failed">Sign in failed, see logs for details.</string>
     <string name="multi_factor_signed_out">You are not signed in. To use this sample, first navigate to the Email/Password example to sign in and then return here to enroll in multi-factor auth.</string>
+    <string name="dot">\u25CF</string>
+    <string name="username">Username</string>
+    <string name="save">Save</string>
 </resources>
