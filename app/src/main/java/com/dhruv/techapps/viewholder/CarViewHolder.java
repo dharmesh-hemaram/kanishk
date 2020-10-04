@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dhruv.techapps.DataHolder;
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.R;
 import com.dhruv.techapps.models.Car;
 

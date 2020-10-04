@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.models.Brand;
 import com.dhruv.techapps.services.APIClient;
 import com.dhruv.techapps.services.GitHubService;

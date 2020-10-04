@@ -1,7 +1,6 @@
 package com.dhruv.techapps.models;
 
-import com.dhruv.techapps.Common;
-import com.dhruv.techapps.DataHolder;
+import com.dhruv.techapps.common.Common;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ServerValue;

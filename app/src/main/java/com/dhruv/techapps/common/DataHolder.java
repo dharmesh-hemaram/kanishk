@@ -1,4 +1,4 @@
-package com.dhruv.techapps;
+package com.dhruv.techapps.common;
 
 import com.dhruv.techapps.models.Brand;
 import com.dhruv.techapps.models.Model;

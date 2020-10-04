@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.dhruv.techapps.adapter.ImageViewAdapter;
+import com.dhruv.techapps.common.Common;
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityNewCarBinding;
 import com.dhruv.techapps.models.Car;
 import com.google.firebase.database.DatabaseReference;

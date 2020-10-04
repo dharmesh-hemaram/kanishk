@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dhruv.techapps.adapter.BidAdapter;
 import com.dhruv.techapps.adapter.SliderAdapterExample;
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityCarDetailBinding;
 import com.dhruv.techapps.models.Bid;
 import com.dhruv.techapps.models.Car;
