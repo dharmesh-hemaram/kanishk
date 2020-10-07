@@ -17,34 +17,43 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.dhruv.techapps.adapter.ImageViewAdapter;
 import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.common.DataHolder;
-import com.dhruv.techapps.databinding.ActivityNewCarBinding;
-import com.dhruv.techapps.models.Car;
+import com.dhruv.techapps.databinding.ActivityNewVehicleBinding;
+import com.dhruv.techapps.models.Brand;
+import com.dhruv.techapps.models.Vehicle;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
+public class NewVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
-    private static final String TAG = "NewPostActivity";
+    private static final String TAG = "NewCarActivity";
     private static final String REQUIRED = "Required";
     // [START declare_database_ref]
     private DatabaseReference mDatabase;
     private StorageReference mStorage;
-    private ActivityNewCarBinding binding;
+    private ActivityNewVehicleBinding binding;
     private int brandId = 0;
+    private String brand;
+    private String model;
+    private String variant;
     private int modelId = 0;
     private int variantId = 0;
-    private int typeId = 0;
+    private int engineTypeId = 0;
+    private String type;
+    private List<Brand> brands;
     private ImageViewAdapter imageViewAdapter;
+
+    private DataHolder dataHolder = DataHolder.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityNewCarBinding.inflate(getLayoutInflater());
+        binding = ActivityNewVehicleBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // [START initialize_database_ref]
@@ -97,26 +106,61 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
     public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
         Log.d(TAG, parentView.getId() + "~" + position);
         switch (parentView.getId()) {
+            case R.id.fieldType:
+                type = Common.TYPES[position].toLowerCase();
+                brands = Common.getBrands(position, dataHolder);
+                ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataHolder.getBrands(brands));
+                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                binding.fieldBrand.setAdapter(aa);
+                break;
             case R.id.fieldBrand:
                 brandId = position;
+                brand = brands.get(position).name;
+                String[] models = dataHolder.getModels(brands, brandId);
+                if (models.length == 1) {
+                    binding.fieldModelText.setVisibility(View.VISIBLE);
+                    binding.fieldVariantText.setVisibility(View.VISIBLE);
+                    binding.fieldModel.setVisibility(View.GONE);
+                    binding.fieldVariant.setVisibility(View.GONE);
+                } else {
+                    binding.fieldModelText.setVisibility(View.GONE);
+                    binding.fieldVariantText.setVisibility(View.GONE);
+                    binding.fieldModel.setVisibility(View.VISIBLE);
+                    binding.fieldVariant.setVisibility(View.VISIBLE);
+                    aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataHolder.getModels(brands, brandId));
+                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    binding.fieldModel.setAdapter(aa);
+                }
 
-                ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, DataHolder.getInstance().getModels(brandId));
-                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                //Setting the ArrayAdapter data on the Spinner
-                binding.fieldModel.setAdapter(aa);
                 break;
             case R.id.fieldModel:
                 modelId = position;
-                aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, DataHolder.getInstance().getVariants(brandId, modelId));
-                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                //Setting the ArrayAdapter data on the Spinner
-                binding.fieldVariant.setAdapter(aa);
+                if (modelId + 1 == binding.fieldModel.getAdapter().getCount()) {
+                    binding.fieldModelText.setVisibility(View.VISIBLE);
+                    binding.fieldVariantText.setVisibility(View.VISIBLE);
+                    binding.fieldVariant.setVisibility(View.GONE);
+                    binding.fieldModelText.requestFocus();
+                } else {
+                    model = brands.get(brandId).models.get(position).name;
+                    binding.fieldVariant.setVisibility(View.VISIBLE);
+                    binding.fieldModelText.setVisibility(View.GONE);
+                    aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataHolder.getVariants(brands, brandId, modelId));
+                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    binding.fieldVariant.setAdapter(aa);
+                }
                 break;
             case R.id.fieldVariant:
                 variantId = position;
+                if (variantId + 1 == binding.fieldVariant.getAdapter().getCount()) {
+                    binding.fieldVariantText.setVisibility(View.VISIBLE);
+                    binding.fieldVariantText.requestFocus();
+                } else {
+                    variant = brands.get(brandId).models.get(modelId).variants[position];
+                    binding.fieldVariantText.setVisibility(View.GONE);
+                }
                 break;
-            case R.id.fieldType:
-                typeId = position;
+            case R.id.fieldEngineType:
+                engineTypeId = position;
                 break;
             default:
                 Log.e(TAG, String.valueOf(parentView.getId()));
@@ -129,39 +173,23 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
     }
 
     private void setSpinner() {
-
-        binding.fieldBrand.setOnItemSelectedListener(this);
-        binding.fieldModel.setOnItemSelectedListener(this);
-        binding.fieldVariant.setOnItemSelectedListener(this);
         binding.fieldType.setOnItemSelectedListener(this);
+        binding.fieldEngineType.setOnItemSelectedListener(this);
+        binding.fieldBrand.setOnItemSelectedListener(this);
+        binding.fieldVariant.setOnItemSelectedListener(this);
+        binding.fieldModel.setOnItemSelectedListener(this);
 
-
+        Log.d(TAG, Common.TYPES.toString());
         //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, DataHolder.getInstance().getBrands());
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        binding.fieldBrand.setAdapter(aa);
-
-
-        //Creating the ArrayAdapter instance having the country list
-        aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, new String[]{"~~Select Model~~"});
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        binding.fieldModel.setAdapter(aa);
-
-
-        //Creating the ArrayAdapter instance having the country list
-        aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, new String[]{"~~Select Variant~~"});
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        binding.fieldVariant.setAdapter(aa);
-
-
-        //Creating the ArrayAdapter instance having the country list
-        aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Common.TYPES);
+        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Common.TYPES);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         binding.fieldType.setAdapter(aa);
+
+        aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Common.ENGINE_TYPES);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        binding.fieldEngineType.setAdapter(aa);
     }
 
     private void submitPost() {
@@ -172,7 +200,8 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
         final String kiloMeter = binding.fieldKiloMeter.getText().toString();
         final String color = binding.fieldColor.getText().toString();
         final String mobileNumber = binding.fieldMobileNumber.getText().toString();
-        final String owners = "1";
+        final String modelText = binding.fieldModelText.getText().toString();
+        final String variantText = binding.fieldVariantText.getText().toString();
 
         if (imageViewAdapter == null) {
             Toast.makeText(this, "Please select images...", Toast.LENGTH_SHORT).show();
@@ -204,8 +233,32 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
         // [START single_value_read]
         final String userId = getUid();
 
+
+        String name = brand;
+        if (model == null || model.isEmpty()) {
+            if (modelText.isEmpty()) {
+                binding.fieldModelText.setError(REQUIRED);
+                return;
+            } else {
+                name += modelText;
+            }
+        } else {
+            name += model;
+        }
+
+        if (variant == null || variant.isEmpty()) {
+            if (variantText.isEmpty()) {
+                binding.fieldVariantText.setError(REQUIRED);
+                return;
+            } else {
+                name += variantText;
+            }
+        } else {
+            name += variant;
+        }
+
         // Write new post
-        writeNewPost(userId, year, price, regNum, kiloMeter, owners, color, mobileNumber, insurance);
+        writeNewPost(userId, name, year, price, regNum, kiloMeter, color, mobileNumber, insurance);
 
         // Finish this Activity, back to the stream
         setEditingEnabled(true);
@@ -225,14 +278,14 @@ public class NewCarActivity extends BaseActivity implements AdapterView.OnItemSe
     }
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String year, String price, String regNum, String km, String owners, String color, String mobile, String insurance) {
-        String key = mDatabase.child("cars").push().getKey();
-        Car car = new Car(userId, brandId + "," + modelId + "," + variantId, year, price, regNum, km, owners, color, typeId, mobile, insurance);
-        Map<String, Object> postValues = car.toMap();
+    private void writeNewPost(String userId, String name, String year, String price, String regNum, String km, String color, String mobile, String insurance) {
+        String key = mDatabase.child(type).push().getKey();
+        Vehicle vehicle = new Vehicle(userId, name, engineTypeId, year, price, regNum, km, color, mobile, insurance);
+        Map<String, Object> postValues = vehicle.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         Log.d(TAG, key);
         Log.d(TAG, postValues.toString());
-        childUpdates.put("/cars/" + key, postValues);
+        childUpdates.put("/" + type + "/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
 

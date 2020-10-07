@@ -25,6 +25,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_baseline_add_24"
+        android:visibility="gone"
         app:tint="@android:color/white" />
 
 </RelativeLayout>

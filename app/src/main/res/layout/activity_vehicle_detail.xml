@@ -23,6 +23,19 @@
         app:sliderScrollTimeInSec="1"
         app:sliderStartAutoCycle="true" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageSlider"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorAccent"
+        android:src="@drawable/ic_baseline_edit_24"
+        android:visibility="gone"
+        app:tint="@android:color/white" />
+
     <TableLayout
         android:id="@+id/carDetailLayout"
         android:layout_width="match_parent"
@@ -132,13 +145,13 @@
                 android:text="Type" />
 
             <TextView
-                android:id="@+id/carType"
+                android:id="@+id/carEngineType"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                tools:text="50,000" />
+                tools:text="Petrol" />
         </TableRow>
 
         <TableRow>

@@ -10,49 +10,47 @@ import java.util.Map;
 
 // [START post_class]
 @IgnoreExtraProperties
-public class Car {
+public class Vehicle {
 
     public String uid;
-    public String brand;
+    public String name;
+    public int eType;
     public int year;
     public double price;
     public String reg;
     public int km;
-    public int owners;
     public String color;
-    public int type;
     public String mobile;
     public String ins;
-    public HashMap<String, Object> updated;
+    public Object updated;
+    public boolean soldout;
 
-    public Car() {
+    public Vehicle() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Car(String uid, String brand, String year, String price, String regNum, String km, String owners, String color, Integer type, String mobile, String ins) {
+    public Vehicle(String uid, String name, int eType, String year, String price, String regNum, String km, String color, String mobile, String ins) {
         this.uid = uid;
-        this.brand = brand;
+        this.name = name;
+        this.eType = eType;
         this.year = Integer.parseInt(year);
         this.price = Double.parseDouble(price);
         this.reg = regNum;
         this.km = Integer.parseInt(km);
-        this.owners = Integer.parseInt(owners);
         this.color = color;
-        this.type = type;
         this.mobile = mobile;
         this.ins = ins;
-        this.updated = new HashMap<String, Object>();
-        this.updated.put("date", ServerValue.TIMESTAMP);
+        this.updated = ServerValue.TIMESTAMP;
     }
 
     @Exclude
     public long getUpdatedOnLong() {
-        return (long) updated.get("date");
+        return (long) updated;
     }
 
     @Exclude
-    public String getTypeName() {
-        return Common.TYPES[type];
+    public String getEngineTypeName() {
+        return Common.ENGINE_TYPES[eType];
     }
 
     // [START post_to_map]
@@ -60,18 +58,22 @@ public class Car {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
-        result.put("brand", brand);
+        result.put("name", name);
         result.put("year", year);
         result.put("price", price);
         result.put("reg", reg);
         result.put("km", km);
-        result.put("owners", owners);
-        result.put("color", color);
-        result.put("type", type);
-        result.put("mobile", mobile);
-        result.put("ins", ins);
+        if (color != null && !color.isEmpty()) {
+            result.put("color", color);
+        }
+        if (mobile != null && !mobile.isEmpty()) {
+            result.put("mobile", mobile);
+        }
+        if (ins != null && !ins.isEmpty()) {
+            result.put("ins", ins);
+        }
+        result.put("eType", eType);
         result.put("updated", updated);
-
         return result;
     }
     // [END post_to_map]

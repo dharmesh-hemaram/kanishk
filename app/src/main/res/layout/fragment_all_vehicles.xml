@@ -9,10 +9,9 @@
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:clipToPadding="false"
         android:padding="10dp"
         android:scrollbars="vertical"
-        tools:listitem="@layout/item_car" />
+        tools:listitem="@layout/item_vehicle" />
 
 </FrameLayout>

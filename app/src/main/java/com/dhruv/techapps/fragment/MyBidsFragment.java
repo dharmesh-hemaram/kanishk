@@ -3,9 +3,9 @@ package com.dhruv.techapps.fragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
-public class MyTopCarsFragment extends CarListFragment {
+public class MyBidsFragment extends VehicleListFragment {
 
-    public MyTopCarsFragment() {
+    public MyBidsFragment() {
     }
 
     @Override
@@ -15,10 +15,8 @@ public class MyTopCarsFragment extends CarListFragment {
         // [START my_top_posts_query]
         // My top posts by number of stars
         String myUserId = getUid();
-        Query myTopPostsQuery = databaseReference.child("cars").child(myUserId)
+        return databaseReference.child("cars").child(myUserId)
                 .orderByChild("starCount");
         // [END my_top_posts_query]
-
-        return myTopPostsQuery;
     }
 }

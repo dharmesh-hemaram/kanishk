@@ -29,8 +29,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.dhruv.techapps.databinding.ActivityMainBinding;
-import com.dhruv.techapps.fragment.MyTopCarsFragment;
-import com.dhruv.techapps.fragment.RecentCarsFragment;
+import com.dhruv.techapps.fragment.MyBidsFragment;
+import com.dhruv.techapps.fragment.RecentVehiclesFragment;
 import com.dhruv.techapps.fragment.UserDialogFragment;
 import com.dhruv.techapps.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,19 +46,20 @@ import java.util.Map;
 public class MainActivity extends BaseActivity implements UserDialogFragment.EditNameDialogListener {
 
     private static final String TAG = "MainActivity";
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         // Create the adapter that will return a fragment for each section
         FragmentPagerAdapter mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             private final Fragment[] mFragments = new Fragment[]{
-                    new RecentCarsFragment(),
-                    new MyTopCarsFragment(),
+                    new RecentVehiclesFragment(),
+                    new MyBidsFragment(),
             };
             private final String[] mFragmentNames = new String[]{
                     getString(R.string.heading_recent), getString(R.string.heading_my_top_posts)
@@ -82,14 +83,6 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
         // Set up the ViewPager with the sections adapter.
         binding.container.setAdapter(mPagerAdapter);
         binding.tabs.setupWithViewPager(binding.container);
-
-        // Button launches NewPostActivity
-        binding.fabNewCar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewCarActivity.class));
-            }
-        });
     }
 
     @Override
@@ -102,6 +95,14 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
                 User user = snapshot.getValue(User.class);
                 if (user == null) {
                     getUserInfo();
+                } else if (user.isAdmin) {
+                    binding.fabNewCar.setVisibility(View.VISIBLE);// Button launches NewPostActivity
+                    binding.fabNewCar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(MainActivity.this, NewVehicleActivity.class));
+                        }
+                    });
                 }
             }
 

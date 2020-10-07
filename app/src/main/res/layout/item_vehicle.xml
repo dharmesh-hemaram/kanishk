@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="440dp"
     android:layout_marginBottom="10dp">
@@ -10,11 +11,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/carNameLayout"
-            layout="@layout/include_car_name"
+        <TextView
+            android:id="@+id/carName"
+            style="@style/Base.TextAppearance.AppCompat.Large"
             android:layout_width="match_parent"
-            android:layout_height="40dp" />
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            tools:text="Tata Motors" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -25,13 +32,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/altrox" />
+                android:contentDescription="car Image"
+                android:src="@drawable/ic_baseline_photo_camera_24" />
 
 
         </RelativeLayout>
 
         <include
-            layout="@layout/include_car_text"
+            layout="@layout/include_vehicle_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -51,6 +59,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
+                android:contentDescription="like car"
                 android:src="@drawable/ic_baseline_star_border_24"
                 app:tint="@android:color/black" />
         </LinearLayout>

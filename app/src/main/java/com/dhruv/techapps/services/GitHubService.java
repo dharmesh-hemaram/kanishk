@@ -9,6 +9,18 @@ import retrofit2.http.GET;
 
 public interface GitHubService {
 
-    @GET("/Dhruv-Techapps/car-bid/master/brands.json")
-    Call<List<Brand>> getBrands();
+    @GET("/dharmesh-hemaram/kanishk/main/car-brands.json")
+    Call<List<Brand>> getCardBrands();
+
+    @GET("/dharmesh-hemaram/kanishk/main/tractor-brands.json")
+    Call<List<Brand>> getTractorBrands();
+
+    @GET("/dharmesh-hemaram/kanishk/main/truck-brands.json")
+    Call<List<Brand>> getTruckBrands();
+
+    @GET("/dharmesh-hemaram/kanishk/main/tempo-brands.json")
+    Call<List<Brand>> getTempoBrands();
+
+    @GET("/dharmesh-hemaram/kanishk/main/bike-brands.json")
+    Call<List<Brand>> getBikeBrands();
 }

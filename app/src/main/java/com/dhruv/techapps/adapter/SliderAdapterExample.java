@@ -17,7 +17,7 @@ import java.util.List;
 public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample.SliderAdapterVH> {
 
     private Context context;
-    private List<Bitmap> mSliderItems = new ArrayList<Bitmap>();
+    private List<Bitmap> mSliderItems = new ArrayList<>();
 
     public SliderAdapterExample(Context context) {
         this.context = context;
@@ -51,7 +51,8 @@ public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample
         Bitmap uri = mSliderItems.get(position);
         Glide.with(viewHolder.itemView)
                 .load(uri)
-                .fitCenter()
+                .centerCrop()
+                //.placeholder(R.drawable.loading_spinner)
                 .into(viewHolder.imageViewBackground);
     }
 

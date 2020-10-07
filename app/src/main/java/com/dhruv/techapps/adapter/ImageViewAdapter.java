@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhruv.techapps.R;
+import com.google.firebase.database.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -32,11 +33,11 @@ public class ImageViewAdapter extends RecyclerView.Adapter<ImageViewAdapter.View
     }
 
     @Override
+    @NotNull
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.item_image, parent, false);
-        ViewHolder viewHolder = new ViewHolder(listItem);
-        return viewHolder;
+        return new ViewHolder(listItem);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ImageViewAdapter extends RecyclerView.Adapter<ImageViewAdapter.View
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.imageView = (ImageView) itemView.findViewById(R.id.fieldImage);
+            this.imageView = itemView.findViewById(R.id.fieldImage);
         }
     }
 }

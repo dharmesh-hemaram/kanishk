@@ -1,8 +1,6 @@
 package com.dhruv.techapps.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,10 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dhruv.techapps.CarDetailActivity;
 import com.dhruv.techapps.R;
-import com.dhruv.techapps.models.Car;
-import com.dhruv.techapps.viewholder.CarViewHolder;
+import com.dhruv.techapps.VehicleDetailActivity;
+import com.dhruv.techapps.models.Vehicle;
+import com.dhruv.techapps.module.GlideApp;
+import com.dhruv.techapps.viewholder.VehicleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +30,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 
-public abstract class CarListFragment extends Fragment {
+public abstract class VehicleListFragment extends Fragment {
 
     private static final String TAG = "CarListFragment";
 
@@ -39,18 +38,18 @@ public abstract class CarListFragment extends Fragment {
     private DatabaseReference mDatabase;
     // [END define_database_reference]
 
-    private FirebaseRecyclerAdapter<Car, CarViewHolder> mAdapter;
+    private FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
 
-    public CarListFragment() {
+    public VehicleListFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.fragment_all_cars, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_all_vehicles, container, false);
 
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -75,20 +74,20 @@ public abstract class CarListFragment extends Fragment {
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
 
-        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Car>()
-                .setQuery(postsQuery, Car.class)
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Vehicle>()
+                .setQuery(postsQuery, Vehicle.class)
                 .build();
 
-        mAdapter = new FirebaseRecyclerAdapter<Car, CarViewHolder>(options) {
+        mAdapter = new FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder>(options) {
 
             @Override
-            public CarViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            public VehicleViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                return new CarViewHolder(inflater.inflate(R.layout.item_car, viewGroup, false));
+                return new VehicleViewHolder(inflater.inflate(R.layout.item_vehicle, viewGroup, false));
             }
 
             @Override
-            protected void onBindViewHolder(CarViewHolder viewHolder, int position, final Car model) {
+            protected void onBindViewHolder(VehicleViewHolder viewHolder, int position, final Vehicle model) {
                 final DatabaseReference postRef = getRef(position);
 
 
@@ -98,14 +97,7 @@ public abstract class CarListFragment extends Fragment {
                     @Override
                     public void onSuccess(ListResult listResult) {
                         if (listResult.getItems().size() > 0) {
-                            final long ONE_MEGABYTE = 1024 * 1024;
-                            listResult.getItems().get(0).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    viewHolder.imageView.setImageBitmap(bitmap);
-                                }
-                            });
+                            GlideApp.with(getContext()).load(listResult.getItems().get(0)).into(viewHolder.imageView);
                         }
                     }
                 });
@@ -113,8 +105,8 @@ public abstract class CarListFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), CarDetailActivity.class);
-                        intent.putExtra(CarDetailActivity.EXTRA_POST_KEY, postKey);
+                        Intent intent = new Intent(getActivity(), VehicleDetailActivity.class);
+                        intent.putExtra(VehicleDetailActivity.EXTRA_POST_KEY, postKey);
                         startActivity(intent);
                     }
                 });
@@ -147,7 +139,7 @@ public abstract class CarListFragment extends Fragment {
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                Car p = mutableData.getValue(Car.class);
+                Vehicle p = mutableData.getValue(Vehicle.class);
                 if (p == null) {
                     return Transaction.success(mutableData);
                 }

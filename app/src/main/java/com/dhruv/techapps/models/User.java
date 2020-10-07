@@ -12,6 +12,7 @@ public class User {
 
     public String username;
     public String phone;
+    public boolean isAdmin;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)

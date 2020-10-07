@@ -13,10 +13,10 @@ import com.dhruv.techapps.adapter.BidAdapter;
 import com.dhruv.techapps.adapter.SliderAdapterExample;
 import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.common.DataHolder;
-import com.dhruv.techapps.databinding.ActivityCarDetailBinding;
+import com.dhruv.techapps.databinding.ActivityVehicleDetailBinding;
 import com.dhruv.techapps.models.Bid;
-import com.dhruv.techapps.models.Car;
 import com.dhruv.techapps.models.User;
+import com.dhruv.techapps.models.Vehicle;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,23 +30,24 @@ import com.smarteist.autoimageslider.SliderView;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-public class CarDetailActivity extends BaseActivity implements View.OnClickListener {
+public class VehicleDetailActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_POST_KEY = "post_key";
     private static final String TAG = "CarDetailActivity";
     private DatabaseReference mCarReference;
-    private DatabaseReference mBiddingsReference;
+    private DatabaseReference mBiddingReference;
     private ValueEventListener mPostListener;
     private String mPostKey;
     private BidAdapter mAdapter;
-    private ActivityCarDetailBinding binding;
+    private ActivityVehicleDetailBinding binding;
     private SliderAdapterExample adapter;
-    private Car car;
+    private DataHolder dataHolder;
+    private Vehicle vehicle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityCarDetailBinding.inflate(getLayoutInflater());
+        binding = ActivityVehicleDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Get post key from intent
@@ -58,7 +59,7 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
 
         // Initialize Database
         mCarReference = FirebaseDatabase.getInstance().getReference().child("cars").child(mPostKey);
-        mBiddingsReference = FirebaseDatabase.getInstance().getReference().child("car-bidding").child(mPostKey);
+        mBiddingReference = FirebaseDatabase.getInstance().getReference().child("car-bidding").child(mPostKey);
 
         binding.buttonCarBidding.setOnClickListener(this);
         binding.recyclerCarBids.setLayoutManager(new LinearLayoutManager(this));
@@ -80,15 +81,9 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 String carKey = dataSnapshot.getKey();
-                car = dataSnapshot.getValue(Car.class);
+                vehicle = dataSnapshot.getValue(Vehicle.class);
 
-
-                String[] name = car.brand.split(",");
-                String brand = DataHolder.getInstance().getBrands()[Integer.parseInt(name[0])];
-                String model = DataHolder.getInstance().getModels(Integer.parseInt(name[0]))[Integer.parseInt(name[1])];
-                String variant = DataHolder.getInstance().getVariants(Integer.parseInt(name[0]), Integer.parseInt(name[1]))[Integer.parseInt(name[2])];
-
-                setTitle(brand + " " + getResources().getString(R.string.dot) + " " + model + " " + getResources().getString(R.string.dot) + " " + variant);
+                setTitle(vehicle.name);
 
                 // [START_EXCLUDE]
                 DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -97,13 +92,13 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
 
                 DecimalFormat currencyFormat = new DecimalFormat("₹ #,###", symbols);
                 DecimalFormat decimalFormat = new DecimalFormat("#,###", symbols);
-                binding.carPrice.setText(currencyFormat.format(car.price));
-                binding.carYear.setText(String.valueOf(car.year));
-                binding.carRegistrationNumber.setText(car.reg);
-                binding.carKM.setText(decimalFormat.format(car.km));
-                binding.carType.setText(Common.TYPES[car.type]);
-                binding.carIns.setText(car.ins);
-                binding.carColor.setText(car.color);
+                binding.carPrice.setText(currencyFormat.format(vehicle.price));
+                binding.carYear.setText(String.valueOf(vehicle.year));
+                binding.carRegistrationNumber.setText(vehicle.reg);
+                binding.carKM.setText(decimalFormat.format(vehicle.km));
+                binding.carEngineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
+                binding.carIns.setText(vehicle.ins);
+                binding.carColor.setText(vehicle.color);
 
                 // [END_EXCLUDE]
 
@@ -122,8 +117,6 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
                                     }
                                 });
                             }
-                        } else {
-                            binding.imageSlider.findViewById(R.id.imageSlider).setVisibility(View.GONE);
                         }
                     }
                 });
@@ -134,7 +127,7 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                 // [START_EXCLUDE]
-                Toast.makeText(CarDetailActivity.this, "Failed to load car details.",
+                Toast.makeText(VehicleDetailActivity.this, "Failed to load car details.",
                         Toast.LENGTH_SHORT).show();
                 // [END_EXCLUDE]
             }
@@ -146,7 +139,7 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
         mPostListener = postListener;
 
         // Listen for comments
-        mAdapter = new BidAdapter(this, mBiddingsReference);
+        mAdapter = new BidAdapter(this, mBiddingReference);
         binding.recyclerCarBids.setAdapter(mAdapter);
     }
 
@@ -183,7 +176,7 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
             }
             return maxPrice;
         } else {
-            return car.price;
+            return vehicle.price;
         }
     }
 
@@ -191,7 +184,7 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
         final String uid = getUid();
         Double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
         Double maxPrice = getMaxPrice();
-        if(Double.compare(biddingAmount,maxPrice) > 0){
+        if (Double.compare(biddingAmount, maxPrice) > 0) {
             FirebaseDatabase
                     .getInstance()
                     .getReference()
@@ -208,7 +201,7 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
                             Bid bid = new Bid(uid, authorName, biddingAmount);
 
                             // Push the comment, it will appear in the list
-                            mBiddingsReference.push().setValue(bid);
+                            mBiddingReference.push().setValue(bid);
 
                             // Clear the field
                             binding.fieldBiddingAmount.setText(null);
@@ -219,9 +212,9 @@ public class CarDetailActivity extends BaseActivity implements View.OnClickListe
 
                         }
                     });
-        }else{
-            Log.d(TAG,"Bidding error");
-            Toast.makeText(this,"Bidding price should be higher",Toast.LENGTH_LONG).show();
+        } else {
+            Log.d(TAG, "Bidding error");
+            Toast.makeText(this, "Bidding price should be higher", Toast.LENGTH_LONG).show();
         }
 
     }
