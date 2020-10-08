@@ -6,6 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhruv.techapps.R;
 import com.dhruv.techapps.VehicleDetailActivity;
+import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.models.Vehicle;
 import com.dhruv.techapps.module.GlideApp;
 import com.dhruv.techapps.viewholder.VehicleViewHolder;
@@ -30,10 +34,11 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 
-public abstract class VehicleListFragment extends Fragment {
+public abstract class VehicleListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    private static final String TAG = "CarListFragment";
-
+    private static final String TAG = "VehicleListFragment";
+    protected String type = Common.TYPES[0].toLowerCase();
+    // [END define_database_reference]
     // [START define_database_reference]
     private DatabaseReference mDatabase;
     // [END define_database_reference]
@@ -50,6 +55,7 @@ public abstract class VehicleListFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_all_vehicles, container, false);
+        setTypeFilter(rootView);
 
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -59,6 +65,31 @@ public abstract class VehicleListFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         return rootView;
+    }
+
+    private void setTypeFilter(View rootView) {
+        Spinner typeFilter = ((Spinner) rootView.findViewById(R.id.typeFilter));
+        typeFilter.setOnItemSelectedListener(this);
+        ArrayAdapter aa = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, Common.TYPES);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        typeFilter.setAdapter(aa);
+    }
+
+    //Performing action onItemSelected and onNothing selected
+    @Override
+    public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+        type = Common.TYPES[position].toLowerCase();
+        // Set up FirebaseRecyclerAdapter with the Query
+        Query postsQuery = getQuery(mDatabase);
+
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Vehicle>().setQuery(postsQuery, Vehicle.class).build();
+        mAdapter.updateOptions(options);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     @Override

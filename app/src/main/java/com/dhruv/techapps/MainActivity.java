@@ -33,6 +33,12 @@ import com.dhruv.techapps.fragment.MyBidsFragment;
 import com.dhruv.techapps.fragment.RecentVehiclesFragment;
 import com.dhruv.techapps.fragment.UserDialogFragment;
 import com.dhruv.techapps.models.User;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +57,7 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobileAds.initialize(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -83,6 +90,27 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
         // Set up the ViewPager with the sections adapter.
         binding.container.setAdapter(mPagerAdapter);
         binding.tabs.setupWithViewPager(binding.container);
+    }
+
+    private void loadAd(){
+        AdLoader adLoader = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/2247696110")
+                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        // Show the ad.
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError adError) {
+                        // Handle the failure by logging, altering the UI, and so on.
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder()
+                        // Methods in the NativeAdOptions.Builder class can be
+                        // used here to specify individual options settings.
+                        .build())
+                .build();
     }
 
     @Override

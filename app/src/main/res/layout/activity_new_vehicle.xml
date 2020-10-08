@@ -45,7 +45,7 @@
             android:layout_below="@+id/fieldModel"
             android:autofillHints="Model"
             android:hint="Model"
-            android:inputType="text"
+            android:inputType="text|textCapSentences"
             android:visibility="gone" />
 
         <Spinner
@@ -61,7 +61,7 @@
             android:layout_below="@+id/fieldVariant"
             android:autofillHints="Variant"
             android:hint="Variant"
-            android:inputType="text"
+            android:inputType="text|textCapSentences"
             android:visibility="gone" />
 
         <EditText
@@ -79,8 +79,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/fieldPrice"
             android:autofillHints="Year"
-            android:hint="Year"
-            android:inputType="number" />
+            android:hint="2020"
+            android:inputType="number"
+            android:maxLength="4" />
 
         <EditText
             android:id="@+id/fieldRegistrationNumber"
@@ -88,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/fieldYear"
             android:autofillHints="Registration Number"
-            android:hint="Registration Number"
+            android:hint="MH12ND3109"
             android:inputType="textCapCharacters"
             tools:ignore="TextFields" />
 
@@ -108,7 +109,7 @@
             android:layout_below="@+id/fieldKiloMeter"
             android:autofillHints="Insurance"
             android:hint="Insurance"
-            android:inputType="text" />
+            android:inputType="text|textCapSentences" />
 
         <EditText
             android:id="@+id/fieldColor"
@@ -117,7 +118,7 @@
             android:layout_below="@+id/fieldInsurance"
             android:autofillHints="Color"
             android:hint="Color"
-            android:inputType="text" />
+            android:inputType="text|textCapSentences" />
 
         <Spinner
             android:id="@+id/fieldEngineType"
@@ -132,7 +133,8 @@
             android:layout_below="@+id/fieldEngineType"
             android:autofillHints="Mobile Number"
             android:hint="Mobile Number"
-            android:inputType="number" />
+            android:inputType="number"
+            android:maxLength="10" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -149,9 +151,9 @@
             android:id="@+id/fabSubmitPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/fieldImages"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
             android:src="@drawable/ic_baseline_done_24" />
 

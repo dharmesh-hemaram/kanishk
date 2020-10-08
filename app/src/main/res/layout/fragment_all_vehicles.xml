@@ -5,13 +5,38 @@
     android:layout_height="match_parent"
     tools:viewBindingIgnore="true">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/messagesList"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="10dp"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/item_vehicle" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/vehicleFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/typeFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <SearchView
+                android:id="@+id/nameFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messagesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/vehicleFilter"
+            android:clipToPadding="false"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/item_vehicle" />
+
+    </RelativeLayout>
 
 </FrameLayout>

@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhruv.techapps.R;
 import com.dhruv.techapps.models.Vehicle;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

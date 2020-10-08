@@ -33,7 +33,7 @@ import java.text.DecimalFormatSymbols;
 public class VehicleDetailActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_POST_KEY = "post_key";
-    private static final String TAG = "CarDetailActivity";
+    private static final String TAG = "VehicleDetailActivity";
     private DatabaseReference mCarReference;
     private DatabaseReference mBiddingReference;
     private ValueEventListener mPostListener;

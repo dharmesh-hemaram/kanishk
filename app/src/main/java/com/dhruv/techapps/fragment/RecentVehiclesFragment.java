@@ -13,7 +13,7 @@ public class RecentVehiclesFragment extends VehicleListFragment {
         // [START recent_posts_query]
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
-        return databaseReference.child("cars").limitToFirst(100);
+        return databaseReference.child(type).limitToFirst(100);
         // [END recent_posts_query]
     }
 }

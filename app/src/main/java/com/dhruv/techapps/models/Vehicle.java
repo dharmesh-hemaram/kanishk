@@ -36,7 +36,9 @@ public class Vehicle {
         this.year = Integer.parseInt(year);
         this.price = Double.parseDouble(price);
         this.reg = regNum;
-        this.km = Integer.parseInt(km);
+        if (km != null && !km.isEmpty()) {
+            this.km = Integer.parseInt(km);
+        }
         this.color = color;
         this.mobile = mobile;
         this.ins = ins;

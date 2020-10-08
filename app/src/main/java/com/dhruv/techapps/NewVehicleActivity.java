@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -25,13 +26,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NewVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
+public class NewVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, View.OnFocusChangeListener {
 
-    private static final String TAG = "NewCarActivity";
+    private static final String TAG = "NewVehicleActivity";
     private static final String REQUIRED = "Required";
     // [START declare_database_ref]
     private DatabaseReference mDatabase;
@@ -78,6 +80,7 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
             }
         });
         setSpinner();
+        setNumberFormatter();
     }
 
     @Override
@@ -109,6 +112,9 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
             case R.id.fieldType:
                 type = Common.TYPES[position].toLowerCase();
                 brands = Common.getBrands(position, dataHolder);
+                brand = "";
+                model = "";
+                variant = "";
                 ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataHolder.getBrands(brands));
                 aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 binding.fieldBrand.setAdapter(aa);
@@ -117,6 +123,8 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
                 brandId = position;
                 brand = brands.get(position).name;
                 String[] models = dataHolder.getModels(brands, brandId);
+                model = "";
+                variant = "";
                 if (models.length == 1) {
                     binding.fieldModelText.setVisibility(View.VISIBLE);
                     binding.fieldVariantText.setVisibility(View.VISIBLE);
@@ -131,10 +139,10 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
                     aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     binding.fieldModel.setAdapter(aa);
                 }
-
                 break;
             case R.id.fieldModel:
                 modelId = position;
+                variant = "";
                 if (modelId + 1 == binding.fieldModel.getAdapter().getCount()) {
                     binding.fieldModelText.setVisibility(View.VISIBLE);
                     binding.fieldVariantText.setVisibility(View.VISIBLE);
@@ -172,6 +180,44 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
 
     }
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        try {
+            if (v.getId() == binding.fieldPrice.getId()) {
+                EditText editText = (EditText) v;
+                String value = editText.getText().toString();
+                if (!value.isEmpty()) {
+                    if (hasFocus) {
+                        String cleanString = Common.removeCurrencyFormatter(value);
+                        editText.setText(cleanString);
+                    } else {
+                        String formatted = Common.formatCurrency(value);
+                        editText.setText(formatted);
+                    }
+                }
+            } else if (v.getId() == binding.fieldKiloMeter.getId()) {
+                EditText editText = (EditText) v;
+                String value = editText.getText().toString();
+                if (!value.isEmpty()) {
+                    if (hasFocus) {
+                        String cleanString = Common.removeDecimalFormatter(value);
+                        editText.setText(cleanString);
+                    } else {
+                        String formatted = Common.formatDecimal(value);
+                        editText.setText(formatted);
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void setNumberFormatter() {
+        binding.fieldPrice.setOnFocusChangeListener(this);
+        binding.fieldKiloMeter.setOnFocusChangeListener(this);
+    }
+
     private void setSpinner() {
         binding.fieldType.setOnItemSelectedListener(this);
         binding.fieldEngineType.setOnItemSelectedListener(this);
@@ -193,77 +239,81 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
     }
 
     private void submitPost() {
-        final String year = binding.fieldYear.getText().toString();
-        final String regNum = binding.fieldRegistrationNumber.getText().toString();
-        final String price = binding.fieldPrice.getText().toString();
-        final String insurance = binding.fieldInsurance.getText().toString();
-        final String kiloMeter = binding.fieldKiloMeter.getText().toString();
-        final String color = binding.fieldColor.getText().toString();
-        final String mobileNumber = binding.fieldMobileNumber.getText().toString();
-        final String modelText = binding.fieldModelText.getText().toString();
-        final String variantText = binding.fieldVariantText.getText().toString();
+        try {
+            final String year = binding.fieldYear.getText().toString();
+            final String regNum = binding.fieldRegistrationNumber.getText().toString();
+            final String price = Common.removeCurrencyFormatter(binding.fieldPrice.getText().toString());
+            final String insurance = binding.fieldInsurance.getText().toString();
+            final String kiloMeter = Common.removeDecimalFormatter(binding.fieldKiloMeter.getText().toString());
+            final String color = binding.fieldColor.getText().toString();
+            final String mobileNumber = binding.fieldMobileNumber.getText().toString();
+            final String modelText = binding.fieldModelText.getText().toString();
+            final String variantText = binding.fieldVariantText.getText().toString();
 
-        if (imageViewAdapter == null) {
-            Toast.makeText(this, "Please select images...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Title is required
-        if (TextUtils.isEmpty(year)) {
-            binding.fieldYear.setError(REQUIRED);
-            return;
-        }
-
-        // Body is required
-        if (TextUtils.isEmpty(regNum)) {
-            binding.fieldRegistrationNumber.setError(REQUIRED);
-            return;
-        }
-
-        // Body is required
-        if (TextUtils.isEmpty(price)) {
-            binding.fieldPrice.setError(REQUIRED);
-            return;
-        }
-
-        // Disable button so there are no multi-posts
-        setEditingEnabled(false);
-        Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
-
-        // [START single_value_read]
-        final String userId = getUid();
-
-
-        String name = brand;
-        if (model == null || model.isEmpty()) {
-            if (modelText.isEmpty()) {
-                binding.fieldModelText.setError(REQUIRED);
+            if (imageViewAdapter == null) {
+                Toast.makeText(this, "Please select images...", Toast.LENGTH_SHORT).show();
                 return;
-            } else {
-                name += modelText;
             }
-        } else {
-            name += model;
-        }
 
-        if (variant == null || variant.isEmpty()) {
-            if (variantText.isEmpty()) {
-                binding.fieldVariantText.setError(REQUIRED);
+            boolean isError = false;
+
+            if (TextUtils.isEmpty(price)) {
+                binding.fieldPrice.setError(REQUIRED);
+                isError = true;
+            }
+
+            if (TextUtils.isEmpty(year)) {
+                binding.fieldYear.setError(REQUIRED);
+                isError = true;
+            }
+
+            if (TextUtils.isEmpty(regNum)) {
+                binding.fieldRegistrationNumber.setError(REQUIRED);
+                isError = true;
+            }
+
+
+            // [START single_value_read]
+            final String userId = getUid();
+
+            if (model == null || model.isEmpty()) {
+                if (modelText.isEmpty()) {
+                    binding.fieldModelText.setError(REQUIRED);
+                    isError = true;
+                } else {
+                    model = modelText;
+                }
+            }
+
+            if (variant == null || variant.isEmpty()) {
+                if (variantText.isEmpty()) {
+                    binding.fieldVariantText.setError(REQUIRED);
+                    isError = true;
+                } else {
+                    variant = variantText;
+                }
+            }
+
+            if (isError) {
                 return;
-            } else {
-                name += variantText;
             }
-        } else {
-            name += variant;
+
+            String name = getResources().getString(R.string.vehicle_name, brand, model, variant);
+
+
+            // Disable button so there are no multi-posts
+            setEditingEnabled(false);
+            Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
+            // Write new post
+            writeNewPost(userId, name, year, price, regNum, kiloMeter, color, mobileNumber, insurance);
+
+            // Finish this Activity, back to the stream
+            setEditingEnabled(true);
+            finish();
+            // [END_EXCLUDE]
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-        // Write new post
-        writeNewPost(userId, name, year, price, regNum, kiloMeter, color, mobileNumber, insurance);
-
-        // Finish this Activity, back to the stream
-        setEditingEnabled(true);
-        finish();
-        // [END_EXCLUDE]
 
     }
 
@@ -279,12 +329,12 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
 
     // [START write_fan_out]
     private void writeNewPost(String userId, String name, String year, String price, String regNum, String km, String color, String mobile, String insurance) {
-        String key = mDatabase.child(type).push().getKey();
+
         Vehicle vehicle = new Vehicle(userId, name, engineTypeId, year, price, regNum, km, color, mobile, insurance);
         Map<String, Object> postValues = vehicle.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        Log.d(TAG, key);
         Log.d(TAG, postValues.toString());
+        String key = mDatabase.child(type).push().getKey();
         childUpdates.put("/" + type + "/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
