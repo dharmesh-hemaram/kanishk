@@ -22,7 +22,9 @@ import com.dhruv.techapps.module.GlideApp;
 import com.dhruv.techapps.viewholder.VehicleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,8 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 
 public abstract class VehicleListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -46,15 +48,18 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
     private FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     public VehicleListFragment() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_all_vehicles, container, false);
+        loadAd(rootView);
         setTypeFilter(rootView);
 
         // [START create_database_reference]
@@ -63,8 +68,17 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
 
         mRecycler = rootView.findViewById(R.id.messagesList);
         mRecycler.setHasFixedSize(true);
-
         return rootView;
+    }
+
+    private void loadAd(View rootView) {
+        /*mInterstitialAd = new InterstitialAd(getContext());
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());*/
+
+        mAdView = rootView.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void setTypeFilter(View rootView) {
@@ -105,37 +119,39 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
 
-        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Vehicle>()
-                .setQuery(postsQuery, Vehicle.class)
-                .build();
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Vehicle>().setQuery(postsQuery, Vehicle.class).build();
 
         mAdapter = new FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder>(options) {
 
             @Override
-            public VehicleViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            public VehicleViewHolder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 return new VehicleViewHolder(inflater.inflate(R.layout.item_vehicle, viewGroup, false));
             }
 
             @Override
+            @NotNull
             protected void onBindViewHolder(VehicleViewHolder viewHolder, int position, final Vehicle model) {
                 final DatabaseReference postRef = getRef(position);
 
 
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
-                FirebaseStorage.getInstance().getReference("images/" + postKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                    @Override
-                    public void onSuccess(ListResult listResult) {
-                        if (listResult.getItems().size() > 0) {
-                            GlideApp.with(getContext()).load(listResult.getItems().get(0)).into(viewHolder.imageView);
-                        }
+                FirebaseStorage.getInstance().getReference("images/" + postKey).listAll().addOnSuccessListener(listResult -> {
+                    if (listResult.getItems().size() > 0) {
+                        GlideApp.with(getContext()).load(listResult.getItems().get(0)).into(viewHolder.imageView);
                     }
                 });
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Launch PostDetailActivity
+                        /*if (mInterstitialAd.isLoaded()) {
+                            Log.d(TAG, "The interstitial loaded.");
+                            mInterstitialAd.show();
+                        } else {
+                            Log.d(TAG, "The interstitial wasn't loaded yet.");
+                            // Launch PostDetailActivity
+                        }*/
                         Intent intent = new Intent(getActivity(), VehicleDetailActivity.class);
                         intent.putExtra(VehicleDetailActivity.EXTRA_POST_KEY, postKey);
                         startActivity(intent);
@@ -150,12 +166,11 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
                 }*/
 
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(model, new View.OnClickListener() {
+                viewHolder.bindToPost(getResources(), model, new View.OnClickListener() {
                     @Override
                     public void onClick(View starView) {
                         // Need to write to both places the post is stored
                         DatabaseReference globalPostRef = mDatabase.child("cars").child(postRef.getKey());
-
                         // Run two transactions
                         onStarClicked(globalPostRef);
                     }

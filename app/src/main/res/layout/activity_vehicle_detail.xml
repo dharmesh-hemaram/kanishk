@@ -31,10 +31,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_baseline_edit_24"
-        android:visibility="gone"
-        app:tint="@android:color/white" />
+        android:visibility="gone" />
 
     <TableLayout
         android:id="@+id/carDetailLayout"

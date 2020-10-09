@@ -7,7 +7,9 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        style="@style/Widget.MaterialComponents.TabLayout.Colored"
+        android:layout_height="?actionBarSize"
+        android:minHeight="?actionBarSize" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/container"
@@ -22,10 +24,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:visibility="visible"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_baseline_add_24"
-        android:visibility="gone"
-        app:tint="@android:color/white" />
+        app:backgroundTint="@color/colorAccent" />
 
 </RelativeLayout>

@@ -24,21 +24,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.dhruv.techapps.adapter.TabAdapter;
 import com.dhruv.techapps.databinding.ActivityMainBinding;
 import com.dhruv.techapps.fragment.MyBidsFragment;
 import com.dhruv.techapps.fragment.RecentVehiclesFragment;
 import com.dhruv.techapps.fragment.UserDialogFragment;
 import com.dhruv.techapps.models.User;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.formats.NativeAdOptions;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -57,88 +51,46 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MobileAds.initialize(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        getSupportActionBar().setElevation(0);
+
+        MobileAds.initialize(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        // Create the adapter that will return a fragment for each section
-        FragmentPagerAdapter mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(),
-                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-            private final Fragment[] mFragments = new Fragment[]{
-                    new RecentVehiclesFragment(),
-                    new MyBidsFragment(),
-            };
-            private final String[] mFragmentNames = new String[]{
-                    getString(R.string.heading_recent), getString(R.string.heading_my_top_posts)
-            };
-
-            @Override
-            public Fragment getItem(int position) {
-                return mFragments[position];
-            }
-
-            @Override
-            public int getCount() {
-                return mFragments.length;
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return mFragmentNames[position];
-            }
-        };
-        // Set up the ViewPager with the sections adapter.
-        binding.container.setAdapter(mPagerAdapter);
+        TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
+        adapter.addFragment(new RecentVehiclesFragment(), "Recent");
+        adapter.addFragment(new MyBidsFragment(), "My Bids");
+        binding.container.setAdapter(adapter);
         binding.tabs.setupWithViewPager(binding.container);
-    }
-
-    private void loadAd(){
-        AdLoader adLoader = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/2247696110")
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        // Show the ad.
-                    }
-                })
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError adError) {
-                        // Handle the failure by logging, altering the UI, and so on.
-                    }
-                })
-                .withNativeAdOptions(new NativeAdOptions.Builder()
-                        // Methods in the NativeAdOptions.Builder class can be
-                        // used here to specify individual options settings.
-                        .build())
-                .build();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDatabase.getInstance().getReference().child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                if (user == null) {
-                    getUserInfo();
-                } else if (user.isAdmin) {
-                    binding.fabNewCar.setVisibility(View.VISIBLE);// Button launches NewPostActivity
-                    binding.fabNewCar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            startActivity(new Intent(MainActivity.this, NewVehicleActivity.class));
-                        }
-                    });
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String uid = firebaseUser.getUid();
+            FirebaseDatabase.getInstance().getReference().child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    if (user == null) {
+                        getUserInfo();
+                    } else if (user.isAdmin) {
+                        binding.fabNewCar.setVisibility(View.VISIBLE);// Button launches NewPostActivity
+                        binding.fabNewCar.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NewVehicleActivity.class)));
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else {
+            startActivity(new Intent(this, PhoneAuthActivity.class));
+            finish();
+        }
     }
 
     @Override
@@ -169,14 +121,20 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
     @Override
     public void onFinishEditDialog(String inputText) {
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        User user = new User();
-        user.username = inputText;
-        user.phone = mUser.getPhoneNumber();
-        Map<String, Object> postValues = user.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-        Log.d(TAG, childUpdates.toString());
-        childUpdates.put("/users/" + mUser.getUid(), postValues);
-        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
+        if (mUser != null) {
+            User user = new User();
+            user.username = inputText;
+            user.phone = mUser.getPhoneNumber();
+            Map<String, Object> postValues = user.toMap();
+            Map<String, Object> childUpdates = new HashMap<>();
+            Log.d(TAG, childUpdates.toString());
+            childUpdates.put("/users/" + mUser.getUid(), postValues);
+            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
+        } else {
+            startActivity(new Intent(this, PhoneAuthActivity.class));
+            finish();
+        }
+
     }
 
 }

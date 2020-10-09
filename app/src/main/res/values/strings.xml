@@ -1,15 +1,7 @@
 <resources>
     <string name="app_name">Kanishk</string>
     <string name="phone_title_text">DEAL OF WHEELS</string>
-    <string name="menu_login">Log in</string>
     <string name="menu_logout">Log out</string>
-    <string name="login_label">Log In</string>
-    <string name="email_label">Email</string>
-    <string name="password_label">Password</string>
-    <string name="send_text">Send</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec condimentum ante, quis mattis mi. Proin ut rhoncus libero, ac euismod neque. Ut suscipit, enim a facilisis consequat, orci lacus venenatis orci, at ultricies orci nulla sed ex. In condimentum viverra velit, eget feugiat libero imperdiet vel. Aenean pretium, lectus vitae bibendum bibendum, diam turpis convallis eros, quis tristique leo sapien at ipsum. Praesent eu odio id nulla lobortis auctor. Donec eget dolor eget nisl euismod commodo vel a lacus. Quisque ut justo vitae urna pharetra accumsan. Etiam dignissim neque iaculis mauris viverra, blandit rhoncus odio porttitor. Phasellus nibh arcu.</string>
-    <string name="title_sign_in">Welcome</string>
-    <string name="sign_up">Sign Up</string>
     <string name="hint_password">password</string>
     <string name="hint_email">email</string>
     <string name="sign_in">Sign In</string>
@@ -62,5 +54,8 @@
     <string name="save">Save</string>
 
     <string name="vehicle_name">%1$s \u25CF %2$s \u25CF %3$s</string>
+    <string name="km_string">KM: %1$s</string>
+    <string name="year_string">YEAR: %1$s</string>
     <string name="rupee_symbol">₹</string>
+    <string name="search">Search</string>
 </resources>

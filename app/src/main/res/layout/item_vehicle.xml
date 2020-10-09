@@ -13,7 +13,8 @@
 
         <TextView
             android:id="@+id/carName"
-            style="@style/Base.TextAppearance.AppCompat.Large"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/my_app_heading_color"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
@@ -47,7 +48,6 @@
             android:id="@+id/starLayout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:backgroundTint="@color/colorAccent"
             android:gravity="center_vertical"
             android:visibility="gone">
 

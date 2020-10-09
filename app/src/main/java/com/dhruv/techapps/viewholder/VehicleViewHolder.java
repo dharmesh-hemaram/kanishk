@@ -1,5 +1,6 @@
 package com.dhruv.techapps.viewholder;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,9 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhruv.techapps.R;
 import com.dhruv.techapps.models.Vehicle;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -35,7 +33,7 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder {
         imageView = itemView.findViewById(R.id.carImage);
     }
 
-    public void bindToPost(Vehicle vehicle, View.OnClickListener starClickListener) {
+    public void bindToPost(Resources resources, Vehicle vehicle, View.OnClickListener starClickListener) {
 
 
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -48,7 +46,7 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder {
         nameView.setText(vehicle.name);
         regView.setText(vehicle.reg.toUpperCase());
         priceView.setText(currencyFormat.format(vehicle.price));
-        kmView.setText("Km: " + decimalFormat.format(vehicle.km));
-        yearView.setText("Year: " + String.valueOf(vehicle.year));
+        kmView.setText(resources.getString(R.string.km_string, decimalFormat.format(vehicle.km)));
+        yearView.setText(resources.getString(R.string.year_string, Integer.toString(vehicle.year)));
     }
 }

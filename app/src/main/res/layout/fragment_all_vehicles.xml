@@ -1,42 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:viewBindingIgnore="true">
+    android:layout_height="wrap_content"
+    android:background="@color/my_app_background_color">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/vehicleFilter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_bottom">
 
-        <LinearLayout
-            android:id="@+id/vehicleFilter"
+        <Spinner
+            android:id="@+id/typeFilter"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/primary_rounded"
+            android:gravity="center_horizontal"
+            android:minWidth="100sp"
+            android:padding="10dp" />
+
+        <SearchView
+            android:id="@+id/nameFilter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp" />
+    </LinearLayout>
 
-            <Spinner
-                android:id="@+id/typeFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
 
-            <SearchView
-                android:id="@+id/nameFilter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp" />
-        </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/vehicleFilter"
+        android:clipToPadding="false"
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_vehicle" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/messagesList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/vehicleFilter"
-            android:clipToPadding="false"
-            android:padding="10dp"
-            android:scrollbars="vertical"
-            tools:listitem="@layout/item_vehicle" />
+</RelativeLayout>
 
-    </RelativeLayout>
-
-</FrameLayout>
