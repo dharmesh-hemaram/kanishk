@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.dhruv.techapps.adapter.TabAdapter;
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityMainBinding;
 import com.dhruv.techapps.fragment.MyBidsFragment;
 import com.dhruv.techapps.fragment.RecentVehiclesFragment;
@@ -53,7 +54,10 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        getSupportActionBar().setElevation(0);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setElevation(0);
+        }
+
 
         MobileAds.initialize(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -77,6 +81,7 @@ public class MainActivity extends BaseActivity implements UserDialogFragment.Edi
                     if (user == null) {
                         getUserInfo();
                     } else if (user.isAdmin) {
+                        DataHolder.getInstance().setIsAdmin(true);
                         binding.fabNewCar.setVisibility(View.VISIBLE);// Button launches NewPostActivity
                         binding.fabNewCar.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NewVehicleActivity.class)));
                     }

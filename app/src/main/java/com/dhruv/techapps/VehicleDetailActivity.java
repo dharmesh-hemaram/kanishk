@@ -1,7 +1,6 @@
 package com.dhruv.techapps;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.dhruv.techapps.adapter.BidAdapter;
 import com.dhruv.techapps.adapter.SliderAdapterExample;
 import com.dhruv.techapps.common.Common;
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityVehicleDetailBinding;
 import com.dhruv.techapps.models.Bid;
 import com.dhruv.techapps.models.User;
@@ -30,10 +30,11 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
     public static final String EXTRA_POST_KEY = "post_key";
     public static final String EXTRA_POST_TYPE = "post_type";
     private static final String TAG = "VehicleDetailActivity";
-    private DatabaseReference mCarReference;
+    private DatabaseReference mVehicleReference;
     private DatabaseReference mBiddingReference;
     private ValueEventListener mPostListener;
     private String mPostKey;
+    private String mPostType;
     private BidAdapter mAdapter;
     private ActivityVehicleDetailBinding binding;
     private SliderAdapterExample adapter;
@@ -47,17 +48,16 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
 
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        String mPostType = getIntent().getStringExtra(EXTRA_POST_TYPE);
+        mPostType = getIntent().getStringExtra(EXTRA_POST_TYPE);
         assert mPostType != null;
         String mPostBiddingType = mPostType.substring(0, mPostType.length() - 1) + "-bidding";
         if (null == mPostKey) {
             throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
         }
-        Log.d(TAG, mPostKey + "!!~" + mPostType);
 
         // Initialize Database
-        mCarReference = FirebaseDatabase.getInstance().getReference().child(mPostType).child(mPostKey);
-        mBiddingReference = FirebaseDatabase.getInstance().getReference().child(mPostBiddingType).child(mPostKey);
+        mVehicleReference = FirebaseDatabase.getInstance().getReference().child(mPostType.toLowerCase()).child(mPostKey);
+        mBiddingReference = FirebaseDatabase.getInstance().getReference().child(mPostBiddingType.toLowerCase()).child(mPostKey);
 
         binding.buttonCarBidding.setOnClickListener(this);
         binding.recyclerCarBids.setLayoutManager(new LinearLayoutManager(this));
@@ -68,9 +68,12 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
 
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
+
+        checkAdmin();
 
         // Add value event listener to the post
         // [START post_value_event_listener]
@@ -83,29 +86,18 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
                 if (vehicle != null) {
                     setTitle(vehicle.name);
                     // [START_EXCLUDE]
-                    binding.carPrice.setText(Common.formatCurrency(vehicle.price));
-                    binding.carYear.setText(String.valueOf(vehicle.year));
-                    binding.carRegistrationNumber.setText(vehicle.reg);
-                    binding.carKM.setText(Common.formatDecimal(vehicle.km));
-                    binding.carEngineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
-                    binding.carIns.setText(vehicle.ins);
-                    binding.carColor.setText(vehicle.color);
-
+                    binding.price.setText(Common.formatCurrency(vehicle.price));
+                    binding.year.setText(String.valueOf(vehicle.year));
+                    binding.regNum.setText(vehicle.reg);
+                    binding.km.setText(Common.formatDecimal(vehicle.km));
+                    binding.engineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
+                    binding.ins.setText(vehicle.ins);
+                    binding.color.setText(vehicle.color);
+                    binding.mobileNumber.setText(vehicle.mobile);
 
                     // [END_EXCLUDE]
 
-                    FirebaseStorage.getInstance().getReference("/images/" + mPostKey).listAll().addOnSuccessListener(listResult -> {
-                        if (listResult.getItems().size() > 0) {
-                            final long ONE_MEGABYTE = 1024 * 1024;
-                            for (int i = 0; i < listResult.getItems().size(); i++) {
-                                listResult.getItems().get(i).getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    Log.d(TAG, "here" + bitmap.toString());
-                                    adapter.addItem(bitmap);
-                                });
-                            }
-                        }
-                    });
+                    FirebaseStorage.getInstance().getReference("/images/" + mPostKey).listAll().addOnSuccessListener(listResult -> adapter.renewItems(listResult.getItems()));
                 }
 
             }
@@ -120,7 +112,7 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
                 // [END_EXCLUDE]
             }
         };
-        mCarReference.addValueEventListener(postListener);
+        mVehicleReference.addValueEventListener(postListener);
         // [END post_value_event_listener]
 
         // Keep copy of post listener so we can remove it when app stops
@@ -131,13 +123,21 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
         binding.recyclerCarBids.setAdapter(mAdapter);
     }
 
+    private void checkAdmin() {
+        if (DataHolder.getInstance().getIsAdmin()) {
+            binding.fabEdit.setVisibility(View.VISIBLE);
+            binding.mobileComponent.setVisibility(View.VISIBLE);
+            binding.fabEdit.setOnClickListener(this::onEditClick);
+        }
+    }
+
     @Override
     public void onStop() {
         super.onStop();
 
         // Remove post value event listener
         if (mPostListener != null) {
-            mCarReference.removeEventListener(mPostListener);
+            mVehicleReference.removeEventListener(mPostListener);
         }
         if (mAdapter != null) {
             // Clean up comments listener
@@ -209,6 +209,12 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
     }
 
 
+    private void onEditClick(View v) {
+        Intent intent = new Intent(this, NewVehicleActivity.class);
+        intent.putExtra(VehicleDetailActivity.EXTRA_POST_KEY, mPostKey);
+        intent.putExtra(VehicleDetailActivity.EXTRA_POST_TYPE, mPostType);
+        startActivity(intent);
+    }
 }
 
 

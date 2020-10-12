@@ -26,18 +26,28 @@
             android:minWidth="100sp" />
 
         <SearchView
-            android:id="@+id/nameFilter"
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp" />
     </LinearLayout>
 
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vehicleFilter"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/vehicleFilter"
+        android:layout_above="@id/adView"
+        android:layout_below="@+id/progressBar"
         android:clipToPadding="false"
         android:padding="10dp"
         android:scrollbars="vertical"

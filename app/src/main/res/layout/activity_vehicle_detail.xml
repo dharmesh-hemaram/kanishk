@@ -32,6 +32,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_edit_24"
+        app:backgroundTint="@color/colorAccent"
         android:visibility="gone" />
 
     <TableLayout
@@ -51,7 +52,7 @@
                 android:text="@string/price" />
 
             <TextView
-                android:id="@+id/carPrice"
+                android:id="@+id/price"
                 style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +71,7 @@
                 android:text="@string/year" />
 
             <TextView
-                android:id="@+id/carYear"
+                android:id="@+id/year"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,7 +89,7 @@
                 android:text="@string/regNum" />
 
             <TextView
-                android:id="@+id/carRegistrationNumber"
+                android:id="@+id/regNum"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,7 +108,7 @@
                 android:text="@string/kilo_meter" />
 
             <TextView
-                android:id="@+id/carKM"
+                android:id="@+id/km"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,7 +126,7 @@
                 android:text="@string/color" />
 
             <TextView
-                android:id="@+id/carColor"
+                android:id="@+id/color"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,7 +144,7 @@
                 android:text="@string/engine_type" />
 
             <TextView
-                android:id="@+id/carEngineType"
+                android:id="@+id/engineType"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -161,13 +162,33 @@
                 android:text="@string/insurance" />
 
             <TextView
-                android:id="@+id/carIns"
+                android:id="@+id/ins"
                 style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 tools:text="50,000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/mobileComponent"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mobile_number" />
+
+            <TextView
+                android:id="@+id/mobileNumber"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                tools:text="8983659998" />
         </TableRow>
     </TableLayout>
 

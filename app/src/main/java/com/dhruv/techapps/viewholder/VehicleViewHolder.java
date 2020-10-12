@@ -1,7 +1,6 @@
 package com.dhruv.techapps.viewholder;
 
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,8 +36,6 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder {
         nameView.setText(vehicle.name);
         regView.setText(vehicle.reg.toUpperCase());
         priceView.setText(Common.formatCurrency(vehicle.price));
-        Log.d(TAG, vehicle.km + "~~" + Common.formatDecimal(vehicle.km));
-
         kmView.setText(resources.getString(R.string.km_string, Common.formatDecimal(vehicle.km)));
         yearView.setText(resources.getString(R.string.year_string, Integer.toString(vehicle.year)));
     }

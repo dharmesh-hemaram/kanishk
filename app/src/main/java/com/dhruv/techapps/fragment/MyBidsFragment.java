@@ -1,10 +1,12 @@
 package com.dhruv.techapps.fragment;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 public class MyBidsFragment extends VehicleListFragment {
-
+    private static final String TAG = "MyBidsFragment";
     public MyBidsFragment() {
     }
 
@@ -18,5 +20,17 @@ public class MyBidsFragment extends VehicleListFragment {
         return databaseReference.child("cars").child(myUserId)
                 .orderByChild("starCount");
         // [END my_top_posts_query]
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.d(TAG, query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        Log.d(TAG, query);
+        return false;
     }
 }

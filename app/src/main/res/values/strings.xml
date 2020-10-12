@@ -16,6 +16,7 @@
     <string name="status_sign_in_failed">Sign-in failed</string>
     <string name="instant_validation">(instant validation)</string>
     <string name="username">Username</string>
+    <string name="dot">\u25CF</string>
     <string name="vehicle_name">%1$s \u25CF %2$s \u25CF %3$s</string>
     <string name="km_string">KM: %1$s</string>
     <string name="year_string">Y: %1$s</string>

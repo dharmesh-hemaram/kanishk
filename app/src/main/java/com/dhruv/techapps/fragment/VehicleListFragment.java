@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import com.dhruv.techapps.R;
 import com.dhruv.techapps.VehicleDetailActivity;
 import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.models.Vehicle;
+import com.dhruv.techapps.module.GlideApp;
 import com.dhruv.techapps.viewholder.VehicleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -33,13 +36,15 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.annotations.NotNull;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Objects;
 
-public abstract class VehicleListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public abstract class VehicleListFragment extends Fragment implements AdapterView.OnItemSelectedListener, SearchView.OnQueryTextListener {
 
     private static final String TAG = "VehicleListFragment";
-    protected String type = Common.TYPES[0].toLowerCase();
+    protected String type = Common.TYPES[0];
+    protected String query;
     // [END define_database_reference]
     // [START define_database_reference]
     private DatabaseReference mDatabase;
@@ -47,6 +52,7 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
 
     private FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder> mAdapter;
     private RecyclerView mRecycler;
+    private ProgressBar mProgressBar;
 
     public VehicleListFragment() {
     }
@@ -59,10 +65,11 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
         loadAd(rootView);
         setTypeFilter(rootView);
 
+        ((SearchView) rootView.findViewById(R.id.search)).setOnQueryTextListener(this);
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
-
+        mProgressBar = rootView.findViewById(R.id.progressBar);
         mRecycler = rootView.findViewById(R.id.messagesList);
         mRecycler.setHasFixedSize(true);
         return rootView;
@@ -87,7 +94,7 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
     //Performing action onItemSelected and onNothing selected
     @Override
     public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-        type = Common.TYPES[position].toLowerCase();
+        type = Common.TYPES[position];
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
 
@@ -117,9 +124,19 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
 
         mAdapter = new FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder>(options) {
 
+            @Override
+            public void onDataChanged() {
+                if (mProgressBar != null) {
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            }
+
             @NonNull
             @Override
             public VehicleViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup viewGroup, int i) {
+                if (mProgressBar != null) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 return new VehicleViewHolder(inflater.inflate(R.layout.item_vehicle, viewGroup, false));
             }
@@ -132,19 +149,12 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
 
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
-                /*FirebaseStorage.getInstance().getReference("images/" + postKey).listAll().addOnSuccessListener(listResult -> {
+                FirebaseStorage.getInstance().getReference("images/" + postKey).listAll().addOnSuccessListener(listResult -> {
                     if (listResult.getItems().size() > 0) {
-                        GlideApp.with(getContext()).load(listResult.getItems().get(0)).into(viewHolder.imageView);
+                        GlideApp.with(Objects.requireNonNull(getContext())).load(listResult.getItems().get(0)).into(viewHolder.imageView);
                     }
-                });*/
+                });
                 viewHolder.itemView.setOnClickListener(v -> {
-                    /*if (mInterstitialAd.isLoaded()) {
-                        Log.d(TAG, "The interstitial loaded.");
-                        mInterstitialAd.show();
-                    } else {
-                        Log.d(TAG, "The interstitial wasn't loaded yet.");
-                        // Launch PostDetailActivity
-                    }*/
                     Intent intent = new Intent(getActivity(), VehicleDetailActivity.class);
                     intent.putExtra(VehicleDetailActivity.EXTRA_POST_KEY, postKey);
                     intent.putExtra(VehicleDetailActivity.EXTRA_POST_TYPE, type);

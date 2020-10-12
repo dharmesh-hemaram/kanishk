@@ -13,9 +13,19 @@ public class DataHolder {
     private List<Brand> truckBrands;
     private List<Brand> tempoBrands;
     private List<Brand> bikeBrands;
+    private boolean isAdmin = false;
+
 
     public static DataHolder getInstance() {
         return holder;
+    }
+
+    public boolean getIsAdmin() {
+        return this.isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public List<Brand> getCarBrands() {

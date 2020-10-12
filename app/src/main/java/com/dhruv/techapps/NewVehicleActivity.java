@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.dhruv.techapps.adapter.ImageViewAdapter;
@@ -19,8 +20,11 @@ import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityNewVehicleBinding;
 import com.dhruv.techapps.models.Brand;
 import com.dhruv.techapps.models.Vehicle;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -32,14 +36,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.dhruv.techapps.VehicleDetailActivity.EXTRA_POST_KEY;
+import static com.dhruv.techapps.VehicleDetailActivity.EXTRA_POST_TYPE;
+
 public class NewVehicleActivity extends BaseActivity {
 
     private static final String TAG = "NewVehicleActivity";
     private static final String REQUIRED = "Required";
     private static final String INVALID = "Invalid";
-    // [START declare_database_ref]
-    private DatabaseReference mDatabase;
-    private StorageReference mStorage;
     private ActivityNewVehicleBinding binding;
     private int brandId = 0;
     private int modelId = 0;
@@ -49,16 +53,19 @@ public class NewVehicleActivity extends BaseActivity {
     private ImageViewAdapter imageViewAdapter;
     private DataHolder dataHolder = DataHolder.getInstance();
 
+    private String mPostKey;
+    private String mPostType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNewVehicleBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // [START initialize_database_ref]
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mStorage = FirebaseStorage.getInstance().getReference("images/");
-        // [END initialize_database_ref]
+        // Get post key from intent
+        mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
+        mPostType = getIntent().getStringExtra(EXTRA_POST_TYPE);
+
 
         binding.fabSubmitPost.setOnClickListener(v -> submitPost());
         binding.fieldImageSelect.setOnClickListener(v -> {
@@ -76,6 +83,63 @@ public class NewVehicleActivity extends BaseActivity {
         setVariants();
         setEngineTypes();
         setNumberFormatter();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkPost();
+        checkPostType();
+    }
+
+    private void checkPost() {
+        if (mPostKey != null) {
+            DatabaseReference mVehicleReference = FirebaseDatabase.getInstance().getReference().child(mPostType.toLowerCase()).child(mPostKey);
+            mVehicleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    Vehicle vehicle = dataSnapshot.getValue(Vehicle.class);
+
+                    if (vehicle != null) {
+
+                        String[] names = vehicle.name.split(getResources().getString(R.string.dot));
+                        // [START_EXCLUDE]
+                        binding.fieldBrand.setText(names[0]);
+                        binding.fieldModel.setText(names[1]);
+                        binding.fieldVariant.setText(names[2]);
+                        Objects.requireNonNull(binding.fieldPrice.getEditText()).setText(Common.formatCurrency(vehicle.price));
+                        Objects.requireNonNull(binding.fieldYear.getEditText()).setText(String.valueOf(vehicle.year));
+                        Objects.requireNonNull(binding.fieldRegistrationNumber.getEditText()).setText(vehicle.reg);
+                        Objects.requireNonNull(binding.fieldKiloMeter.getEditText()).setText(Common.formatDecimal(vehicle.km));
+                        binding.fieldEngineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
+                        Objects.requireNonNull(binding.fieldInsurance.getEditText()).setText(vehicle.ins);
+                        Objects.requireNonNull(binding.fieldColor.getEditText()).setText(vehicle.color);
+                        Objects.requireNonNull(binding.fieldMobileNumber.getEditText()).setText(vehicle.mobile);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    private void checkPostType() {
+        if (mPostType != null) {
+            binding.fieldType.setText(mPostType);
+            int position = Arrays.asList(Common.TYPES).indexOf(mPostType);
+            if (position != -1) {
+                binding.fieldType.setEnabled(false);
+                binding.fieldTypeLayout.setEnabled(false);
+                type = Common.TYPES[position].toLowerCase();
+                brands = Common.getBrands(position, dataHolder);
+                binding.fieldBrand.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, dataHolder.getBrands(brands)));
+            }
+        }
     }
 
     @Override
@@ -202,7 +266,7 @@ public class NewVehicleActivity extends BaseActivity {
             final String mobileNumber = Objects.requireNonNull(binding.fieldMobileNumber.getEditText()).getText().toString();
 
 
-            if (imageViewAdapter == null) {
+            if (imageViewAdapter == null && mPostKey == null) {
                 binding.fieldImageSelect.requestFocus();
                 Toast.makeText(this, "Please select images...", Toast.LENGTH_SHORT).show();
                 return;
@@ -299,21 +363,30 @@ public class NewVehicleActivity extends BaseActivity {
         Vehicle vehicle = new Vehicle(userId, name, engineTypeId, year, price, regNum, km, color, mobile, insurance);
         Map<String, Object> postValues = vehicle.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        String key = mDatabase.child(type).push().getKey();
-        childUpdates.put("/" + type + "/" + key, postValues);
+        // [START initialize_database_ref]
+        // [START declare_database_ref]
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        StorageReference mStorage = FirebaseStorage.getInstance().getReference("images/");
+        // [END initialize_database_ref]
+        if (mPostKey == null) {
+            mPostKey = mDatabase.child(type).push().getKey();
+        }
+        childUpdates.put("/" + type + "/" + mPostKey, postValues);
 
         mDatabase.updateChildren(childUpdates);
-
-        if (imageViewAdapter.uri != null) {
-            Uri uri = imageViewAdapter.uri;
-            mStorage.child(key + "/" + uri.getLastPathSegment()).putFile(uri);
-        } else {
-            ClipData clipData = imageViewAdapter.clipData;
-            for (int index = 0; index < clipData.getItemCount(); index++) {
-                Uri uri = clipData.getItemAt(index).getUri();
-                mStorage.child(key + "/" + uri.getLastPathSegment()).putFile(uri);
+        if (imageViewAdapter != null) {
+            if (imageViewAdapter.uri != null) {
+                Uri uri = imageViewAdapter.uri;
+                mStorage.child(mPostKey + "/" + uri.getLastPathSegment()).putFile(uri);
+            } else {
+                ClipData clipData = imageViewAdapter.clipData;
+                for (int index = 0; index < clipData.getItemCount(); index++) {
+                    Uri uri = clipData.getItemAt(index).getUri();
+                    mStorage.child(mPostKey + "/" + uri.getLastPathSegment()).putFile(uri);
+                }
             }
         }
+
 
     }
 }

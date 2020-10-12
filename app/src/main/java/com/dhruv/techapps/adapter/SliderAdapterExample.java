@@ -1,58 +1,63 @@
 package com.dhruv.techapps.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.dhruv.techapps.R;
+import com.dhruv.techapps.module.GlideApp;
+import com.google.firebase.storage.StorageReference;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample.SliderAdapterVH> {
 
     private Context context;
-    private List<Bitmap> mSliderItems = new ArrayList<>();
+    private List<StorageReference> mSliderItems = new ArrayList<>();
 
     public SliderAdapterExample(Context context) {
         this.context = context;
     }
 
 
-    public void renewItems(List<Bitmap> sliderItems) {
+    public void renewItems(List<StorageReference> sliderItems) {
         this.mSliderItems = sliderItems;
         notifyDataSetChanged();
     }
+
+    public void deleteItems() {
+        this.mSliderItems.clear();
+    }
+
 
     public void deleteItem(int position) {
         this.mSliderItems.remove(position);
         notifyDataSetChanged();
     }
 
-    public void addItem(Bitmap sliderItem) {
+    public void addItem(StorageReference sliderItem) {
         this.mSliderItems.add(sliderItem);
         notifyDataSetChanged();
     }
 
     @Override
     public SliderAdapterVH onCreateViewHolder(ViewGroup parent) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_slider_layout_item, null);
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_slider_layout_item, parent, false);
         return new SliderAdapterVH(inflate);
     }
 
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, final int position) {
 
-        Bitmap uri = mSliderItems.get(position);
-        Glide.with(viewHolder.itemView)
-                .load(uri)
+        StorageReference ref = mSliderItems.get(position);
+        GlideApp.with(Objects.requireNonNull(context))
+                .load(ref)
                 .centerCrop()
-                //.placeholder(R.drawable.loading_spinner)
                 .into(viewHolder.imageViewBackground);
     }
 
@@ -62,7 +67,7 @@ public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample
         return mSliderItems.size();
     }
 
-    class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
+    static class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
 
         View itemView;
         ImageView imageViewBackground;
