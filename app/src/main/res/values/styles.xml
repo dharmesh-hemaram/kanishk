@@ -21,7 +21,6 @@
         <item name="colorOnBackground">@color/my_app_color_on_background</item>
         <item name="colorOnError">@color/my_app_color_on_error</item>
         <item name="colorOnSurface">@color/my_app_color_on_surface</item>
-        <item name="scrimBackground">@color/mtrl_scrim_color</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1
         </item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2
@@ -49,8 +48,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
