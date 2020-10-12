@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Common {
 
@@ -15,28 +16,38 @@ public class Common {
     public final static String[] ENGINE_TYPES = {"Petrol", "Diesel", "CNG"};
     private static final String TAG = "Common";
 
-    public final static String formatCurrency(String currency) {
+    public static String formatCurrency(String currency) {
         Log.d(TAG, currency);
         double parsed = Double.parseDouble(currency + "00");
-        Log.d(TAG, currency + "00");
+        Log.d(TAG, currency);
         return NumberFormat.getCurrencyInstance(new Locale("en", "in")).format((parsed / 100));
     }
 
-    public final static String removeCurrencyFormatter(String currency) throws ParseException {
-        Log.d(TAG, currency);
-        return NumberFormat.getCurrencyInstance(new Locale("en", "in")).parse(currency).toString();
+    public static String formatCurrency(double parsed) {
+        Log.d(TAG, parsed + "");
+        return NumberFormat.getCurrencyInstance(new Locale("en", "in")).format(parsed);
     }
 
-    public final static String formatDecimal(String number) {
+    public static String removeCurrencyFormatter(String currency) throws ParseException {
+        Log.d(TAG, currency);
+        return Objects.requireNonNull(NumberFormat.getCurrencyInstance(new Locale("en", "in")).parse(currency)).toString();
+    }
+
+    public static String formatDecimal(String number) {
         Log.d(TAG, number);
         double parsed = Double.parseDouble(number + "00");
-        Log.d(TAG, number);
+        Log.d(TAG, parsed + "");
         return NumberFormat.getInstance(new Locale("en", "in")).format((parsed / 100));
     }
 
-    public final static String removeDecimalFormatter(String currency) throws ParseException {
-        Log.d(TAG, currency);
-        return NumberFormat.getInstance(new Locale("en", "in")).parse(currency).toString();
+    public static String formatDecimal(double parsed) {
+        Log.d(TAG, parsed + "");
+        return NumberFormat.getInstance(new Locale("en", "in")).format(parsed);
+    }
+
+    public static String removeDecimalFormatter(String number) throws ParseException {
+        Log.d(TAG, number);
+        return Objects.requireNonNull(NumberFormat.getInstance(new Locale("en", "in")).parse(number)).toString();
     }
 
     public static List<Brand> getBrands(int typeId, DataHolder dataHolder) {

@@ -10,40 +10,40 @@
     <TextView
         android:id="@+id/carPrice"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
         tools:text="$ 1,00,00" />
 
     <TextView
         android:id="@+id/carYear"
         style="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/my_app_para_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
+        android:textColor="@color/my_app_para_color"
         tools:text="2019" />
 
     <TextView
         android:id="@+id/carRegistrationNumber"
         style="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/my_app_para_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:textColor="@color/my_app_para_color"
         tools:text="MH12ND3109" />
 
     <TextView
         android:id="@+id/carKM"
         style="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/my_app_para_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:textColor="@color/my_app_para_color"
         tools:text="50,000" />
 
 </LinearLayout>

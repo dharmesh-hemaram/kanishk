@@ -18,7 +18,7 @@ public class APIClient {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
         // add logging as last interceptor
-        client.addInterceptor(logging);  // <-- this is the important line!
+        // client.addInterceptor(logging);  // <-- this is the important line!
 
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://raw.githubusercontent.com")

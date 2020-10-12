@@ -14,128 +14,248 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:text="Select Images" />
+            android:layout_marginBottom="5dp"
+            android:background="@color/colorPrimary"
+            android:text="@string/select_images"
+            android:textColor="@android:color/white" />
 
-        <Spinner
-            android:id="@+id/fieldType"
+        <LinearLayout
+            android:id="@+id/fieldBrandContainer"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/fieldImageSelect" />
+            android:layout_below="@+id/fieldImageSelect"
+            android:layout_marginBottom="5dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/fieldBrand"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/test"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:hint="@string/type">
+
+                <AutoCompleteTextView
+                    android:id="@+id/fieldType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="@string/brand">
+
+                <AutoCompleteTextView
+                    android:id="@+id/fieldBrand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fieldModelContainer"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/fieldType" />
+            android:layout_below="@+id/fieldBrandContainer"
+            android:layout_marginBottom="5dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/fieldModel"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:hint="@string/model">
+
+                <AutoCompleteTextView
+                    android:id="@+id/fieldModel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="@string/variant">
+
+                <AutoCompleteTextView
+                    android:id="@+id/fieldVariant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fieldPriceContainer"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/fieldBrand"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_below="@+id/fieldModelContainer"
+            android:layout_marginBottom="5dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/fieldModelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldModel"
-            android:autofillHints="Model"
-            android:hint="Model"
-            android:inputType="text|textCapSentences"
-            android:visibility="gone" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fieldPrice"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:hint="@string/price">
 
-        <Spinner
-            android:id="@+id/fieldVariant"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@+id/fieldModelText" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/fieldVariantText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldVariant"
-            android:autofillHints="Variant"
-            android:hint="Variant"
-            android:inputType="text|textCapSentences"
-            android:visibility="gone" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fieldYear"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="@string/year">
 
-        <EditText
-            android:id="@+id/fieldPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldVariantText"
-            android:autofillHints="Base Price"
-            android:hint="Price"
-            android:inputType="numberDecimal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/fieldYear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldPrice"
-            android:autofillHints="Year"
-            android:hint="2020"
-            android:inputType="number"
-            android:maxLength="4" />
-
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fieldRegistrationNumber"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldYear"
-            android:autofillHints="Registration Number"
-            android:hint="MH12ND3109"
-            android:inputType="textCapCharacters"
-            tools:ignore="TextFields" />
+            android:layout_below="@+id/fieldPriceContainer"
+            android:layout_marginBottom="5dp"
+            android:hint="@string/regNum">
 
-        <EditText
-            android:id="@+id/fieldKiloMeter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldRegistrationNumber"
-            android:autofillHints="Kilo Meter"
-            android:hint="Kilo Meter"
-            android:inputType="number" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapCharacters" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/fieldInsurance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldKiloMeter"
-            android:autofillHints="Insurance"
-            android:hint="Insurance"
-            android:inputType="text|textCapSentences" />
-
-        <EditText
-            android:id="@+id/fieldColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldInsurance"
-            android:autofillHints="Color"
-            android:hint="Color"
-            android:inputType="text|textCapSentences" />
-
-        <Spinner
-            android:id="@+id/fieldEngineType"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fieldEngineTypeContainer"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/fieldColor" />
+            android:layout_below="@+id/fieldRegistrationNumber"
+            android:layout_marginBottom="5dp"
+            android:hint="@string/engine_type">
 
-        <EditText
-            android:id="@+id/fieldMobileNumber"
+            <AutoCompleteTextView
+                android:id="@+id/fieldEngineType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/fieldKMContainer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/fieldEngineTypeContainer"
+            android:layout_marginBottom="5dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fieldKiloMeter"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:hint="@string/kilo_meter">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fieldInsurance"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="@string/insurance">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text|textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fieldColor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/fieldEngineType"
-            android:autofillHints="Mobile Number"
-            android:hint="Mobile Number"
-            android:inputType="number"
-            android:maxLength="10" />
+            android:layout_below="@+id/fieldKMContainer"
+            android:layout_marginBottom="5dp"
+            android:hint="@string/color">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fieldMobileNumber"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fieldColor"
+            android:layout_marginBottom="5dp"
+            android:hint="@string/mobile_number">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="10" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fieldImages"

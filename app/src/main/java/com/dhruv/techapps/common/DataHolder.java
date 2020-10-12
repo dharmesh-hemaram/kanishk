@@ -72,26 +72,20 @@ public class DataHolder {
 
     public String[] getModels(List<Brand> brands, int brandId) {
         if (brands == null || brands.get(brandId).models == null) {
-            return new String[]{"~~TYPE MODEL~~"};
+            return null;
         }
         List<Model> models = brands.get(brandId).models;
-        String[] arr = new String[models.size() + 1];
+        String[] arr = new String[models.size()];
         // ArrayList to Array Conversion
         for (int i = 0; i < models.size(); i++)
             arr[i] = models.get(i).name;
-        arr[arr.length - 1] = "~~TYPE MODEL~~";
         return arr;
     }
 
     public String[] getVariants(List<Brand> brands, int brandId, int modelId) {
         if (brands == null || brands.get(brandId).models == null || brands.get(brandId).models.get(modelId) == null || brands.get(brandId).models.get(modelId).variants == null) {
-            return new String[]{"~~TYPE VARIANT~~"};
+            return null;
         }
-        String[] variants = brands.get(brandId).models.get(modelId).variants;
-        String[] arr = new String[variants.length + 1];
-        for (int i = 0; i < variants.length; i++)
-            arr[i] = variants[i];
-        arr[arr.length - 1] = "~~TYPE VARIANT~~";
-        return arr;
+        return brands.get(brandId).models.get(modelId).variants;
     }
 }

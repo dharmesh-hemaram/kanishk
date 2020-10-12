@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,29 +25,28 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class NewVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, View.OnFocusChangeListener {
+public class NewVehicleActivity extends BaseActivity {
 
     private static final String TAG = "NewVehicleActivity";
     private static final String REQUIRED = "Required";
+    private static final String INVALID = "Invalid";
     // [START declare_database_ref]
     private DatabaseReference mDatabase;
     private StorageReference mStorage;
     private ActivityNewVehicleBinding binding;
     private int brandId = 0;
-    private String brand;
-    private String model;
-    private String variant;
     private int modelId = 0;
-    private int variantId = 0;
     private int engineTypeId = 0;
     private String type;
     private List<Brand> brands;
     private ImageViewAdapter imageViewAdapter;
-
     private DataHolder dataHolder = DataHolder.getInstance();
 
     @Override
@@ -63,23 +60,21 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
         mStorage = FirebaseStorage.getInstance().getReference("images/");
         // [END initialize_database_ref]
 
-        binding.fabSubmitPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitPost();
-            }
-        });
-        binding.fieldImageSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
+        binding.fabSubmitPost.setOnClickListener(v -> submitPost());
+        binding.fieldImageSelect.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
             }
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
         });
-        setSpinner();
+        setTypes();
+        setBrands();
+        setModels();
+        setVariants();
+        setEngineTypes();
         setNumberFormatter();
     }
 
@@ -89,13 +84,11 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data.getClipData() != null) {
-                    Log.d(TAG, "getClipData");
                     imageViewAdapter = new ImageViewAdapter(data.getClipData(), getContentResolver());
                     binding.fieldImages.setLayoutManager(new GridLayoutManager(this, 3));
                     binding.fieldImages.setAdapter(imageViewAdapter); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
 
                 } else if (data.getData() != null) {
-                    Log.d(TAG, "getData");
                     imageViewAdapter = new ImageViewAdapter(data.getData(), getContentResolver());
                     binding.fieldImages.setLayoutManager(new GridLayoutManager(this, 1));
                     binding.fieldImages.setAdapter(imageViewAdapter); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
@@ -104,194 +97,166 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
         }
     }
 
-    //Performing action onItemSelected and onNothing selected
-    @Override
-    public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-        Log.d(TAG, parentView.getId() + "~" + position);
-        switch (parentView.getId()) {
-            case R.id.fieldType:
-                type = Common.TYPES[position].toLowerCase();
-                brands = Common.getBrands(position, dataHolder);
-                brand = "";
-                model = "";
-                variant = "";
-                ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataHolder.getBrands(brands));
-                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                binding.fieldBrand.setAdapter(aa);
-                break;
-            case R.id.fieldBrand:
-                brandId = position;
-                brand = brands.get(position).name;
-                String[] models = dataHolder.getModels(brands, brandId);
-                model = "";
-                variant = "";
-                if (models.length == 1) {
-                    binding.fieldModelText.setVisibility(View.VISIBLE);
-                    binding.fieldVariantText.setVisibility(View.VISIBLE);
-                    binding.fieldModel.setVisibility(View.GONE);
-                    binding.fieldVariant.setVisibility(View.GONE);
-                } else {
-                    binding.fieldModelText.setVisibility(View.GONE);
-                    binding.fieldVariantText.setVisibility(View.GONE);
-                    binding.fieldModel.setVisibility(View.VISIBLE);
-                    binding.fieldVariant.setVisibility(View.VISIBLE);
-                    aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataHolder.getModels(brands, brandId));
-                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    binding.fieldModel.setAdapter(aa);
-                }
-                break;
-            case R.id.fieldModel:
-                modelId = position;
-                variant = "";
-                if (modelId + 1 == binding.fieldModel.getAdapter().getCount()) {
-                    binding.fieldModelText.setVisibility(View.VISIBLE);
-                    binding.fieldVariantText.setVisibility(View.VISIBLE);
-                    binding.fieldVariant.setVisibility(View.GONE);
-                    binding.fieldModelText.requestFocus();
-                } else {
-                    model = brands.get(brandId).models.get(position).name;
-                    binding.fieldVariant.setVisibility(View.VISIBLE);
-                    binding.fieldModelText.setVisibility(View.GONE);
-                    aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, dataHolder.getVariants(brands, brandId, modelId));
-                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    binding.fieldVariant.setAdapter(aa);
-                }
-                break;
-            case R.id.fieldVariant:
-                variantId = position;
-                if (variantId + 1 == binding.fieldVariant.getAdapter().getCount()) {
-                    binding.fieldVariantText.setVisibility(View.VISIBLE);
-                    binding.fieldVariantText.requestFocus();
-                } else {
-                    variant = brands.get(brandId).models.get(modelId).variants[position];
-                    binding.fieldVariantText.setVisibility(View.GONE);
-                }
-                break;
-            case R.id.fieldEngineType:
-                engineTypeId = position;
-                break;
-            default:
-                Log.e(TAG, String.valueOf(parentView.getId()));
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        try {
-            if (v.getId() == binding.fieldPrice.getId()) {
-                EditText editText = (EditText) v;
-                String value = editText.getText().toString();
-                if (!value.isEmpty()) {
-                    if (hasFocus) {
+    private void setNumberFormatter() {
+        Objects.requireNonNull(binding.fieldPrice.getEditText()).setOnFocusChangeListener((v, hasFocus) -> {
+            EditText editText = (EditText) v;
+            String value = editText.getText().toString();
+            if (!value.isEmpty()) {
+                if (hasFocus) {
+                    try {
                         String cleanString = Common.removeCurrencyFormatter(value);
                         editText.setText(cleanString);
-                    } else {
-                        String formatted = Common.formatCurrency(value);
-                        editText.setText(formatted);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                }
-            } else if (v.getId() == binding.fieldKiloMeter.getId()) {
-                EditText editText = (EditText) v;
-                String value = editText.getText().toString();
-                if (!value.isEmpty()) {
-                    if (hasFocus) {
-                        String cleanString = Common.removeDecimalFormatter(value);
-                        editText.setText(cleanString);
-                    } else {
-                        String formatted = Common.formatDecimal(value);
-                        editText.setText(formatted);
-                    }
+                } else {
+                    String formatted = Common.formatCurrency(value);
+                    editText.setText(formatted);
                 }
             }
-        } catch (ParseException e) {
-            Log.e(TAG, e.getMessage());
-        }
+        });
+        Objects.requireNonNull(binding.fieldKiloMeter.getEditText()).setOnFocusChangeListener((v, hasFocus) -> {
+            EditText editText = (EditText) v;
+            String value = editText.getText().toString();
+            if (!value.isEmpty()) {
+                if (hasFocus) {
+                    try {
+                        String cleanString = Common.removeDecimalFormatter(value);
+                        editText.setText(cleanString);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String formatted = Common.formatDecimal(value);
+                    editText.setText(formatted);
+                }
+            }
+        });
     }
 
-    private void setNumberFormatter() {
-        binding.fieldPrice.setOnFocusChangeListener(this);
-        binding.fieldKiloMeter.setOnFocusChangeListener(this);
+    private void setTypes() {
+        binding.fieldType.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, Common.TYPES));
+        binding.fieldType.setOnItemClickListener((parent, view, position, id) -> {
+            type = Common.TYPES[position].toLowerCase();
+            brands = Common.getBrands(position, dataHolder);
+            binding.fieldBrand.setText("");
+            binding.fieldModel.setText("");
+            binding.fieldVariant.setText("");
+            binding.fieldBrand.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, dataHolder.getBrands(brands)));
+        });
     }
 
-    private void setSpinner() {
-        binding.fieldType.setOnItemSelectedListener(this);
-        binding.fieldEngineType.setOnItemSelectedListener(this);
-        binding.fieldBrand.setOnItemSelectedListener(this);
-        binding.fieldVariant.setOnItemSelectedListener(this);
-        binding.fieldModel.setOnItemSelectedListener(this);
+    private void setBrands() {
+        binding.fieldBrand.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, new ArrayList<>()));
+        binding.fieldBrand.setOnItemClickListener((parent, view, position, id) -> {
+            brandId = position;
+            String[] models = dataHolder.getModels(brands, position);
+            binding.fieldModel.setText("");
+            binding.fieldVariant.setText("");
+            if (models != null && models.length > 0) {
+                binding.fieldModel.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, models));
+            } else {
+                binding.fieldModel.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, new ArrayList<>()));
+            }
+            binding.fieldVariant.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, new ArrayList<>()));
+        });
+    }
 
-        Log.d(TAG, Common.TYPES.toString());
-        //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Common.TYPES);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        binding.fieldType.setAdapter(aa);
+    private void setModels() {
+        binding.fieldModel.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, new ArrayList<>()));
+        binding.fieldModel.setOnItemClickListener((parent, view, position, id) -> {
+            binding.fieldVariant.setText("");
+            String[] variants = dataHolder.getVariants(brands, brandId, modelId);
+            if (variants != null && variants.length > 0) {
+                binding.fieldVariant.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, variants));
+            } else {
+                binding.fieldVariant.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, new ArrayList<>()));
+            }
+        });
+    }
 
-        aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Common.ENGINE_TYPES);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        binding.fieldEngineType.setAdapter(aa);
+    private void setVariants() {
+        binding.fieldVariant.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, new ArrayList<>()));
+    }
+
+    private void setEngineTypes() {
+        binding.fieldEngineType.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, Common.ENGINE_TYPES));
+        binding.fieldEngineType.setOnItemClickListener((parent, view, position, id) -> engineTypeId = position);
     }
 
     private void submitPost() {
         try {
-            final String year = binding.fieldYear.getText().toString();
-            final String regNum = binding.fieldRegistrationNumber.getText().toString();
-            final String price = Common.removeCurrencyFormatter(binding.fieldPrice.getText().toString());
-            final String insurance = binding.fieldInsurance.getText().toString();
-            final String kiloMeter = Common.removeDecimalFormatter(binding.fieldKiloMeter.getText().toString());
-            final String color = binding.fieldColor.getText().toString();
-            final String mobileNumber = binding.fieldMobileNumber.getText().toString();
-            final String modelText = binding.fieldModelText.getText().toString();
-            final String variantText = binding.fieldVariantText.getText().toString();
+            final String type = binding.fieldType.getText().toString();
+            final String brand = binding.fieldBrand.getText().toString();
+            final String model = binding.fieldModel.getText().toString();
+            final String variant = binding.fieldVariant.getText().toString();
+            final String engineType = binding.fieldEngineType.getText().toString();
+
+
+            final String year = Objects.requireNonNull(binding.fieldYear.getEditText()).getText().toString();
+            final String regNum = Objects.requireNonNull(binding.fieldRegistrationNumber.getEditText()).getText().toString();
+            final String insurance = Objects.requireNonNull(binding.fieldInsurance.getEditText()).getText().toString();
+            final String price = Objects.requireNonNull(binding.fieldPrice.getEditText()).getText().toString();
+            final String kiloMeter = Objects.requireNonNull(binding.fieldKiloMeter.getEditText()).getText().toString();
+            final String color = Objects.requireNonNull(binding.fieldColor.getEditText()).getText().toString();
+            final String mobileNumber = Objects.requireNonNull(binding.fieldMobileNumber.getEditText()).getText().toString();
+
 
             if (imageViewAdapter == null) {
+                binding.fieldImageSelect.requestFocus();
                 Toast.makeText(this, "Please select images...", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             boolean isError = false;
 
+            if (TextUtils.isEmpty(type)) {
+                binding.fieldType.setError(REQUIRED);
+                binding.fieldType.requestFocus();
+                isError = true;
+            } else if (!Arrays.asList(Common.TYPES).contains(type)) {
+                binding.fieldType.setError("Not supported type");
+                binding.fieldType.requestFocus();
+                isError = true;
+            }
+
             if (TextUtils.isEmpty(price)) {
                 binding.fieldPrice.setError(REQUIRED);
+                binding.fieldPrice.requestFocus();
                 isError = true;
             }
 
             if (TextUtils.isEmpty(year)) {
                 binding.fieldYear.setError(REQUIRED);
+                binding.fieldYear.requestFocus();
                 isError = true;
             }
 
             if (TextUtils.isEmpty(regNum)) {
                 binding.fieldRegistrationNumber.setError(REQUIRED);
+                binding.fieldRegistrationNumber.requestFocus();
                 isError = true;
             }
 
-
-            // [START single_value_read]
-            final String userId = getUid();
-
-            if (model == null || model.isEmpty()) {
-                if (modelText.isEmpty()) {
-                    binding.fieldModelText.setError(REQUIRED);
-                    isError = true;
-                } else {
-                    model = modelText;
-                }
+            if (TextUtils.isEmpty(brand)) {
+                binding.fieldBrand.setError(REQUIRED);
+                binding.fieldBrand.requestFocus();
+                isError = true;
             }
-
-            if (variant == null || variant.isEmpty()) {
-                if (variantText.isEmpty()) {
-                    binding.fieldVariantText.setError(REQUIRED);
-                    isError = true;
-                } else {
-                    variant = variantText;
-                }
+            if (TextUtils.isEmpty(model)) {
+                binding.fieldModel.setError(REQUIRED);
+                binding.fieldModel.requestFocus();
+                isError = true;
+            }
+            if (TextUtils.isEmpty(variant)) {
+                binding.fieldVariant.setError(REQUIRED);
+                binding.fieldVariant.requestFocus();
+                isError = true;
+            }
+            if (TextUtils.isEmpty(engineType)) {
+                binding.fieldEngineType.setError(REQUIRED);
+                binding.fieldEngineType.requestFocus();
+                isError = true;
             }
 
             if (isError) {
@@ -300,10 +265,11 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
 
             String name = getResources().getString(R.string.vehicle_name, brand, model, variant);
 
-
             // Disable button so there are no multi-posts
             setEditingEnabled(false);
             Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
+            // [START single_value_read]
+            final String userId = getUid();
             // Write new post
             writeNewPost(userId, name, year, price, regNum, kiloMeter, color, mobileNumber, insurance);
 
@@ -328,12 +294,11 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
     }
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String name, String year, String price, String regNum, String km, String color, String mobile, String insurance) {
+    private void writeNewPost(String userId, String name, String year, String price, String regNum, String km, String color, String mobile, String insurance) throws ParseException {
 
         Vehicle vehicle = new Vehicle(userId, name, engineTypeId, year, price, regNum, km, color, mobile, insurance);
         Map<String, Object> postValues = vehicle.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        Log.d(TAG, postValues.toString());
         String key = mDatabase.child(type).push().getKey();
         childUpdates.put("/" + type + "/" + key, postValues);
 
@@ -351,5 +316,4 @@ public class NewVehicleActivity extends BaseActivity implements AdapterView.OnIt
         }
 
     }
-    // [END write_fan_out]
 }

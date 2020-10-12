@@ -5,6 +5,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ServerValue;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,15 +30,15 @@ public class Vehicle {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Vehicle(String uid, String name, int eType, String year, String price, String regNum, String km, String color, String mobile, String ins) {
+    public Vehicle(String uid, String name, int eType, String year, String price, String regNum, String km, String color, String mobile, String ins) throws ParseException {
         this.uid = uid;
         this.name = name;
         this.eType = eType;
         this.year = Integer.parseInt(year);
-        this.price = Double.parseDouble(price);
+        this.price = Double.parseDouble(Common.removeCurrencyFormatter(price));
         this.reg = regNum;
         if (km != null && !km.isEmpty()) {
-            this.km = Integer.parseInt(km);
+            this.km = Integer.parseInt(Common.removeDecimalFormatter(km));
         }
         this.color = color;
         this.mobile = mobile;

@@ -1,6 +1,7 @@
 package com.dhruv.techapps.viewholder;
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,13 +9,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhruv.techapps.R;
+import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.models.Vehicle;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-
 public class VehicleViewHolder extends RecyclerView.ViewHolder {
-
+    private static final String TAG = "VehicleViewHolder";
     public TextView nameView;
     public TextView priceView;
     public TextView kmView;
@@ -35,18 +34,12 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder {
 
     public void bindToPost(Resources resources, Vehicle vehicle, View.OnClickListener starClickListener) {
 
-
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setGroupingSeparator(',');
-        symbols.setDecimalSeparator('.');
-
-        DecimalFormat currencyFormat = new DecimalFormat("₹ #,###", symbols);
-        DecimalFormat decimalFormat = new DecimalFormat("#,###", symbols);
-
         nameView.setText(vehicle.name);
         regView.setText(vehicle.reg.toUpperCase());
-        priceView.setText(currencyFormat.format(vehicle.price));
-        kmView.setText(resources.getString(R.string.km_string, decimalFormat.format(vehicle.km)));
+        priceView.setText(Common.formatCurrency(vehicle.price));
+        Log.d(TAG, vehicle.km + "~~" + Common.formatDecimal(vehicle.km));
+
+        kmView.setText(resources.getString(R.string.km_string, Common.formatDecimal(vehicle.km)));
         yearView.setText(resources.getString(R.string.year_string, Integer.toString(vehicle.year)));
     }
 }

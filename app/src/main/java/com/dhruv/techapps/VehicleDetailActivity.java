@@ -7,32 +7,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dhruv.techapps.adapter.BidAdapter;
 import com.dhruv.techapps.adapter.SliderAdapterExample;
 import com.dhruv.techapps.common.Common;
-import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityVehicleDetailBinding;
 import com.dhruv.techapps.models.Bid;
 import com.dhruv.techapps.models.User;
 import com.dhruv.techapps.models.Vehicle;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.smarteist.autoimageslider.SliderView;
-
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 
 public class VehicleDetailActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_POST_KEY = "post_key";
+    public static final String EXTRA_POST_TYPE = "post_type";
     private static final String TAG = "VehicleDetailActivity";
     private DatabaseReference mCarReference;
     private DatabaseReference mBiddingReference;
@@ -41,7 +37,6 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
     private BidAdapter mAdapter;
     private ActivityVehicleDetailBinding binding;
     private SliderAdapterExample adapter;
-    private DataHolder dataHolder;
     private Vehicle vehicle;
 
     @Override
@@ -52,14 +47,17 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
 
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        if (mPostKey == null) {
+        String mPostType = getIntent().getStringExtra(EXTRA_POST_TYPE);
+        assert mPostType != null;
+        String mPostBiddingType = mPostType.substring(0, mPostType.length() - 1) + "-bidding";
+        if (null == mPostKey) {
             throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
         }
-        Log.d(TAG, mPostKey);
+        Log.d(TAG, mPostKey + "!!~" + mPostType);
 
         // Initialize Database
-        mCarReference = FirebaseDatabase.getInstance().getReference().child("cars").child(mPostKey);
-        mBiddingReference = FirebaseDatabase.getInstance().getReference().child("car-bidding").child(mPostKey);
+        mCarReference = FirebaseDatabase.getInstance().getReference().child(mPostType).child(mPostKey);
+        mBiddingReference = FirebaseDatabase.getInstance().getReference().child(mPostBiddingType).child(mPostKey);
 
         binding.buttonCarBidding.setOnClickListener(this);
         binding.recyclerCarBids.setLayoutManager(new LinearLayoutManager(this));
@@ -80,46 +78,36 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                String carKey = dataSnapshot.getKey();
                 vehicle = dataSnapshot.getValue(Vehicle.class);
 
-                setTitle(vehicle.name);
+                if (vehicle != null) {
+                    setTitle(vehicle.name);
+                    // [START_EXCLUDE]
+                    binding.carPrice.setText(Common.formatCurrency(vehicle.price));
+                    binding.carYear.setText(String.valueOf(vehicle.year));
+                    binding.carRegistrationNumber.setText(vehicle.reg);
+                    binding.carKM.setText(Common.formatDecimal(vehicle.km));
+                    binding.carEngineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
+                    binding.carIns.setText(vehicle.ins);
+                    binding.carColor.setText(vehicle.color);
 
-                // [START_EXCLUDE]
-                DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-                symbols.setGroupingSeparator(',');
-                symbols.setDecimalSeparator('.');
 
-                DecimalFormat currencyFormat = new DecimalFormat("₹ #,###", symbols);
-                DecimalFormat decimalFormat = new DecimalFormat("#,###", symbols);
-                binding.carPrice.setText(currencyFormat.format(vehicle.price));
-                binding.carYear.setText(String.valueOf(vehicle.year));
-                binding.carRegistrationNumber.setText(vehicle.reg);
-                binding.carKM.setText(decimalFormat.format(vehicle.km));
-                binding.carEngineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
-                binding.carIns.setText(vehicle.ins);
-                binding.carColor.setText(vehicle.color);
+                    // [END_EXCLUDE]
 
-                // [END_EXCLUDE]
-
-                FirebaseStorage.getInstance().getReference("/images/" + mPostKey).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                    @Override
-                    public void onSuccess(ListResult listResult) {
+                    FirebaseStorage.getInstance().getReference("/images/" + mPostKey).listAll().addOnSuccessListener(listResult -> {
                         if (listResult.getItems().size() > 0) {
                             final long ONE_MEGABYTE = 1024 * 1024;
                             for (int i = 0; i < listResult.getItems().size(); i++) {
-                                listResult.getItems().get(i).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                    @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                        Log.d(TAG, "here" + bitmap.toString());
-                                        adapter.addItem(bitmap);
-                                    }
+                                listResult.getItems().get(i).getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    Log.d(TAG, "here" + bitmap.toString());
+                                    adapter.addItem(bitmap);
                                 });
                             }
                         }
-                    }
-                });
+                    });
+                }
+
             }
 
             @Override
@@ -182,8 +170,8 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
 
     private void postBidding() {
         final String uid = getUid();
-        Double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
-        Double maxPrice = getMaxPrice();
+        double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
+        double maxPrice = getMaxPrice();
         if (Double.compare(biddingAmount, maxPrice) > 0) {
             FirebaseDatabase
                     .getInstance()
@@ -192,9 +180,10 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
                     .child(uid)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             // Get user information
                             User user = dataSnapshot.getValue(User.class);
+                            assert user != null;
                             String authorName = user.username;
                             // Create new comment object
                             Double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
@@ -208,7 +197,7 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
                     });

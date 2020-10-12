@@ -6,8 +6,8 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
-        android:layout_width="match_parent"
         style="@style/Widget.MaterialComponents.TabLayout.Colored"
+        android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:minHeight="?actionBarSize" />
 
@@ -24,9 +24,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:visibility="visible"
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_add_24"
+        android:visibility="visible"
         app:backgroundTint="@color/colorAccent" />
 
 </RelativeLayout>
