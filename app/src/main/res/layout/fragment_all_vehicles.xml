@@ -23,8 +23,7 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/primary_rounded"
             android:gravity="center_horizontal"
-            android:minWidth="100sp"
-            android:padding="10dp" />
+            android:minWidth="100sp" />
 
         <SearchView
             android:id="@+id/nameFilter"
@@ -33,15 +32,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp" />
     </LinearLayout>
-
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesList"
@@ -52,6 +42,15 @@
         android:padding="10dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_vehicle" />
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
 
 </RelativeLayout>
 

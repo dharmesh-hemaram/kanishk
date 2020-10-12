@@ -81,7 +81,7 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
     private void setTypeFilter(View rootView) {
         Spinner typeFilter = rootView.findViewById(R.id.typeFilter);
         typeFilter.setOnItemSelectedListener(this);
-        typeFilter.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, Common.TYPES));
+        typeFilter.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.list_item, Common.TYPES));
     }
 
     //Performing action onItemSelected and onNothing selected
