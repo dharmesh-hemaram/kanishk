@@ -1,6 +1,8 @@
 package com.dhruv.techapps;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,8 +10,12 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
+import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.databinding.ActivityPhoneAuthBinding;
+import com.dhruv.techapps.fragment.UserDialogFragment;
+import com.dhruv.techapps.models.User;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
@@ -18,11 +24,17 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class PhoneAuthActivity extends AppCompatActivity implements
-        View.OnClickListener {
+        View.OnClickListener, UserDialogFragment.EditNameDialogListener {
 
     private static final String TAG = "PhoneAuthActivity";
 
@@ -148,6 +160,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        Log.d(TAG, currentUser.getDisplayName());
+        Log.d(TAG, currentUser.getUid());
+        Log.d(TAG, currentUser.getPhoneNumber());
         updateUI(currentUser);
 
         // [START_EXCLUDE]
@@ -253,7 +268,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            updateUI(STATE_SIGNIN_SUCCESS, user);
+            startMainActivity();
         } else {
             updateUI(STATE_INITIALIZED);
         }
@@ -317,8 +332,53 @@ public class PhoneAuthActivity extends AppCompatActivity implements
             mBinding.phoneAuthFields.setVisibility(View.VISIBLE);
             mBinding.signedInButtons.setVisibility(View.GONE);
         } else {
-            startMainActivity();
+            String uid = user.getUid();
+            FirebaseDatabase.getInstance().getReference().child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    if (user == null) {
+                        getUserInfo();
+                    } else if (user.isAdmin) {
+                        SharedPreferences.Editor editor = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE).edit();
+                        editor.putBoolean(Common.IS_ADMIN, user.isAdmin);
+                        editor.apply();
+                        startMainActivity();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
+    }
+
+    public void getUserInfo() {
+        FragmentManager fm = getSupportFragmentManager();
+        UserDialogFragment myDialogFragment = new UserDialogFragment();
+        myDialogFragment.show(fm, "fragment_edit_name");
+    }
+
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mUser != null) {
+            User user = new User();
+            user.username = inputText;
+            user.phone = mUser.getPhoneNumber();
+            Map<String, Object> postValues = user.toMap();
+            Map<String, Object> childUpdates = new HashMap<>();
+            Log.d(TAG, childUpdates.toString());
+            childUpdates.put("/users/" + mUser.getUid(), postValues);
+            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
+        } else {
+            startActivity(new Intent(this, PhoneAuthActivity.class));
+            finish();
+        }
+
     }
 
     public void startMainActivity() {
@@ -355,7 +415,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 if (!validatePhoneNumber()) {
                     return;
                 }
-
                 startPhoneNumberVerification(mBinding.fieldPhoneNumber.getText().toString());
                 break;
             case R.id.buttonVerifyPhone:
@@ -364,7 +423,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     mBinding.fieldVerificationCode.setError("Cannot be empty.");
                     return;
                 }
-
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.buttonResend:

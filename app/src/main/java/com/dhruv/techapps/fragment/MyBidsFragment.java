@@ -7,6 +7,7 @@ import com.google.firebase.database.Query;
 
 public class MyBidsFragment extends VehicleListFragment {
     private static final String TAG = "MyBidsFragment";
+
     public MyBidsFragment() {
     }
 

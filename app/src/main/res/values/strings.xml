@@ -41,4 +41,9 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="cars">Cars</string>
+    <string name="tractors">Tractors</string>
+    <string name="trucks">Trucks</string>
+    <string name="tempos">Tempos</string>
+    <string name="bikes">Bikes</string>
 </resources>

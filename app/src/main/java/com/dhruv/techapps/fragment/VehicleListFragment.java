@@ -165,12 +165,12 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
                 }*/
 
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(getResources(), model, starView -> {
+                /*viewHolder.bindToPost(getResources(), model, starView -> {
                     // Need to write to both places the post is stored
                     DatabaseReference globalPostRef = mDatabase.child(type).child(Objects.requireNonNull(postRef.getKey()));
                     // Run two transactions
                     onStarClicked(globalPostRef);
-                });
+                });*/
             }
         };
         mRecycler.setAdapter(mAdapter);

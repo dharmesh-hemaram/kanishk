@@ -32,8 +32,8 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_baseline_edit_24"
-        app:backgroundTint="@color/colorAccent"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:backgroundTint="@color/colorAccent" />
 
     <TableLayout
         android:id="@+id/carDetailLayout"
@@ -217,8 +217,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:autofillHints="500000"
-            android:inputType="numberDecimal"
             android:hint="@string/place_a_bid"
+            android:inputType="numberDecimal"
             android:maxLines="1" />
 
         <com.google.android.material.button.MaterialButton

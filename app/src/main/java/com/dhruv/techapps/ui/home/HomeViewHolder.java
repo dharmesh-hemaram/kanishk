@@ -1,4 +1,4 @@
-package com.dhruv.techapps.viewholder;
+package com.dhruv.techapps.ui.home;
 
 import android.content.res.Resources;
 import android.view.View;
@@ -11,8 +11,8 @@ import com.dhruv.techapps.R;
 import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.models.Vehicle;
 
-public class VehicleViewHolder extends RecyclerView.ViewHolder {
-    private static final String TAG = "VehicleViewHolder";
+public class HomeViewHolder extends RecyclerView.ViewHolder {
+    private static final String TAG = "HomeViewHolder";
     public TextView nameView;
     public TextView priceView;
     public TextView kmView;
@@ -20,7 +20,7 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder {
     public ImageView imageView;
     public TextView regView;
 
-    public VehicleViewHolder(View itemView) {
+    public HomeViewHolder(View itemView) {
         super(itemView);
 
         nameView = itemView.findViewById(R.id.carName);
@@ -31,7 +31,7 @@ public class VehicleViewHolder extends RecyclerView.ViewHolder {
         imageView = itemView.findViewById(R.id.carImage);
     }
 
-    public void bindToPost(Resources resources, Vehicle vehicle) {
+    public void bindToPost(Resources resources, Vehicle vehicle, View.OnClickListener starClickListener) {
 
         nameView.setText(vehicle.name);
         regView.setText(vehicle.reg.toUpperCase());

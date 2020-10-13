@@ -46,7 +46,7 @@ import java.util.Map;
 
 public class MainActivity2 extends BaseActivity implements UserDialogFragment.EditNameDialogListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity2";
     private ActivityMain2Binding binding;
 
     @Override

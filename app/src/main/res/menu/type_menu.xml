@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_car"
+        android:title="@string/cars" />
+    <item
+        android:id="@+id/menu_tractor"
+        android:title="@string/tractors" />
+    <item
+        android:id="@+id/menu_truck"
+        android:title="@string/trucks" />
+    <item
+        android:id="@+id/menu_tempo"
+        android:title="@string/tempos" />
+    <item
+        android:id="@+id/menu_bike"
+        android:title="@string/bikes" />
+</menu>
