@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -86,7 +86,8 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
     }
 
     private void setTypeFilter(View rootView) {
-        Spinner typeFilter = rootView.findViewById(R.id.typeFilter);
+        AutoCompleteTextView typeFilter = rootView.findViewById(R.id.typeFilter);
+        typeFilter.setText(type);
         typeFilter.setOnItemSelectedListener(this);
         typeFilter.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.list_item, Common.TYPES));
     }
@@ -126,17 +127,12 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
 
             @Override
             public void onDataChanged() {
-                if (mProgressBar != null) {
-                    mProgressBar.setVisibility(View.GONE);
-                }
+
             }
 
             @NonNull
             @Override
             public VehicleViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup viewGroup, int i) {
-                if (mProgressBar != null) {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                }
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 return new VehicleViewHolder(inflater.inflate(R.layout.item_vehicle, viewGroup, false));
             }
