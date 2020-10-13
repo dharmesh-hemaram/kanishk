@@ -16,12 +16,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/typeFilterLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
+            android:minWidth="150dp"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:hint="@string/type"
             android:layout_marginLeft="10dp"
-            android:paddingBottom="7dp">
+            android:paddingBottom="5dp">
 
             <AutoCompleteTextView
                 android:id="@+id/typeFilter"
@@ -29,6 +30,7 @@
                 android:layout_height="match_parent"
                 android:enabled="false"
                 android:inputType="none"
+                android:textColor="@color/colorPrimary"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 

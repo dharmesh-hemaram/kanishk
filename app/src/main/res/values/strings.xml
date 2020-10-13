@@ -37,4 +37,8 @@
     <string name="bid">Bid</string>
     <string name="vehicle_image">Vehicle Image</string>
     <string name="like">Like</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
