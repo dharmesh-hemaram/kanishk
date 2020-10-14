@@ -63,18 +63,13 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <ProgressBar
         android:id="@+id/progressBarLogin"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/phoneNumberContainer"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonNext"

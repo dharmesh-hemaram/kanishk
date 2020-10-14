@@ -95,7 +95,9 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
                                 startActivity(intent);
                             }
                         }
+                        mBinding.progressBarVerify.setVisibility(View.GONE);
                     } else {
+                        mBinding.progressBarVerify.setVisibility(View.GONE);
                         // Sign in failed, display a message and update the UI
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
@@ -112,6 +114,7 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
 
     @Override
     public void onPinEntered(CharSequence str) {
+        mBinding.progressBarVerify.setVisibility(View.VISIBLE);
         verifyPhoneNumberWithCode(mVerificationId, str.toString());
     }
 

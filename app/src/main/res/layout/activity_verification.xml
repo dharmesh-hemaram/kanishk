@@ -70,9 +70,11 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <LinearLayout
+        android:id="@+id/resendContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textEnterCode"
+        android:layout_marginBottom="30dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
@@ -93,5 +95,13 @@
             android:textAlignment="viewEnd"
             tools:ignore="RtlCompat,RtlSymmetry" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarVerify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/resendContainer"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

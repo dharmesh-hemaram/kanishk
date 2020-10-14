@@ -70,9 +70,9 @@ public class MainActivity2 extends BaseActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
 
-                        DataHolder.getInstance().setIsAdmin(true);
-                        binding.fabNewCar.setVisibility(View.VISIBLE);// Button launches NewPostActivity
-                        binding.fabNewCar.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, NewVehicleActivity.class)));
+                    DataHolder.getInstance().setIsAdmin(true);
+                    binding.fabNewCar.setVisibility(View.VISIBLE);// Button launches NewPostActivity
+                    binding.fabNewCar.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, NewVehicleActivity.class)));
 
                 }
 
