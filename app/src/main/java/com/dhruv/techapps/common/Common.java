@@ -14,8 +14,8 @@ public class Common {
 
     public final static String[] TYPES = {"Cars", "Tractors", "Trucks", "Tempos", "Bikes"};
     public final static String[] ENGINE_TYPES = {"Petrol", "Diesel", "CNG"};
-    private static final String TAG = "Common";
     public static final String IS_ADMIN = "isAdmin";
+    private static final String TAG = "Common";
 
     public static String formatCurrency(String currency) {
         Log.d(TAG, currency);

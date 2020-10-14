@@ -18,22 +18,18 @@ package com.dhruv.techapps;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 
 import com.dhruv.techapps.adapter.TabAdapter;
 import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityMain2Binding;
 import com.dhruv.techapps.fragment.MyBidsFragment;
 import com.dhruv.techapps.fragment.RecentVehiclesFragment;
-import com.dhruv.techapps.fragment.UserDialogFragment;
 import com.dhruv.techapps.models.User;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,10 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class MainActivity2 extends BaseActivity implements UserDialogFragment.EditNameDialogListener {
+public class MainActivity2 extends BaseActivity {
 
     private static final String TAG = "MainActivity2";
     private ActivityMain2Binding binding;
@@ -58,8 +51,6 @@ public class MainActivity2 extends BaseActivity implements UserDialogFragment.Ed
             getSupportActionBar().setElevation(0);
         }
 
-
-        MobileAds.initialize(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
         adapter.addFragment(new RecentVehiclesFragment(), "Recent");
@@ -78,13 +69,11 @@ public class MainActivity2 extends BaseActivity implements UserDialogFragment.Ed
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
-                    if (user == null) {
-                        getUserInfo();
-                    } else if (user.isAdmin) {
+
                         DataHolder.getInstance().setIsAdmin(true);
                         binding.fabNewCar.setVisibility(View.VISIBLE);// Button launches NewPostActivity
                         binding.fabNewCar.setOnClickListener(v -> startActivity(new Intent(MainActivity2.this, NewVehicleActivity.class)));
-                    }
+
                 }
 
                 @Override
@@ -93,7 +82,7 @@ public class MainActivity2 extends BaseActivity implements UserDialogFragment.Ed
                 }
             });
         } else {
-            startActivity(new Intent(this, PhoneAuthActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
     }
@@ -109,7 +98,7 @@ public class MainActivity2 extends BaseActivity implements UserDialogFragment.Ed
         int i = item.getItemId();
         if (i == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(this, PhoneAuthActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return true;
         } else {
@@ -117,29 +106,5 @@ public class MainActivity2 extends BaseActivity implements UserDialogFragment.Ed
         }
     }
 
-    public void getUserInfo() {
-        FragmentManager fm = getSupportFragmentManager();
-        UserDialogFragment myDialogFragment = new UserDialogFragment();
-        myDialogFragment.show(fm, "fragment_edit_name");
-    }
-
-    @Override
-    public void onFinishEditDialog(String inputText) {
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mUser != null) {
-            User user = new User();
-            user.username = inputText;
-            user.phone = mUser.getPhoneNumber();
-            Map<String, Object> postValues = user.toMap();
-            Map<String, Object> childUpdates = new HashMap<>();
-            Log.d(TAG, childUpdates.toString());
-            childUpdates.put("/users/" + mUser.getUid(), postValues);
-            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
-        } else {
-            startActivity(new Intent(this, PhoneAuthActivity.class));
-            finish();
-        }
-
-    }
 
 }

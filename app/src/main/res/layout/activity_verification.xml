@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/textPhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/verify_phone_number_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/textPhoneMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textPhoneNumber"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/verify_phone_number_message"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonWrongNumber"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textPhoneMessage"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:padding="0dp"
+        android:text="@string/wrong_number"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <com.alimuzaffar.lib.pin.PinEntryEditText
+        android:id="@+id/pinEntryEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonWrongNumber"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="60dp"
+        android:cursorVisible="false"
+        android:digits="1234567890"
+        android:gravity="center"
+        android:inputType="number"
+        android:maxLength="6"
+        android:textIsSelectable="false"
+        android:textSize="20sp"
+        app:pinLineStroke="1dp"
+        app:pinLineStrokeSelected="1dp" />
+
+    <TextView
+        android:id="@+id/textEnterCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pinEntryEditText"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:text="@string/enter_6_digit_code"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textEnterCode"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonResend"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/resend_code" />
+
+        <TextView
+            android:id="@+id/textTimer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:textAlignment="viewEnd"
+            tools:ignore="RtlCompat,RtlSymmetry" />
+    </LinearLayout>
+
+</RelativeLayout>

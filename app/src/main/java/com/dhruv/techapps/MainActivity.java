@@ -3,20 +3,17 @@ package com.dhruv.techapps;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.dhruv.techapps.common.DataHolder;
-import com.dhruv.techapps.fragment.UserDialogFragment;
 import com.dhruv.techapps.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,10 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class MainActivity extends AppCompatActivity implements UserDialogFragment.EditNameDialogListener {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private String type;
 
@@ -62,9 +56,7 @@ public class MainActivity extends AppCompatActivity implements UserDialogFragmen
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
-                    if (user == null) {
-                        getUserInfo();
-                    } else if (user.isAdmin) {
+                    if (user != null && user.isAdmin) {
                         DataHolder.getInstance().setIsAdmin(true);
                     }
                 }
@@ -75,34 +67,9 @@ public class MainActivity extends AppCompatActivity implements UserDialogFragmen
                 }
             });
         } else {
-            startActivity(new Intent(this, PhoneAuthActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
-    }
-
-    public void getUserInfo() {
-        FragmentManager fm = getSupportFragmentManager();
-        UserDialogFragment myDialogFragment = new UserDialogFragment();
-        myDialogFragment.show(fm, "fragment_edit_name");
-    }
-
-    @Override
-    public void onFinishEditDialog(String inputText) {
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mUser != null) {
-            User user = new User();
-            user.username = inputText;
-            user.phone = mUser.getPhoneNumber();
-            Map<String, Object> postValues = user.toMap();
-            Map<String, Object> childUpdates = new HashMap<>();
-            Log.d(TAG, childUpdates.toString());
-            childUpdates.put("/users/" + mUser.getUid(), postValues);
-            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
-        } else {
-            startActivity(new Intent(this, PhoneAuthActivity.class));
-            finish();
-        }
-
     }
 
     @Override

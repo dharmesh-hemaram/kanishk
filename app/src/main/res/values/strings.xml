@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Kanishk</string>
+    <string name="welcome_to_kanishk">Welcome to Kanishk</string>
     <string name="phone_title_text">DEAL OF WHEELS</string>
     <string name="menu_logout">Log out</string>
-
     <string name="sign_out">Sign Out</string>
     <string name="start_phone_auth">Start</string>
     <string name="verify_phone_auth">Verify</string>
@@ -46,4 +46,27 @@
     <string name="trucks">Trucks</string>
     <string name="tempos">Tempos</string>
     <string name="bikes">Bikes</string>
+    <string name="_91">+91</string>
+    <string name="_continue">Continue</string>
+    <string name="privacy_policy_and_terms">Read our <a href="www.google.com">Privacy Policy</a>. Tap "Agree and continue" to accept the <a href="www.google.com">Terms of Service</a>.</string>
+    <string name="welcome">Provide your phone number, so we can be able to send you confirmation code</string>
+    <string name="agree_and_continue">AGREE AND CONTINUE</string>
+    <string name="next">NEXT</string>
+    <string name="sms_verify_phone_number">We will send an SMS message to verify your phone number.</string>
+    <string name="enter_your_phone_number">Enter your phone number</string>
+
+    <string name="phone_verify_title">We will be verifying the phone number.</string>
+    <string name="phone_verify_message">is this OK, or would you like to edit the number?</string>
+    <string name="phone_verify_edit">EDIT</string>
+    <string name="phone_verify_ok">OK</string>
+
+    <string name="verify_phone_number_title">Verify %1$s</string>
+    <string name="verify_phone_number_message">Please enter verification code sent to %1$s</string>
+    <string name="enter_6_digit_code">Enter 6-digit code</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="profile_info">Profile Info</string>
+    <string name="profile_message">Please provide your name and an optional profile photo</string>
+    <string name="type_your_name_here">Type your name here</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="wrong_number">Wrong Number?</string>
 </resources>

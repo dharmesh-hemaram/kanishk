@@ -25,8 +25,6 @@ import com.dhruv.techapps.module.GlideApp;
 import com.dhruv.techapps.viewholder.VehicleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -80,16 +78,16 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());*/
 
-        AdView mAdView = rootView.findViewById(R.id.adView);
+        /*AdView mAdView = rootView.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);*/
     }
 
     private void setTypeFilter(View rootView) {
         AutoCompleteTextView typeFilter = rootView.findViewById(R.id.typeFilter);
         typeFilter.setText(type);
         typeFilter.setOnItemSelectedListener(this);
-        typeFilter.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.list_item, Common.TYPES));
+        typeFilter.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.list_item, Common.TYPES));
     }
 
     //Performing action onItemSelected and onNothing selected
@@ -147,7 +145,7 @@ public abstract class VehicleListFragment extends Fragment implements AdapterVie
                 final String postKey = postRef.getKey();
                 FirebaseStorage.getInstance().getReference("images/" + postKey).listAll().addOnSuccessListener(listResult -> {
                     if (listResult.getItems().size() > 0) {
-                        GlideApp.with(Objects.requireNonNull(getContext())).load(listResult.getItems().get(0)).into(viewHolder.imageView);
+                        GlideApp.with(requireContext()).load(listResult.getItems().get(0)).into(viewHolder.imageView);
                     }
                 });
                 viewHolder.itemView.setOnClickListener(v -> {

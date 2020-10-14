@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:581893535411:android:378a4fbf980550e5b362c6",
+        "mobilesdk_app_id": "1:581893535411:android:f8ce98957bdd921cb362c6",
         "android_client_info": {
           "package_name": "com.dhruv.techapps"
         }
@@ -33,7 +33,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-6638520082075335~6440464894"
     }
   ],
   "configuration_version": "1"

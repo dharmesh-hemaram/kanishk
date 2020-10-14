@@ -42,6 +42,12 @@
         <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
         <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
+        <item name="materialButtonStyle">@style/Widget.AppTheme.MyButton</item>
+    </style>
+
+
+    <style name="Widget.AppTheme.MyButton" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">6dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

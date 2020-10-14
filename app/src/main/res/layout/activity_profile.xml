@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/textProfileTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:text="@string/profile_info"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/textProfileMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textProfileTitle"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/profile_message"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/imageProfile"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_below="@+id/textProfileMessage"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/profile_image"
+        android:src="@drawable/ic_baseline_add_a_photo_24"
+        app:civ_border_color="@color/my_app_para_color"
+        app:civ_border_width="0dp" />
+
+    <EditText
+        android:id="@+id/fieldName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageProfile"
+        android:layout_marginBottom="20dp"
+        android:focusable="true"
+        android:hint="@string/type_your_name_here"
+        android:importantForAutofill="no"
+        android:inputType="textCapSentences"
+        android:textSize="20sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fieldName"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_margin="50dp"
+        android:text="@string/next"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:cornerRadius="5dp" />
+</RelativeLayout>
