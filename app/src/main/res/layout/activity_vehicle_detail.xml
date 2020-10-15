@@ -21,7 +21,203 @@
         app:sliderIndicatorSelectedColor="#5A5A5A"
         app:sliderIndicatorUnselectedColor="#FFF"
         app:sliderScrollTimeInSec="1"
-        app:sliderStartAutoCycle="true" />
+        app:sliderStartAutoCycle="false" />
+
+    <TextView
+        android:id="@+id/textName"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageSlider"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        tools:text="Tata Motos * Altoz * XM" />
+
+    <LinearLayout
+        android:id="@+id/priceContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textName"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/textPrice"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/my_app_para_color"
+            tools:text="$ 5,00,000" />
+
+        <TextView
+            android:id="@+id/textRegNum"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAlignment="viewEnd"
+            android:textAllCaps="true"
+            android:textColor="@color/my_app_para_color"
+            tools:text="MH12ND3109" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/carDetailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/priceContainer"
+        android:layout_marginHorizontal="10dp"
+        android:background="@android:color/white"
+        android:baselineAligned="false"
+        android:paddingVertical="10dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/border_right"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/year" />
+
+            <TextView
+                android:id="@+id/textYear"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2019" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/border_right"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/kilo_meter" />
+
+            <TextView
+                android:id="@+id/textKm"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="50,000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/border_right"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/color" />
+
+            <TextView
+                android:id="@+id/textColor"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Green" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/border_right"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/engine_type" />
+
+            <TextView
+                android:id="@+id/textEngineType"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Petrol" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/insurance" />
+
+            <TextView
+                android:id="@+id/textInsurance"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Yes" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bidsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/carDetailLayout"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/textBids"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/bids" />
+
+        <TextView
+            android:id="@+id/textMobileNumber"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoLink="phone"
+            android:gravity="end"
+            android:textAlignment="viewEnd"
+            android:visibility="gone"
+            tools:text="8983659998" />
+    </LinearLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabEdit"
@@ -30,205 +226,63 @@
         android:layout_below="@+id/imageSlider"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
+        android:layout_marginTop="-25dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:src="@drawable/ic_baseline_edit_24"
         android:visibility="gone"
-        app:backgroundTint="@color/colorAccent" />
+        app:backgroundTint="@color/colorPrimary" />
 
-    <TableLayout
-        android:id="@+id/carDetailLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imageSlider"
-        android:padding="10dp"
-        android:stretchColumns="1">
-
-        <TableRow>
-
-            <TextView
-                style="@style/TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/price" />
-
-            <TextView
-                android:id="@+id/price"
-                style="@style/TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/colorPrimary"
-                tools:text="5 lakh" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/year" />
-
-            <TextView
-                android:id="@+id/year"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                tools:text="2019" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/regNum" />
-
-            <TextView
-                android:id="@+id/regNum"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:textAllCaps="true"
-                tools:text="MH12ND3109" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/kilo_meter" />
-
-            <TextView
-                android:id="@+id/km"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                tools:text="50,000" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/color" />
-
-            <TextView
-                android:id="@+id/color"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                tools:text="50,000" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/engine_type" />
-
-            <TextView
-                android:id="@+id/engineType"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                tools:text="Petrol" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/insurance" />
-
-            <TextView
-                android:id="@+id/ins"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                tools:text="50,000" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/mobileComponent"
-            android:visibility="gone">
-
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mobile_number" />
-
-            <TextView
-                android:id="@+id/mobileNumber"
-                style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                tools:text="8983659998" />
-        </TableRow>
-    </TableLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCarBids"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/carDetailLayout"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/bidsContainer"
+
         tools:listitem="@layout/item_bid" />
 
-    <LinearLayout
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/biddingForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/border_y"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:weightSum="1.0">
+        android:layout_margin="5dp"
+        app:cardCornerRadius="25dp">
 
-        <EditText
-            android:id="@+id/fieldBiddingAmount"
-            android:layout_width="0dp"
+        <LinearLayout
+
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:autofillHints="500000"
-            android:hint="@string/place_a_bid"
-            android:inputType="numberDecimal"
-            android:maxLines="1" />
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:weightSum="1.0">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonCarBidding"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="@string/bid" />
+            <EditText
+                android:id="@+id/fieldBiddingAmount"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:autofillHints="500000"
+                android:background="@null"
+                android:hint="@string/place_a_bid"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                tools:ignore="RtlSymmetry" />
 
-    </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCarBidding"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="@string/bid"
+                app:cornerRadius="25dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

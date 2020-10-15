@@ -12,7 +12,11 @@
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
+        android:background="@drawable/border_right"
+        android:paddingEnd="5dp"
+        android:paddingRight="5dp"
+        android:textColor="@color/my_app_heading_color"
+        tools:ignore="RtlSymmetry"
         tools:text="$ 1,00,00" />
 
     <TextView
@@ -20,9 +24,9 @@
         style="@style/Base.TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:background="@drawable/border_right"
         android:gravity="center_vertical"
+        android:paddingHorizontal="5dp"
         android:textColor="@color/my_app_para_color"
         tools:text="2019" />
 
@@ -31,8 +35,8 @@
         style="@style/Base.TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:background="@drawable/border_right"
+        android:paddingHorizontal="5dp"
         android:textColor="@color/my_app_para_color"
         tools:text="MH12ND3109" />
 
@@ -41,9 +45,9 @@
         style="@style/Base.TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
         android:textColor="@color/my_app_para_color"
+        tools:ignore="RtlSymmetry"
         tools:text="50,000" />
-
 </LinearLayout>

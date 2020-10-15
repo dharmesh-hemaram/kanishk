@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dhruv.techapps.adapter.BidAdapter;
@@ -15,8 +14,8 @@ import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityVehicleDetailBinding;
 import com.dhruv.techapps.models.Bid;
-import com.dhruv.techapps.models.User;
 import com.dhruv.techapps.models.Vehicle;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.smarteist.autoimageslider.SliderView;
+
+import java.util.Objects;
 
 public class VehicleDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -60,12 +61,14 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
         mBiddingReference = FirebaseDatabase.getInstance().getReference().child(mPostBiddingType.toLowerCase()).child(mPostKey);
 
         binding.buttonCarBidding.setOnClickListener(this);
-        binding.recyclerCarBids.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+        binding.recyclerCarBids.setLayoutManager(mLayoutManager);
 
         SliderView sliderView = binding.imageSlider.findViewById(R.id.imageSlider);
         adapter = new SliderAdapterExample(this);
         sliderView.setSliderAdapter(adapter);
-
     }
 
 
@@ -84,22 +87,17 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
                 vehicle = dataSnapshot.getValue(Vehicle.class);
 
                 if (vehicle != null) {
-                    setTitle(vehicle.name);
-                    // [START_EXCLUDE]
-                    binding.price.setText(Common.formatCurrency(vehicle.price));
-                    binding.year.setText(String.valueOf(vehicle.year));
-                    binding.regNum.setText(vehicle.reg);
-                    binding.km.setText(Common.formatDecimal(vehicle.km));
-                    binding.engineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
-                    binding.ins.setText(vehicle.ins);
-                    binding.color.setText(vehicle.color);
-                    binding.mobileNumber.setText(vehicle.mobile);
-
-                    // [END_EXCLUDE]
-
+                    binding.textName.setText(vehicle.name);
+                    binding.textPrice.setText(Common.formatCurrency(vehicle.price));
+                    binding.textYear.setText(String.valueOf(vehicle.year));
+                    binding.textRegNum.setText(vehicle.reg);
+                    binding.textKm.setText(Common.formatDecimal(vehicle.km));
+                    binding.textEngineType.setText(vehicle.getEngineTypeName());
+                    binding.textInsurance.setText(vehicle.ins);
+                    binding.textColor.setText(vehicle.color);
+                    binding.textMobileNumber.setText(vehicle.mobile);
                     FirebaseStorage.getInstance().getReference("/images/" + mPostKey).listAll().addOnSuccessListener(listResult -> adapter.renewItems(listResult.getItems()));
                 }
-
             }
 
             @Override
@@ -126,7 +124,7 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
     private void checkAdmin() {
         if (DataHolder.getInstance().getIsAdmin()) {
             binding.fabEdit.setVisibility(View.VISIBLE);
-            binding.mobileComponent.setVisibility(View.VISIBLE);
+            binding.textMobileNumber.setVisibility(View.VISIBLE);
             binding.fabEdit.setOnClickListener(this::onEditClick);
         }
     }
@@ -173,34 +171,13 @@ public class VehicleDetailActivity extends BaseActivity implements View.OnClickL
         double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
         double maxPrice = getMaxPrice();
         if (Double.compare(biddingAmount, maxPrice) > 0) {
-            FirebaseDatabase
-                    .getInstance()
-                    .getReference()
-                    .child("users")
-                    .child(uid)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            // Get user information
-                            User user = dataSnapshot.getValue(User.class);
-                            assert user != null;
-                            String authorName = user.username;
-                            // Create new comment object
-                            Double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
-                            Bid bid = new Bid(uid, authorName, biddingAmount);
 
-                            // Push the comment, it will appear in the list
-                            mBiddingReference.push().setValue(bid);
-
-                            // Clear the field
-                            binding.fieldBiddingAmount.setText(null);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+            String authorName = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName();
+            Bid bid = new Bid(uid, authorName, biddingAmount);
+            // Push the comment, it will appear in the list
+            mBiddingReference.push().setValue(bid);
+            // Clear the field
+            binding.fieldBiddingAmount.setText(null);
         } else {
             Log.d(TAG, "Bidding error");
             Toast.makeText(this, "Bidding price should be higher", Toast.LENGTH_LONG).show();

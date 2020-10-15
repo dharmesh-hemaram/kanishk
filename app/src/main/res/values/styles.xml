@@ -42,11 +42,15 @@
         <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
         <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
-        <item name="materialButtonStyle">@style/Widget.AppTheme.MyButton</item>
+        <item name="materialButtonStyle">@style/AppTheme.MyButton</item>
+        <item name="actionBarStyle">@style/AppTheme.MyActionBar</item>
     </style>
 
+    <style name="AppTheme.MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@android:color/white</item>
+    </style>
 
-    <style name="Widget.AppTheme.MyButton" parent="Widget.MaterialComponents.Button">
+    <style name="AppTheme.MyButton" parent="Widget.MaterialComponents.Button">
         <item name="cornerRadius">6dp</item>
     </style>
 

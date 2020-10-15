@@ -1,9 +1,10 @@
 package com.dhruv.techapps.models;
 
+import android.text.TextUtils;
+
 import com.dhruv.techapps.common.Common;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
-import com.google.firebase.database.ServerValue;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -23,8 +24,12 @@ public class Vehicle {
     public String color;
     public String mobile;
     public String ins;
-    public Object updated;
-    public boolean soldout;
+    public boolean rc;
+    public String location;
+    public int status;
+    public boolean form36;
+    public boolean form28;
+    public boolean soldOut;
 
     public Vehicle() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
@@ -43,12 +48,6 @@ public class Vehicle {
         this.color = color;
         this.mobile = mobile;
         this.ins = ins;
-        this.updated = ServerValue.TIMESTAMP;
-    }
-
-    @Exclude
-    public long getUpdatedOnLong() {
-        return (long) updated;
     }
 
     @Exclude
@@ -66,17 +65,24 @@ public class Vehicle {
         result.put("price", price);
         result.put("reg", reg);
         result.put("km", km);
-        if (color != null && !color.isEmpty()) {
+        result.put("eType", eType);
+        result.put("rc", rc);
+        if (!TextUtils.isEmpty(color)) {
             result.put("color", color);
         }
-        if (mobile != null && !mobile.isEmpty()) {
+        if (!TextUtils.isEmpty(mobile)) {
             result.put("mobile", mobile);
         }
-        if (ins != null && !ins.isEmpty()) {
+        if (!TextUtils.isEmpty(ins)) {
             result.put("ins", ins);
         }
-        result.put("eType", eType);
-        result.put("updated", updated);
+        if (!TextUtils.isEmpty(location)) {
+            result.put("location", location);
+        }
+        result.put("status", status);
+        result.put("form28", form28);
+        result.put("form36", form36);
+        result.put("soldOut", soldOut);
         return result;
     }
     // [END post_to_map]

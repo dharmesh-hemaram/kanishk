@@ -28,7 +28,7 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, VehicleViewHol
     private Context context;
     private FragmentActivity activity;
     private Resources resources;
-    private String mPostType;
+    String mPostType;
 
     public HomeAdapter(FirebaseRecyclerOptions<Vehicle> options, String type, Context context, FragmentActivity activity, Resources resources) {
         super(options);
@@ -61,11 +61,12 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, VehicleViewHol
         });
         viewHolder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, VehicleDetailActivity.class);
+
+            Log.d(TAG, postKey + "!!!" + mPostType);
             intent.putExtra(VehicleDetailActivity.EXTRA_POST_KEY, postKey);
             intent.putExtra(VehicleDetailActivity.EXTRA_POST_TYPE, mPostType);
             activity.startActivity(intent);
         });
-        Log.d(TAG, model.name);
         viewHolder.bindToPost(resources, model);
     }
 }

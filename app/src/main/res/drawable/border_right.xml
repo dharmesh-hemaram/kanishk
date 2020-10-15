@@ -5,11 +5,9 @@
             <solid android:color="@color/my_app_border_color" />
         </shape>
     </item>
-    <item
-        android:bottom="1dp"
-        android:top="1dp">
+    <item android:right="1dp">
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
+            <solid android:color="@android:color/white" />
         </shape>
     </item>
 </layer-list>

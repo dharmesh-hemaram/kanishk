@@ -20,13 +20,13 @@ import com.dhruv.techapps.MainActivity;
 import com.dhruv.techapps.NewVehicleActivity;
 import com.dhruv.techapps.R;
 import com.dhruv.techapps.common.Common;
+import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.models.Vehicle;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
-import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment {
     private HomeAdapter homeAdapter;
     private DatabaseReference mDatabase;
     private ProgressBar progressBar;
+    FloatingActionButton fabNewVehicle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,16 +50,22 @@ public class HomeFragment extends Fragment {
         mRecycler = root.findViewById(R.id.messagesList);
         mRecycler.setHasFixedSize(true);
         progressBar = root.findViewById(R.id.progressBar);
-        actionBar = ((MainActivity) Objects.requireNonNull(getActivity())).getSupportActionBar();
-        root.findViewById(R.id.fabNewVehicle).setVisibility(View.VISIBLE);
-        root.findViewById(R.id.fabNewVehicle).setOnClickListener(v -> startActivity(new Intent(getActivity(), NewVehicleActivity.class)));
+        actionBar = ((MainActivity) requireActivity()).getSupportActionBar();
+        fabNewVehicle = root.findViewById(R.id.fabNewVehicle);
         return root;
+    }
+
+    public void checkAdminAccess() {
+        Log.d("ADMIN", "checkAdminAccess");
+        if (DataHolder.getInstance().getIsAdmin()) {
+            fabNewVehicle.setVisibility(View.VISIBLE);
+            fabNewVehicle.setOnClickListener(v -> startActivity(new Intent(getActivity(), NewVehicleActivity.class)));
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (actionBar != null) {
             actionBar.setTitle(type);
         }
@@ -79,12 +86,14 @@ public class HomeFragment extends Fragment {
     private void updateQuery() {
         Query postsQuery = getQuery(mDatabase);
         FirebaseRecyclerOptions<Vehicle> options = new FirebaseRecyclerOptions.Builder<Vehicle>().setQuery(postsQuery, Vehicle.class).build();
+        homeAdapter.mPostType = type;
         homeAdapter.updateOptions(options);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        checkAdminAccess();
         if (homeAdapter != null) {
             homeAdapter.startListening();
         }
