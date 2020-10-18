@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dhruv.techapps.databinding.ActivityWelcomeBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static com.dhruv.techapps.common.Common.REQUEST_CODE_PROFILE;
 
@@ -22,6 +23,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = ActivityWelcomeBinding.inflate(getLayoutInflater());
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         setContentView(mBinding.getRoot());
     }
 

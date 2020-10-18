@@ -55,6 +55,7 @@ public class Vehicle {
         this.rc = rc;
         this.form35 = form35;
         this.form36 = form36;
+        this.sold = false;
         this.price = Double.parseDouble(Common.removeCurrencyFormatter(price));
     }
 
