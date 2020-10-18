@@ -44,6 +44,9 @@ public class Common {
 
     public static String formatDecimal(double parsed) {
         Log.d(TAG, parsed + "");
+        if (parsed > 99999d) {
+            return ((int) parsed) / 100000 + " lakh";
+        }
         return NumberFormat.getInstance(new Locale("en", "in")).format(parsed);
     }
 

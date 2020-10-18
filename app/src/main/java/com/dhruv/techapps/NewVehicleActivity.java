@@ -257,9 +257,9 @@ public class NewVehicleActivity extends BaseActivity {
     private void submitPost() {
         try {
             final String type = binding.fieldType.getText().toString();
-            final String brand = binding.fieldBrand.getText().toString();
-            final String model = binding.fieldModel.getText().toString();
-            final String variant = binding.fieldVariant.getText().toString();
+            final String brand = binding.fieldBrand.getText().toString().trim();
+            final String model = binding.fieldModel.getText().toString().trim();
+            final String variant = binding.fieldVariant.getText().toString().trim();
             final String regNum = Objects.requireNonNull(binding.fieldRegistrationNumber.getText()).toString();
             final String color = Objects.requireNonNull(binding.fieldColor.getText()).toString();
             final String mobileNumber = Objects.requireNonNull(binding.fieldMobileNumber.getText()).toString();
