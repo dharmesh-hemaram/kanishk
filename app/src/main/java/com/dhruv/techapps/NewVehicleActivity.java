@@ -43,15 +43,15 @@ public class NewVehicleActivity extends BaseActivity {
 
     private static final String TAG = "NewVehicleActivity";
     private static final String REQUIRED = "Required";
-    private static final String INVALID = "Invalid";
+    private final int modelId = 0;
+    private final DataHolder dataHolder = DataHolder.getInstance();
     private ActivityNewVehicleBinding binding;
     private int brandId = 0;
-    private int modelId = 0;
     private int engineTypeId = 0;
     private String type;
     private List<Brand> brands;
     private ImageViewAdapter imageViewAdapter;
-    private DataHolder dataHolder = DataHolder.getInstance();
+    private int statusId = 0;
 
     private String mPostKey;
     private String mPostType;
@@ -78,6 +78,7 @@ public class NewVehicleActivity extends BaseActivity {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
         });
         setTypes();
+        setStatus();
         setBrands();
         setModels();
         setVariants();
@@ -108,14 +109,14 @@ public class NewVehicleActivity extends BaseActivity {
                         binding.fieldBrand.setText(names[0]);
                         binding.fieldModel.setText(names[1]);
                         binding.fieldVariant.setText(names[2]);
-                        Objects.requireNonNull(binding.fieldPrice.getEditText()).setText(Common.formatCurrency(vehicle.price));
-                        Objects.requireNonNull(binding.fieldYear.getEditText()).setText(String.valueOf(vehicle.year));
-                        Objects.requireNonNull(binding.fieldRegistrationNumber.getEditText()).setText(vehicle.reg);
-                        Objects.requireNonNull(binding.fieldKiloMeter.getEditText()).setText(Common.formatDecimal(vehicle.km));
+                        binding.fieldPrice.setText(Common.formatCurrency(vehicle.price));
+                        binding.fieldYear.setText(String.valueOf(vehicle.year));
+                        binding.fieldRegistrationNumber.setText(vehicle.reg);
+                        binding.fieldKiloMeter.setText(Common.formatDecimal(vehicle.km));
                         binding.fieldEngineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
-                        Objects.requireNonNull(binding.fieldInsurance.getEditText()).setText(vehicle.ins);
-                        Objects.requireNonNull(binding.fieldColor.getEditText()).setText(vehicle.color);
-                        Objects.requireNonNull(binding.fieldMobileNumber.getEditText()).setText(vehicle.mobile);
+                        binding.fieldInsurance.setText(vehicle.ins);
+                        binding.fieldColor.setText(vehicle.color);
+                        binding.fieldMobileNumber.setText(vehicle.mobile);
 
                     }
                 }
@@ -162,7 +163,7 @@ public class NewVehicleActivity extends BaseActivity {
     }
 
     private void setNumberFormatter() {
-        Objects.requireNonNull(binding.fieldPrice.getEditText()).setOnFocusChangeListener((v, hasFocus) -> {
+        binding.fieldPrice.setOnFocusChangeListener((v, hasFocus) -> {
             EditText editText = (EditText) v;
             String value = editText.getText().toString();
             if (!value.isEmpty()) {
@@ -179,7 +180,7 @@ public class NewVehicleActivity extends BaseActivity {
                 }
             }
         });
-        Objects.requireNonNull(binding.fieldKiloMeter.getEditText()).setOnFocusChangeListener((v, hasFocus) -> {
+        binding.fieldKiloMeter.setOnFocusChangeListener((v, hasFocus) -> {
             EditText editText = (EditText) v;
             String value = editText.getText().toString();
             if (!value.isEmpty()) {
@@ -248,23 +249,32 @@ public class NewVehicleActivity extends BaseActivity {
         binding.fieldEngineType.setOnItemClickListener((parent, view, position, id) -> engineTypeId = position);
     }
 
+    private void setStatus() {
+        binding.fieldStatus.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, Common.VEHICLE_STATUS));
+        binding.fieldStatus.setOnItemClickListener((parent, view, position, id) -> statusId = position);
+    }
+
     private void submitPost() {
         try {
             final String type = binding.fieldType.getText().toString();
             final String brand = binding.fieldBrand.getText().toString();
             final String model = binding.fieldModel.getText().toString();
             final String variant = binding.fieldVariant.getText().toString();
+            final String regNum = Objects.requireNonNull(binding.fieldRegistrationNumber.getText()).toString();
+            final String color = Objects.requireNonNull(binding.fieldColor.getText()).toString();
+            final String mobileNumber = Objects.requireNonNull(binding.fieldMobileNumber.getText()).toString();
+            final String insurance = Objects.requireNonNull(binding.fieldInsurance.getText()).toString();
+            final String location = Objects.requireNonNull(binding.fieldLocation.getText()).toString();
+
             final String engineType = binding.fieldEngineType.getText().toString();
+            final String year = Objects.requireNonNull(binding.fieldYear.getText()).toString();
+            final String kiloMeter = Objects.requireNonNull(binding.fieldKiloMeter.getText()).toString();
 
+            final boolean rc = binding.checkboxRC.isChecked();
+            final boolean form35 = binding.checkboxForm35.isChecked();
+            final boolean form36 = binding.checkboxForm36.isChecked();
 
-            final String year = Objects.requireNonNull(binding.fieldYear.getEditText()).getText().toString();
-            final String regNum = Objects.requireNonNull(binding.fieldRegistrationNumber.getEditText()).getText().toString();
-            final String insurance = Objects.requireNonNull(binding.fieldInsurance.getEditText()).getText().toString();
-            final String price = Objects.requireNonNull(binding.fieldPrice.getEditText()).getText().toString();
-            final String kiloMeter = Objects.requireNonNull(binding.fieldKiloMeter.getEditText()).getText().toString();
-            final String color = Objects.requireNonNull(binding.fieldColor.getEditText()).getText().toString();
-            final String mobileNumber = Objects.requireNonNull(binding.fieldMobileNumber.getEditText()).getText().toString();
-
+            final String price = Objects.requireNonNull(binding.fieldPrice.getText()).toString();
 
             if (imageViewAdapter == null && mPostKey == null) {
                 binding.fieldImageSelect.requestFocus();
@@ -335,7 +345,7 @@ public class NewVehicleActivity extends BaseActivity {
             // [START single_value_read]
             final String userId = getUid();
             // Write new post
-            writeNewPost(userId, name, year, price, regNum, kiloMeter, color, mobileNumber, insurance);
+            writeNewPost(userId, name, Integer.parseInt(year), price, regNum, kiloMeter, color, mobileNumber, insurance, location, rc, form35, form36);
 
             // Finish this Activity, back to the stream
             setEditingEnabled(true);
@@ -358,9 +368,9 @@ public class NewVehicleActivity extends BaseActivity {
     }
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String name, String year, String price, String regNum, String km, String color, String mobile, String insurance) throws ParseException {
+    private void writeNewPost(String uid, String name, int year, String price, String reg, String km, String color, String mobile, String ins, String loc, boolean rc, boolean form35, boolean form36) throws ParseException {
 
-        Vehicle vehicle = new Vehicle(userId, name, engineTypeId, year, price, regNum, km, color, mobile, insurance);
+        Vehicle vehicle = new Vehicle(uid, name, reg, color, mobile, ins, loc, engineTypeId, year, km, statusId, rc, form35, form36, price);
         Map<String, Object> postValues = vehicle.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         // [START initialize_database_ref]

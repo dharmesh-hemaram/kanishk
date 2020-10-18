@@ -72,4 +72,10 @@
     <string name="wrong_number">Wrong Number?</string>
     <string name="logout">Logout</string>
     <string name="bids">Bids</string>
+    <string name="submit_post">Submit Post</string>
+    <string name="status">Status</string>
+    <string name="rc">RC</string>
+    <string name="form_35">Form 35</string>
+    <string name="form_36">Form 36</string>
+    <string name="location">Location</string>
 </resources>

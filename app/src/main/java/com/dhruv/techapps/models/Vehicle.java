@@ -16,38 +16,46 @@ public class Vehicle {
 
     public String uid;
     public String name;
-    public int eType;
-    public int year;
-    public double price;
     public String reg;
-    public int km;
     public String color;
     public String mobile;
     public String ins;
-    public boolean rc;
-    public String location;
+    public String loc;
+
+    public int eType;
+    public int year;
+    public int km;
     public int status;
+
+    public boolean rc;
     public boolean form36;
-    public boolean form28;
-    public boolean soldOut;
+    public boolean form35;
+    public boolean sold;
+
+    public double price;
+    public double bid;
 
     public Vehicle() {
-        // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Vehicle(String uid, String name, int eType, String year, String price, String regNum, String km, String color, String mobile, String ins) throws ParseException {
+    public Vehicle(String uid, String name, String reg, String color, String mobile, String ins, String loc, int eType, int year, String km, int status, boolean rc, boolean form35, boolean form36, String price) throws ParseException {
         this.uid = uid;
         this.name = name;
-        this.eType = eType;
-        this.year = Integer.parseInt(year);
-        this.price = Double.parseDouble(Common.removeCurrencyFormatter(price));
-        this.reg = regNum;
-        if (km != null && !km.isEmpty()) {
-            this.km = Integer.parseInt(Common.removeDecimalFormatter(km));
-        }
+        this.reg = reg;
         this.color = color;
         this.mobile = mobile;
         this.ins = ins;
+        this.loc = loc;
+        this.eType = eType;
+        this.year = year;
+        if (TextUtils.isEmpty(km)) {
+            this.km = Integer.parseInt(Common.removeDecimalFormatter(km));
+        }
+        this.status = status;
+        this.rc = rc;
+        this.form35 = form35;
+        this.form36 = form36;
+        this.price = Double.parseDouble(Common.removeCurrencyFormatter(price));
     }
 
     @Exclude
@@ -61,12 +69,7 @@ public class Vehicle {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
         result.put("name", name);
-        result.put("year", year);
-        result.put("price", price);
         result.put("reg", reg);
-        result.put("km", km);
-        result.put("eType", eType);
-        result.put("rc", rc);
         if (!TextUtils.isEmpty(color)) {
             result.put("color", color);
         }
@@ -76,13 +79,22 @@ public class Vehicle {
         if (!TextUtils.isEmpty(ins)) {
             result.put("ins", ins);
         }
-        if (!TextUtils.isEmpty(location)) {
-            result.put("location", location);
+        if (!TextUtils.isEmpty(loc)) {
+            result.put("loc", loc);
         }
+
+        result.put("eType", eType);
+        result.put("year", year);
+        result.put("km", km);
         result.put("status", status);
-        result.put("form28", form28);
+
+        result.put("rc", rc);
+        result.put("form35", form35);
         result.put("form36", form36);
-        result.put("soldOut", soldOut);
+        result.put("sold", sold);
+
+        result.put("price", price);
+        result.put("bid", bid);
         return result;
     }
     // [END post_to_map]

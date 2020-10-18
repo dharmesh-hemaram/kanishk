@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="60dp"
+    android:weightSum="5"
+    tools:context=".LandingActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonTrucks"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:layout_weight="1"
+        android:gravity="right|center"
+        android:text="@string/trucks"
+        android:textSize="30sp"
+        app:icon="@drawable/ic_baseline_directions_bus_24"
+        app:iconSize="60dp"
+        tools:ignore="RtlHardcoded" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonTractors"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:layout_weight="1"
+        android:gravity="right|center"
+        android:text="@string/tractors"
+        android:textSize="30sp"
+        app:icon="@drawable/ic_baseline_agriculture_24"
+        app:iconSize="60dp"
+        tools:ignore="RtlHardcoded" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonCars"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:layout_weight="1"
+        android:gravity="right|center"
+        android:text="@string/cars"
+        android:textSize="30sp"
+        app:icon="@drawable/ic_baseline_directions_car_24"
+        app:iconSize="60dp"
+        tools:ignore="RtlHardcoded" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonBikes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:layout_weight="1"
+        android:gravity="right|center"
+        android:text="@string/bikes"
+        android:textSize="30sp"
+        app:icon="@drawable/ic_baseline_directions_bike_24"
+        app:iconSize="60dp"
+        tools:ignore="RtlHardcoded" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonTempos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:layout_weight="1"
+        android:gravity="right|center"
+        android:text="@string/tempos"
+        android:textSize="30sp"
+        app:icon="@drawable/ic_baseline_local_shipping_24"
+        app:iconSize="60dp"
+        tools:ignore="RtlHardcoded" />
+</LinearLayout>

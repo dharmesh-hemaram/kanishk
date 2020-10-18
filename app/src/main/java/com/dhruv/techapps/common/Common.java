@@ -13,6 +13,7 @@ import java.util.Objects;
 public class Common {
 
     public final static String[] TYPES = {"Cars", "Tractors", "Trucks", "Tempos", "Bikes"};
+    public final static String[] VEHICLE_STATUS = {"Running", "Break Down"};
     public final static String[] ENGINE_TYPES = {"Petrol", "Diesel", "CNG"};
     public static final String IS_ADMIN = "isAdmin";
     private static final String TAG = "Common";
@@ -76,7 +77,7 @@ public class Common {
     }
 
     public enum ENUM_TYPES {
-        Car(0), Truck(1), Tempo(2), Bike(3);
+        Car(0), Tractor(1), Truck(2), Tempo(3), Bike(4);
 
 
         private final int code;
@@ -89,4 +90,6 @@ public class Common {
             return this.code;
         }
     }
+
+
 }

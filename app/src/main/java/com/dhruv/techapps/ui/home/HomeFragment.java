@@ -28,20 +28,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import static com.dhruv.techapps.MainActivity.EXTRA_TYPE_KEY;
+
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     ActionBar actionBar;
-    private String type = Common.TYPES[0];
+    FloatingActionButton fabNewVehicle;
+    private String type;
     private RecyclerView mRecycler;
     private HomeAdapter homeAdapter;
     private DatabaseReference mDatabase;
     private ProgressBar progressBar;
-    FloatingActionButton fabNewVehicle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        type = DataHolder.getInstance().getSelectedType();
+        if (type == null) {
+            type = requireActivity().getIntent().getStringExtra(EXTRA_TYPE_KEY);
+        }
+        if (type == null) {
+            type = Common.TYPES[0];
+        }
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,6 +124,7 @@ public class HomeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         type = item.getTitle().toString();
+        DataHolder.getInstance().setSelectedType(type);
         if (actionBar != null) {
             actionBar.setTitle(type);
         }

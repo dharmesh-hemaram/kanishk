@@ -36,7 +36,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     if (currentUser.getDisplayName() == null || currentUser.getDisplayName().isEmpty()) {
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                     } else {
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(), LandingActivity.class));
                     }
                 }
             }.start();

@@ -25,9 +25,9 @@ import java.util.Objects;
 public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder> {
 
     private static final String TAG = "HomeAdapter";
-    private Context context;
-    private FragmentActivity activity;
-    private Resources resources;
+    private final Context context;
+    private final FragmentActivity activity;
+    private final Resources resources;
     String mPostType;
 
     public HomeAdapter(FirebaseRecyclerOptions<Vehicle> options, String type, Context context, FragmentActivity activity, Resources resources) {

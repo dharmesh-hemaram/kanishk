@@ -13,11 +13,19 @@ public class DataHolder {
     private List<Brand> truckBrands;
     private List<Brand> tempoBrands;
     private List<Brand> bikeBrands;
+    private String selectedType;
     private boolean isAdmin = false;
-
 
     public static DataHolder getInstance() {
         return holder;
+    }
+
+    public String getSelectedType() {
+        return this.selectedType;
+    }
+
+    public void setSelectedType(String type) {
+        this.selectedType = type;
     }
 
     public boolean getIsAdmin() {
