@@ -24,6 +24,9 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Objects;
 
+import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_KEY;
+import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_TYPE;
+
 public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, VehicleViewHolder> {
 
     private static final String TAG = "HomeAdapter";
@@ -31,11 +34,11 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, VehicleViewHol
     private final FragmentActivity activity;
     private final Resources resources;
     private final ProgressBar progressBar;
-    String mPostType;
+    String vehicleType;
 
-    public HomeAdapter(FirebaseRecyclerOptions<Vehicle> options, String type, Context context, FragmentActivity activity, Resources resources, ProgressBar progressBar) {
+    public HomeAdapter(FirebaseRecyclerOptions<Vehicle> options, String vehicleType, Context context, FragmentActivity activity, Resources resources, ProgressBar progressBar) {
         super(options);
-        this.mPostType = type;
+        this.vehicleType = vehicleType;
         this.context = context;
         this.activity = activity;
         this.resources = resources;
@@ -72,9 +75,9 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, VehicleViewHol
         viewHolder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, VehicleDetailActivity.class);
 
-            Log.d(TAG, postKey + "!!!" + mPostType);
-            intent.putExtra(VehicleDetailActivity.EXTRA_POST_KEY, postKey);
-            intent.putExtra(VehicleDetailActivity.EXTRA_POST_TYPE, mPostType);
+            Log.d(TAG, postKey + "!!!" + vehicleType);
+            intent.putExtra(EXTRA_VEHICLE_KEY, postKey);
+            intent.putExtra(EXTRA_VEHICLE_TYPE, vehicleType);
             activity.startActivity(intent);
         });
         viewHolder.bindToPost(resources, model);

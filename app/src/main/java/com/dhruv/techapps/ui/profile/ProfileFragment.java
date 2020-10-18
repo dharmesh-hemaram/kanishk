@@ -24,8 +24,9 @@ import com.dhruv.techapps.module.GlideApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static com.dhruv.techapps.ProfileActivity.DISPLAY_NAME_KEY;
-import static com.dhruv.techapps.ProfileActivity.IMAGE_URI_KEY;
+import static com.dhruv.techapps.common.Common.EXTRA_DISPLAY_NAME;
+import static com.dhruv.techapps.common.Common.EXTRA_IMAGE_URI;
+
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
@@ -74,8 +75,8 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PROFILE) {
             assert data != null;
-            String name = data.getStringExtra(DISPLAY_NAME_KEY);
-            Uri imageUri = data.getParcelableExtra(IMAGE_URI_KEY);
+            String name = data.getStringExtra(EXTRA_DISPLAY_NAME);
+            Uri imageUri = data.getParcelableExtra(EXTRA_IMAGE_URI);
             if (name != null) {
                 profileName.setText(name);
             }

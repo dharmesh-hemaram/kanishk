@@ -30,13 +30,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import static com.dhruv.techapps.MainActivity.EXTRA_TYPE_KEY;
+import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_TYPE;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     ActionBar actionBar;
     FloatingActionButton fabNewVehicle;
-    private String type;
+    private String vehicleType;
     private RecyclerView mRecycler;
     private HomeAdapter homeAdapter;
     private DatabaseReference mDatabase;
@@ -46,12 +46,12 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        type = DataHolder.getInstance().getSelectedType();
-        if (type == null) {
-            type = requireActivity().getIntent().getStringExtra(EXTRA_TYPE_KEY);
+        vehicleType = DataHolder.getInstance().getSelectedVehicleType();
+        if (vehicleType == null) {
+            vehicleType = requireActivity().getIntent().getStringExtra(EXTRA_VEHICLE_TYPE);
         }
-        if (type == null) {
-            type = Common.TYPES[0];
+        if (vehicleType == null) {
+            vehicleType = Common.TYPES[0];
         }
     }
 
@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (actionBar != null) {
-            actionBar.setTitle(type);
+            actionBar.setTitle(vehicleType);
             actionBar.setIcon(R.drawable.ic_baseline_local_shipping_24);
         }
 
@@ -97,14 +97,14 @@ public class HomeFragment extends Fragment {
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
         FirebaseRecyclerOptions<Vehicle> options = new FirebaseRecyclerOptions.Builder<Vehicle>().setQuery(postsQuery, Vehicle.class).build();
-        homeAdapter = new HomeAdapter(options, type, getContext(), getActivity(), getResources(), progressBar);
+        homeAdapter = new HomeAdapter(options, vehicleType, getContext(), getActivity(), getResources(), progressBar);
         mRecycler.setAdapter(homeAdapter);
     }
 
     private void updateQuery() {
         Query postsQuery = getQuery(mDatabase);
         FirebaseRecyclerOptions<Vehicle> options = new FirebaseRecyclerOptions.Builder<Vehicle>().setQuery(postsQuery, Vehicle.class).build();
-        homeAdapter.mPostType = type;
+        homeAdapter.vehicleType = vehicleType;
         homeAdapter.updateOptions(options);
     }
 
@@ -126,17 +126,16 @@ public class HomeFragment extends Fragment {
     }
 
     public Query getQuery(DatabaseReference databaseReference) {
-        Log.d(TAG, type.toLowerCase());
-        return databaseReference.child(type.toLowerCase()).limitToFirst(100);
+        return databaseReference.child(vehicleType.toLowerCase()).limitToFirst(100);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         progressBar.setVisibility(View.VISIBLE);
-        type = item.getTitle().toString();
-        DataHolder.getInstance().setSelectedType(type);
+        vehicleType = item.getTitle().toString();
+        DataHolder.getInstance().setSelectedVehicleType(vehicleType);
         if (actionBar != null) {
-            actionBar.setTitle(type);
+            actionBar.setTitle(vehicleType);
         }
         updateQuery();
         return super.onOptionsItemSelected(item);

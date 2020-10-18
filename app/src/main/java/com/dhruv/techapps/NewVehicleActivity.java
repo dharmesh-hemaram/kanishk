@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.dhruv.techapps.VehicleDetailActivity.EXTRA_POST_KEY;
-import static com.dhruv.techapps.VehicleDetailActivity.EXTRA_POST_TYPE;
+import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_KEY;
+import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_TYPE;
 
 public class NewVehicleActivity extends BaseActivity {
 
@@ -63,8 +63,8 @@ public class NewVehicleActivity extends BaseActivity {
         setContentView(binding.getRoot());
 
         // Get post key from intent
-        mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        mPostType = getIntent().getStringExtra(EXTRA_POST_TYPE);
+        mPostKey = getIntent().getStringExtra(EXTRA_VEHICLE_KEY);
+        mPostType = getIntent().getStringExtra(EXTRA_VEHICLE_TYPE);
 
 
         binding.fabSubmitPost.setOnClickListener(v -> submitPost());
@@ -113,10 +113,15 @@ public class NewVehicleActivity extends BaseActivity {
                         binding.fieldYear.setText(String.valueOf(vehicle.year));
                         binding.fieldRegistrationNumber.setText(vehicle.reg);
                         binding.fieldKiloMeter.setText(Common.formatDecimal(vehicle.km));
-                        binding.fieldEngineType.setText(Common.ENGINE_TYPES[vehicle.eType]);
+                        binding.fieldEngineType.setText(vehicle.getEngineTypeName());
                         binding.fieldInsurance.setText(vehicle.ins);
                         binding.fieldColor.setText(vehicle.color);
                         binding.fieldMobileNumber.setText(vehicle.mobile);
+                        binding.fieldStatus.setText(vehicle.getStatusName());
+                        binding.fieldLocation.setText(vehicle.loc);
+                        binding.checkboxRC.setChecked(vehicle.rc);
+                        binding.checkboxForm35.setChecked(vehicle.form35);
+                        binding.checkboxForm36.setChecked(vehicle.form36);
 
                     }
                 }

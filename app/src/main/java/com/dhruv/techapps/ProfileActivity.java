@@ -16,13 +16,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import static com.dhruv.techapps.common.Common.EXTRA_DISPLAY_NAME;
+import static com.dhruv.techapps.common.Common.EXTRA_IMAGE_URI;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "ProfileActivity";
-    public static final String DISPLAY_NAME_KEY = "displayName";
-    public static final String IMAGE_URI_KEY = "imageUri";
-
-    ActivityProfileBinding mBinding;
-    Uri imageUri;
+    private ActivityProfileBinding mBinding;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +64,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Intent returnIntent = new Intent();
-                            returnIntent.putExtra(DISPLAY_NAME_KEY, name);
-                            returnIntent.putExtra(IMAGE_URI_KEY, imageUri);
+                            returnIntent.putExtra(EXTRA_DISPLAY_NAME, name);
+                            returnIntent.putExtra(EXTRA_IMAGE_URI, imageUri);
                             setResult(Activity.RESULT_OK, returnIntent);
                             finish();
                         }

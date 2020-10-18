@@ -22,9 +22,9 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.dhruv.techapps.VerificationActivity.EXTRA_PHONE_NUMBER_KEY;
-import static com.dhruv.techapps.VerificationActivity.EXTRA_TOKEN_KEY;
-import static com.dhruv.techapps.VerificationActivity.EXTRA_VERIFICATION_ID_KEY;
+import static com.dhruv.techapps.common.Common.EXTRA_PHONE_NUMBER;
+import static com.dhruv.techapps.common.Common.EXTRA_TOKEN;
+import static com.dhruv.techapps.common.Common.EXTRA_VERIFICATION_ID;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
@@ -80,9 +80,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
                 Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
-                intent.putExtra(EXTRA_VERIFICATION_ID_KEY, verificationId);
-                intent.putExtra(EXTRA_PHONE_NUMBER_KEY, getShowPhoneNumber());
-                intent.putExtra(EXTRA_TOKEN_KEY, token);
+                intent.putExtra(EXTRA_VERIFICATION_ID, verificationId);
+                intent.putExtra(EXTRA_PHONE_NUMBER, getShowPhoneNumber());
+                intent.putExtra(EXTRA_TOKEN, token);
                 startActivity(intent);
             }
 

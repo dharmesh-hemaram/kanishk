@@ -9,12 +9,12 @@
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:indeterminate="true"
-        android:indeterminateBehavior="cycle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
+        android:indeterminate="true"
+        android:indeterminateBehavior="cycle"
         android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -34,9 +34,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
+        android:contentDescription="@string/add_new_vehicle"
         android:src="@drawable/ic_baseline_add_24"
         android:visibility="gone"
-        android:contentDescription="@string/add_new_vehicle"
         app:backgroundTint="@color/colorPrimary" />
 
 </RelativeLayout>

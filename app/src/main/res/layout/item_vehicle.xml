@@ -22,8 +22,8 @@
             android:paddingLeft="10dp"
             android:paddingEnd="10dp"
             android:paddingRight="10dp"
-            android:textStyle="bold"
             android:textColor="@color/my_app_heading_color"
+            android:textStyle="bold"
             tools:text="@string/vehicle_name" />
 
         <RelativeLayout

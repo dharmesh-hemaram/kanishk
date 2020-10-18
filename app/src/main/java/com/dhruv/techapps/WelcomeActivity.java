@@ -12,9 +12,10 @@ import com.dhruv.techapps.databinding.ActivityWelcomeBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static com.dhruv.techapps.common.Common.REQUEST_CODE_PROFILE;
+
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = "WelcomeActivity";
-    private static final int PROFILE = 1;
     ActivityWelcomeBinding mBinding;
 
     @Override
@@ -22,7 +23,6 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityWelcomeBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-
     }
 
     @Override
@@ -36,7 +36,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 public void onFinish() {
                     if (currentUser.getDisplayName() == null || currentUser.getDisplayName().isEmpty()) {
-                        startActivityForResult(new Intent(getApplicationContext(), ProfileActivity.class), PROFILE);
+                        startActivityForResult(new Intent(getApplicationContext(), ProfileActivity.class), REQUEST_CODE_PROFILE);
                     } else {
                         startActivity(new Intent(getApplicationContext(), LandingActivity.class));
                         finish();
@@ -54,7 +54,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PROFILE) {
+        if (requestCode == REQUEST_CODE_PROFILE) {
             startActivity(new Intent(getApplicationContext(), LandingActivity.class));
             finish();
         }

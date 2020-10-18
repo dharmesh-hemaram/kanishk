@@ -26,14 +26,17 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import static com.dhruv.techapps.common.Common.EXTRA_PHONE_NUMBER;
+import static com.dhruv.techapps.common.Common.EXTRA_TOKEN;
+import static com.dhruv.techapps.common.Common.EXTRA_VERIFICATION_ID;
+import static com.dhruv.techapps.common.Common.REQUEST_CODE_PROFILE;
+
 public class VerificationActivity extends AppCompatActivity implements PinEntryEditText.OnPinEnteredListener, View.OnClickListener {
-    private static final int PROFILE = 1;
-    public static final String EXTRA_VERIFICATION_ID_KEY = "verificationId";
-    public static final String EXTRA_PHONE_NUMBER_KEY = "phone_number";
-    public static final String EXTRA_TOKEN_KEY = "token";
+
     private static final String TAG = "VerificationActivity";
-    ActivityVerificationBinding mBinding;
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+
+    private ActivityVerificationBinding mBinding;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
     private String mPhoneNumber;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -45,9 +48,9 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
         mBinding = ActivityVerificationBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         // Get post key from intent
-        mPhoneNumber = getIntent().getStringExtra(EXTRA_PHONE_NUMBER_KEY);
-        mVerificationId = getIntent().getStringExtra(EXTRA_VERIFICATION_ID_KEY);
-        mResendToken = getIntent().getParcelableExtra(EXTRA_TOKEN_KEY);
+        mPhoneNumber = getIntent().getStringExtra(EXTRA_PHONE_NUMBER);
+        mVerificationId = getIntent().getStringExtra(EXTRA_VERIFICATION_ID);
+        mResendToken = getIntent().getParcelableExtra(EXTRA_TOKEN);
         if (null == mPhoneNumber || null == mVerificationId || null == mResendToken) {
             throw new IllegalArgumentException("Must pass Phone number and token");
         }
@@ -92,8 +95,8 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
                             if (user != null) {
                                 Log.d(TAG, user.getUid());
                                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                                intent.putExtra(EXTRA_VERIFICATION_ID_KEY, user.getUid());
-                                startActivityForResult(intent, PROFILE);
+                                intent.putExtra(EXTRA_VERIFICATION_ID, user.getUid());
+                                startActivityForResult(intent, REQUEST_CODE_PROFILE);
                             }
                         }
                         mBinding.progressBarVerify.setVisibility(View.GONE);
@@ -172,7 +175,7 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PROFILE) {
+        if (requestCode == REQUEST_CODE_PROFILE) {
             startActivity(new Intent(getApplicationContext(), LandingActivity.class));
             finish();
         }

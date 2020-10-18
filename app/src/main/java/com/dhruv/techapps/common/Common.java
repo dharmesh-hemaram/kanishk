@@ -15,7 +15,15 @@ public class Common {
     public final static String[] TYPES = {"Cars", "Tractors", "Trucks", "Tempos", "Bikes"};
     public final static String[] VEHICLE_STATUS = {"Running", "Break Down"};
     public final static String[] ENGINE_TYPES = {"Petrol", "Diesel", "CNG"};
-    public static final String IS_ADMIN = "isAdmin";
+    public static final int REQUEST_CODE_PROFILE = 1;
+    public static final String EXTRA_VERIFICATION_ID = "verificationId";
+    public static final String EXTRA_PHONE_NUMBER = "phoneNumber";
+    public static final String EXTRA_TOKEN = "token";
+    public static final String EXTRA_DISPLAY_NAME = "displayName";
+    public static final String EXTRA_IMAGE_URI = "imageUri";
+    public static final String EXTRA_VEHICLE_TYPE = "vehicleType";
+    public static final String EXTRA_VEHICLE_KEY = "vehicleKey";
+    public static final String EXTRA_VEHICLE_PRICE = "vehiclePrice";
     private static final String TAG = "Common";
 
     public static String formatCurrency(String currency) {

@@ -63,6 +63,11 @@ public class Vehicle {
         return Common.ENGINE_TYPES[eType];
     }
 
+    @Exclude
+    public String getStatusName() {
+        return Common.VEHICLE_STATUS[status];
+    }
+
     // [START post_to_map]
     @Exclude
     public Map<String, Object> toMap() {
