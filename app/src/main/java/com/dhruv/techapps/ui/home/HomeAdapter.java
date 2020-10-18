@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -28,14 +30,22 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, VehicleViewHol
     private final Context context;
     private final FragmentActivity activity;
     private final Resources resources;
+    private final ProgressBar progressBar;
     String mPostType;
 
-    public HomeAdapter(FirebaseRecyclerOptions<Vehicle> options, String type, Context context, FragmentActivity activity, Resources resources) {
+    public HomeAdapter(FirebaseRecyclerOptions<Vehicle> options, String type, Context context, FragmentActivity activity, Resources resources, ProgressBar progressBar) {
         super(options);
         this.mPostType = type;
         this.context = context;
         this.activity = activity;
         this.resources = resources;
+        this.progressBar = progressBar;
+    }
+
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        progressBar.setVisibility(View.GONE);
     }
 
 

@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment {
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
         FirebaseRecyclerOptions<Vehicle> options = new FirebaseRecyclerOptions.Builder<Vehicle>().setQuery(postsQuery, Vehicle.class).build();
-        homeAdapter = new HomeAdapter(options, type, getContext(), getActivity(), getResources());
+        homeAdapter = new HomeAdapter(options, type, getContext(), getActivity(), getResources(), progressBar);
         mRecycler.setAdapter(homeAdapter);
     }
 
@@ -132,6 +132,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        progressBar.setVisibility(View.VISIBLE);
         type = item.getTitle().toString();
         DataHolder.getInstance().setSelectedType(type);
         if (actionBar != null) {
