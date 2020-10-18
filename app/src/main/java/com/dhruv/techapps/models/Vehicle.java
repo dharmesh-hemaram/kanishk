@@ -63,9 +63,25 @@ public class Vehicle {
         return Common.ENGINE_TYPES[eType];
     }
 
+
     @Exclude
     public String getStatusName() {
         return Common.VEHICLE_STATUS[status];
+    }
+
+    @Exclude
+    public String getRC() {
+        return rc ? "Yes" : "No";
+    }
+
+    @Exclude
+    public String getForm35() {
+        return form35 ? "Yes" : "No";
+    }
+
+    @Exclude
+    public String getForm36() {
+        return form36 ? "Yes" : "No";
     }
 
     // [START post_to_map]

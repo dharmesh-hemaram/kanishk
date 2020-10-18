@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample.SliderAdapterVH> {
 
-    private Context context;
+    private final Context context;
     private List<StorageReference> mSliderItems = new ArrayList<>();
 
     public SliderAdapterExample(Context context) {
@@ -28,6 +28,10 @@ public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample
     public void renewItems(List<StorageReference> sliderItems) {
         this.mSliderItems = sliderItems;
         notifyDataSetChanged();
+    }
+
+    public List<StorageReference> getItems() {
+        return this.mSliderItems;
     }
 
     public void deleteItems() {

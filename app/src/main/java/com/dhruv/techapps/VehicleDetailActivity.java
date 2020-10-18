@@ -63,7 +63,7 @@ public class VehicleDetailActivity extends BaseActivity {
         adapter = new SliderAdapterExample(this);
         sliderView.setSliderAdapter(adapter);
         binding.buttonViewBids.setOnClickListener(this::viewBids);
-        binding.buttonSoldOut.setOnClickListener(this::soldOut);
+        binding.fabShare.setOnClickListener(this::share);
     }
 
     @Override
@@ -82,7 +82,11 @@ public class VehicleDetailActivity extends BaseActivity {
 
                 if (vehicle != null) {
                     binding.textName.setText(vehicle.name);
-                    binding.textPrice.setText(Common.formatCurrency(vehicle.price));
+                    if (vehicle.bid <= 0) {
+                        binding.textPrice.setText(Common.formatCurrency(vehicle.price));
+                    } else {
+                        binding.textPrice.setText(Common.formatCurrency(vehicle.bid));
+                    }
                     binding.textYear.setText(String.valueOf(vehicle.year));
                     binding.textRegNum.setText(vehicle.reg);
                     binding.textKm.setText(Common.formatDecimal(vehicle.km));
@@ -146,10 +150,11 @@ public class VehicleDetailActivity extends BaseActivity {
 
     private void checkAdmin() {
         if (DataHolder.getInstance().getIsAdmin()) {
-            binding.fabEdit.setVisibility(View.VISIBLE);
+            binding.buttonEdit.setVisibility(View.VISIBLE);
+            binding.buttonEdit.setOnClickListener(this::onEditClick);
             //binding.textMobileNumber.setVisibility(View.VISIBLE);
             binding.buttonSoldOut.setVisibility(View.VISIBLE);
-            binding.fabEdit.setOnClickListener(this::onEditClick);
+            binding.buttonSoldOut.setOnClickListener(this::onSoldOut);
         }
     }
 
@@ -178,7 +183,28 @@ public class VehicleDetailActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void soldOut(View v) {
+    private void share(View v) {
+
+        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+        whatsappIntent.setType("text/plain");
+        whatsappIntent.setPackage("com.whatsapp");
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, formatMessage());
+        whatsappIntent.setType("text/plain");
+        whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        try {
+            startActivity(whatsappIntent);
+        } catch (android.content.ActivityNotFoundException ex) {
+            ex.printStackTrace();
+            Toast.makeText(this, "Whatsapp have not been installed.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String formatMessage() {
+        return getResources().getString(R.string.message, vehicle.name, Common.formatCurrency(vehicle.price), Common.formatCurrency(vehicle.bid), vehicle.reg, vehicle.year, Common.formatDecimal(vehicle.km), vehicle.getEngineTypeName(), vehicle.getStatusName(), vehicle.ins, vehicle.loc, vehicle.color, vehicle.getRC(), vehicle.getForm35(), vehicle.getForm36());
+    }
+
+    private void onSoldOut(View v) {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Are you sure?")
                 .setMessage(vehicle.name + "\n\nVehicle is sold out")

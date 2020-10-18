@@ -31,11 +31,15 @@ public class HomeViewHolder extends RecyclerView.ViewHolder {
         imageView = itemView.findViewById(R.id.carImage);
     }
 
-    public void bindToPost(Resources resources, Vehicle vehicle, View.OnClickListener starClickListener) {
+    public void bindToPost(Resources resources, Vehicle vehicle) {
 
         nameView.setText(vehicle.name);
         regView.setText(vehicle.reg.toUpperCase());
-        priceView.setText(Common.formatCurrency(vehicle.price));
+        if (vehicle.bid <= 0) {
+            priceView.setText(Common.formatCurrency(vehicle.price));
+        } else {
+            priceView.setText(Common.formatCurrency(vehicle.bid));
+        }
         kmView.setText(resources.getString(R.string.km_string, Common.formatDecimal(vehicle.km)));
         yearView.setText(resources.getString(R.string.year_string, Integer.toString(vehicle.year)));
     }

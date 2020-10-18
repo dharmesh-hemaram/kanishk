@@ -28,6 +28,7 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
     private String vehicleType;
     private double vehiclePrice;
     private DatabaseReference mBiddingReference;
+    private DatabaseReference mVehicleReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
         String mPostBiddingType = vehicleType.substring(0, vehicleType.length() - 1) + "-bidding";
 
         mBiddingReference = FirebaseDatabase.getInstance().getReference().child(mPostBiddingType.toLowerCase()).child(vehicleKey);
+        mVehicleReference = FirebaseDatabase.getInstance().getReference().child(vehicleType.toLowerCase()).child(vehicleKey);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setReverseLayout(true);
@@ -94,6 +96,7 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
             Bid bid = new Bid(uid, authorName, biddingAmount);
             // Push the comment, it will appear in the list
             mBiddingReference.push().setValue(bid);
+            mVehicleReference.child("bid").setValue(bid.amount);
             // Clear the field
             binding.fieldBiddingAmount.setText(null);
         } else {
