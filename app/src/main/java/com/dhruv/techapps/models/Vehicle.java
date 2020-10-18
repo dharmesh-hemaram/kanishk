@@ -48,7 +48,7 @@ public class Vehicle {
         this.loc = loc;
         this.eType = eType;
         this.year = year;
-        if (TextUtils.isEmpty(km)) {
+        if (!TextUtils.isEmpty(km)) {
             this.km = Integer.parseInt(Common.removeDecimalFormatter(km));
         }
         this.status = status;

@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment {
     }
 
     public Query getQuery(DatabaseReference databaseReference) {
-        return databaseReference.child(vehicleType.toLowerCase()).limitToFirst(100);
+        return databaseReference.child(vehicleType.toLowerCase()).orderByChild("sold").equalTo(false).limitToFirst(100);
     }
 
     @Override

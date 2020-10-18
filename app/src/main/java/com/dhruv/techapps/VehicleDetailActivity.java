@@ -17,6 +17,7 @@ import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityVehicleDetailBinding;
 import com.dhruv.techapps.models.Vehicle;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,6 +63,7 @@ public class VehicleDetailActivity extends BaseActivity {
         adapter = new SliderAdapterExample(this);
         sliderView.setSliderAdapter(adapter);
         binding.buttonViewBids.setOnClickListener(this::viewBids);
+        binding.buttonSoldOut.setOnClickListener(this::soldOut);
     }
 
     @Override
@@ -146,6 +148,7 @@ public class VehicleDetailActivity extends BaseActivity {
         if (DataHolder.getInstance().getIsAdmin()) {
             binding.fabEdit.setVisibility(View.VISIBLE);
             //binding.textMobileNumber.setVisibility(View.VISIBLE);
+            binding.buttonSoldOut.setVisibility(View.VISIBLE);
             binding.fabEdit.setOnClickListener(this::onEditClick);
         }
     }
@@ -173,6 +176,17 @@ public class VehicleDetailActivity extends BaseActivity {
         intent.putExtra(EXTRA_VEHICLE_TYPE, vehicleType);
         intent.putExtra(EXTRA_VEHICLE_PRICE, vehicle.price);
         startActivity(intent);
+    }
+
+    private void soldOut(View v) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Are you sure?")
+                .setMessage(vehicle.name + "\n\nVehicle is sold out")
+                .setNeutralButton("NO", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    mVehicleReference.child("sold").setValue(true);
+                    finish();
+                }).show();
     }
 
 }

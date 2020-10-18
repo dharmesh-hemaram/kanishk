@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -374,10 +375,11 @@ public class NewVehicleActivity extends BaseActivity {
 
     // [START write_fan_out]
     private void writeNewPost(String uid, String name, int year, String price, String reg, String km, String color, String mobile, String ins, String loc, boolean rc, boolean form35, boolean form36) throws ParseException {
-
+        Log.d(TAG, km);
         Vehicle vehicle = new Vehicle(uid, name, reg, color, mobile, ins, loc, engineTypeId, year, km, statusId, rc, form35, form36, price);
         Map<String, Object> postValues = vehicle.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
+        Log.d(TAG, postValues.toString());
         // [START initialize_database_ref]
         // [START declare_database_ref]
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
