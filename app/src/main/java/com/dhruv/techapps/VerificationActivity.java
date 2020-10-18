@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alimuzaffar.lib.pin.PinEntryEditText;
@@ -26,7 +27,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity implements PinEntryEditText.OnPinEnteredListener, View.OnClickListener {
-
+    private static final int PROFILE = 1;
     public static final String EXTRA_VERIFICATION_ID_KEY = "verificationId";
     public static final String EXTRA_PHONE_NUMBER_KEY = "phone_number";
     public static final String EXTRA_TOKEN_KEY = "token";
@@ -92,7 +93,7 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
                                 Log.d(TAG, user.getUid());
                                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                                 intent.putExtra(EXTRA_VERIFICATION_ID_KEY, user.getUid());
-                                startActivity(intent);
+                                startActivityForResult(intent, PROFILE);
                             }
                         }
                         mBinding.progressBarVerify.setVisibility(View.GONE);
@@ -166,5 +167,14 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
                 this,               // Activity (for callback binding)
                 mCallbacks,         // OnVerificationStateChangedCallbacks
                 token);             // ForceResendingToken from callbacks
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PROFILE) {
+            startActivity(new Intent(getApplicationContext(), LandingActivity.class));
+            finish();
+        }
     }
 }

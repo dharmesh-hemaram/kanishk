@@ -5,6 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.dhruv.techapps.ProfileActivity;
 import com.dhruv.techapps.R;
+import com.dhruv.techapps.WelcomeActivity;
 import com.dhruv.techapps.module.GlideApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +33,17 @@ public class ProfileFragment extends Fragment {
     ImageView profileImage;
     TextView profileName;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -68,5 +83,15 @@ public class ProfileFragment extends Fragment {
                 profileImage.setImageURI(imageUri);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(requireActivity(), WelcomeActivity.class));
+            requireActivity().finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
