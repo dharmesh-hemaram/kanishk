@@ -2,17 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_car"
+        android:icon="@drawable/ic_baseline_directions_car_24"
         android:title="@string/cars" />
     <item
         android:id="@+id/menu_tractor"
+        android:icon="@drawable/ic_baseline_agriculture_24"
         android:title="@string/tractors" />
     <item
         android:id="@+id/menu_truck"
+        android:icon="@drawable/ic_baseline_directions_bus_24"
         android:title="@string/trucks" />
     <item
         android:id="@+id/menu_tempo"
+        android:icon="@drawable/ic_baseline_local_shipping_24"
         android:title="@string/tempos" />
     <item
         android:id="@+id/menu_bike"
+        android:icon="@drawable/ic_baseline_directions_bike_24"
         android:title="@string/bikes" />
 </menu>

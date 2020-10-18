@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dhruv.techapps.databinding.ActivityWelcomeBinding;
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = "WelcomeActivity";
+    private static final int PROFILE = 1;
     ActivityWelcomeBinding mBinding;
 
     @Override
@@ -34,9 +36,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 public void onFinish() {
                     if (currentUser.getDisplayName() == null || currentUser.getDisplayName().isEmpty()) {
-                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        startActivityForResult(new Intent(getApplicationContext(), ProfileActivity.class), PROFILE);
                     } else {
                         startActivity(new Intent(getApplicationContext(), LandingActivity.class));
+                        finish();
                     }
                 }
             }.start();
@@ -45,6 +48,15 @@ public class WelcomeActivity extends AppCompatActivity {
             mBinding.textPrivacyPolicy.setVisibility(View.VISIBLE);
             mBinding.buttonContinue.setVisibility(View.VISIBLE);
             mBinding.buttonContinue.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), LoginActivity.class)));
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PROFILE) {
+            startActivity(new Intent(getApplicationContext(), LandingActivity.class));
+            finish();
         }
     }
 }

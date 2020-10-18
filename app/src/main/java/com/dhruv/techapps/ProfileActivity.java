@@ -18,6 +18,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "ProfileActivity";
+    public static final String DISPLAY_NAME_KEY = "displayName";
+    public static final String IMAGE_URI_KEY = "imageUri";
+
     ActivityProfileBinding mBinding;
     Uri imageUri;
 
@@ -29,6 +32,15 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.fieldName.requestFocus();
         mBinding.buttonNext.setOnClickListener(this);
         mBinding.imageProfile.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mBinding.fieldName.setText(user.getDisplayName());
+        }
     }
 
     @Override
@@ -44,13 +56,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             UserProfileChangeRequest.Builder profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name);
             if (imageUri != null) {
+                Log.d(TAG, imageUri.toString());
                 profileUpdates.setPhotoUri(imageUri);
             }
             assert user != null;
             user.updateProfile(profileUpdates.build())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(getApplicationContext(), LandingActivity.class));
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra(DISPLAY_NAME_KEY, name);
+                            returnIntent.putExtra(IMAGE_URI_KEY, imageUri);
+                            setResult(Activity.RESULT_OK, returnIntent);
                             finish();
                         }
                     });

@@ -77,6 +77,7 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (actionBar != null) {
             actionBar.setTitle(type);
+            actionBar.setIcon(R.drawable.ic_baseline_local_shipping_24);
         }
 
         // Set up Layout Manager, reverse layout

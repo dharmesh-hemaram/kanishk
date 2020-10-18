@@ -3,24 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.profile.ProfileFragment">
 
-    <TextView
-        android:id="@+id/text_notifications"
+    <LinearLayout
+        android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="20sp" />
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/profileImage"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/profile_image"
+            android:src="@drawable/ic_baseline_add_a_photo_24"
+            app:civ_border_color="@color/my_app_para_color"
+            app:civ_border_width="0dp" />
+
+        <TextView
+            android:id="@+id/profileName"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:gravity="center" />
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonLogout"
+        android:id="@+id/buttonEdit"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/profileContainer"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="50dp"
-        android:text="@string/logout" />
+        android:text="@string/edit" />
 </RelativeLayout>
