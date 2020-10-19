@@ -1,16 +1,45 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fieldImageContainer"
-    android:layout_width="wrap_content"
-    android:layout_height="100dp"
-    android:layout_margin="5dp"
-    android:gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="125dp"
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/fieldImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
         android:src="@drawable/no_media" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/fieldImageProgress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fieldImageRemove"
+        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        app:icon="@drawable/ic_baseline_remove_circle_24" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fieldImageDone"
+        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        app:icon="@drawable/ic_baseline_check_circle_24" />
+</RelativeLayout>

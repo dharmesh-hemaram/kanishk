@@ -34,6 +34,7 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
     private DatabaseReference mBiddingReference;
     private DatabaseReference mVehicleReference;
     private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -31,10 +31,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerVehicleBids"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toTopOf="@+id/biddingForm"
         app:layout_constraintTop_toBottomOf="@+id/vehicleContainer"
         tools:listitem="@layout/item_bid" />

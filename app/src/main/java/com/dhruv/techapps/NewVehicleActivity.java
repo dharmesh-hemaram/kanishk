@@ -1,13 +1,12 @@
 package com.dhruv.techapps;
 
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.dhruv.techapps.adapter.ImageViewAdapter;
+import com.dhruv.techapps.adapter.ImageStorageViewAdapter;
+import com.dhruv.techapps.adapter.ImageUriViewAdapter;
 import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.common.DataHolder;
 import com.dhruv.techapps.databinding.ActivityNewVehicleBinding;
@@ -27,7 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -51,9 +50,9 @@ public class NewVehicleActivity extends BaseActivity {
     private int engineTypeId = 0;
     private String type;
     private List<Brand> brands;
-    private ImageViewAdapter imageViewAdapter;
+    private ImageUriViewAdapter imageUriViewAdapter;
     private int statusId = 0;
-
+    private DatabaseReference mDatabase;
     private String mPostKey;
     private String mPostType;
 
@@ -66,18 +65,18 @@ public class NewVehicleActivity extends BaseActivity {
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_VEHICLE_KEY);
         mPostType = getIntent().getStringExtra(EXTRA_VEHICLE_TYPE);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        if (mPostKey != null) {
+            this.checkPostFromDatabase();
+        } else {
+            mPostKey = mDatabase.child(type).push().getKey();
+        }
 
 
         binding.fabSubmitPost.setOnClickListener(v -> submitPost());
-        binding.fieldImageSelect.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
-        });
+        binding.fieldImageSelect.setOnClickListener(this::onImageSelectClick);
+
         setTypes();
         setStatus();
         setBrands();
@@ -85,54 +84,50 @@ public class NewVehicleActivity extends BaseActivity {
         setVariants();
         setEngineTypes();
         setNumberFormatter();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkPost();
+        setImageAdapter();
         checkPostType();
     }
 
-    private void checkPost() {
-        if (mPostKey != null) {
-            DatabaseReference mVehicleReference = FirebaseDatabase.getInstance().getReference().child(mPostType.toLowerCase()).child(mPostKey);
-            mVehicleReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // Get Post object and use the values to update the UI
-                    Vehicle vehicle = dataSnapshot.getValue(Vehicle.class);
-
-                    if (vehicle != null) {
-
-                        String[] names = vehicle.name.split(getResources().getString(R.string.dot));
-                        // [START_EXCLUDE]
-                        binding.fieldBrand.setText(names[0]);
-                        binding.fieldModel.setText(names[1]);
-                        binding.fieldVariant.setText(names[2]);
-                        binding.fieldPrice.setText(Common.formatCurrency(vehicle.price));
-                        binding.fieldYear.setText(String.valueOf(vehicle.year));
-                        binding.fieldRegistrationNumber.setText(vehicle.reg);
-                        binding.fieldKiloMeter.setText(Common.formatDecimal(vehicle.km));
-                        binding.fieldEngineType.setText(vehicle.getEngineTypeName());
-                        binding.fieldInsurance.setText(vehicle.ins);
-                        binding.fieldColor.setText(vehicle.color);
-                        binding.fieldMobileNumber.setText(vehicle.mobile);
-                        binding.fieldStatus.setText(vehicle.getStatusName());
-                        binding.fieldLocation.setText(vehicle.loc);
-                        binding.checkboxRC.setChecked(vehicle.rc);
-                        binding.checkboxForm35.setChecked(vehicle.form35);
-                        binding.checkboxForm36.setChecked(vehicle.form36);
-
-                    }
+    private void checkPostFromDatabase() {
+        DatabaseReference mVehicleReference = FirebaseDatabase.getInstance().getReference().child(mPostType.toLowerCase()).child(mPostKey);
+        mVehicleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                Vehicle vehicle = dataSnapshot.getValue(Vehicle.class);
+                if (vehicle != null) {
+                    String[] names = vehicle.name.split(getResources().getString(R.string.dot));
+                    // [START_EXCLUDE]
+                    binding.fieldBrand.setText(names[0]);
+                    binding.fieldModel.setText(names[1]);
+                    binding.fieldVariant.setText(names[2]);
+                    binding.fieldPrice.setText(Common.formatCurrency(vehicle.price));
+                    binding.fieldYear.setText(String.valueOf(vehicle.year));
+                    binding.fieldRegistrationNumber.setText(vehicle.reg);
+                    binding.fieldKiloMeter.setText(Common.formatDecimal(vehicle.km));
+                    binding.fieldEngineType.setText(vehicle.getEngineTypeName());
+                    binding.fieldInsurance.setText(vehicle.ins);
+                    binding.fieldColor.setText(vehicle.color);
+                    binding.fieldMobileNumber.setText(vehicle.mobile);
+                    binding.fieldStatus.setText(vehicle.getStatusName());
+                    binding.fieldLocation.setText(vehicle.loc);
+                    binding.checkboxRC.setChecked(vehicle.rc);
+                    binding.checkboxForm35.setChecked(vehicle.form35);
+                    binding.checkboxForm36.setChecked(vehicle.form36);
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-        }
+            }
+        });
+        FirebaseStorage.getInstance().getReference("/images/" + mPostKey).listAll().addOnSuccessListener(listResult -> {
+            ImageStorageViewAdapter imageStorageViewAdapter = new ImageStorageViewAdapter(listResult.getItems(), getApplicationContext());
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+            binding.fieldStorageImages.setLayoutManager(gridLayoutManager);
+            binding.fieldStorageImages.setAdapter(imageStorageViewAdapter);
+        });
     }
 
     private void checkPostType() {
@@ -155,14 +150,11 @@ public class NewVehicleActivity extends BaseActivity {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data.getClipData() != null) {
-                    imageViewAdapter = new ImageViewAdapter(data.getClipData(), getContentResolver());
-                    binding.fieldImages.setLayoutManager(new GridLayoutManager(this, 3));
-                    binding.fieldImages.setAdapter(imageViewAdapter); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
-
+                    for (int index = 0; index < data.getClipData().getItemCount(); index++) {
+                        imageUriViewAdapter.addItem(data.getClipData().getItemAt(index).getUri());
+                    }
                 } else if (data.getData() != null) {
-                    imageViewAdapter = new ImageViewAdapter(data.getData(), getContentResolver());
-                    binding.fieldImages.setLayoutManager(new GridLayoutManager(this, 1));
-                    binding.fieldImages.setAdapter(imageViewAdapter); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
+                    imageUriViewAdapter.addItem(data.getData());
                 }
             }
         }
@@ -203,6 +195,13 @@ public class NewVehicleActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void setImageAdapter() {
+        imageUriViewAdapter = new ImageUriViewAdapter(mPostKey, getContentResolver());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        binding.fieldImages.setLayoutManager(gridLayoutManager);
+        binding.fieldImages.setAdapter(imageUriViewAdapter);
     }
 
     private void setTypes() {
@@ -282,12 +281,6 @@ public class NewVehicleActivity extends BaseActivity {
 
             final String price = Objects.requireNonNull(binding.fieldPrice.getText()).toString();
 
-            if (imageViewAdapter == null && mPostKey == null) {
-                binding.fieldImageSelect.requestFocus();
-                Toast.makeText(this, "Please select images...", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             boolean isError = false;
 
             if (TextUtils.isEmpty(type)) {
@@ -353,9 +346,6 @@ public class NewVehicleActivity extends BaseActivity {
             // Write new post
             writeNewPost(userId, name, Integer.parseInt(year), price, regNum, kiloMeter, color, mobileNumber, insurance, location, rc, form35, form36);
 
-            // Finish this Activity, back to the stream
-            setEditingEnabled(true);
-            finish();
             // [END_EXCLUDE]
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -379,29 +369,17 @@ public class NewVehicleActivity extends BaseActivity {
         Vehicle vehicle = new Vehicle(uid, name, reg, color, mobile, ins, loc, engineTypeId, year, km, statusId, rc, form35, form36, price);
         Map<String, Object> postValues = vehicle.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        Log.d(TAG, postValues.toString());
-        // [START initialize_database_ref]
-        // [START declare_database_ref]
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        StorageReference mStorage = FirebaseStorage.getInstance().getReference("images/");
-        // [END initialize_database_ref]
-        if (mPostKey == null) {
-            mPostKey = mDatabase.child(type).push().getKey();
-        }
         childUpdates.put("/" + type + "/" + mPostKey, postValues);
+        mDatabase.updateChildren(childUpdates).addOnSuccessListener(aVoid -> finish());
+    }
 
-        mDatabase.updateChildren(childUpdates);
-        if (imageViewAdapter != null) {
-            if (imageViewAdapter.uri != null) {
-                Uri uri = imageViewAdapter.uri;
-                mStorage.child(mPostKey + "/" + uri.getLastPathSegment()).putFile(uri);
-            } else {
-                ClipData clipData = imageViewAdapter.clipData;
-                for (int index = 0; index < clipData.getItemCount(); index++) {
-                    Uri uri = clipData.getItemAt(index).getUri();
-                    mStorage.child(mPostKey + "/" + uri.getLastPathSegment()).putFile(uri);
-                }
-            }
+    private void onImageSelectClick(View v) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
     }
 }

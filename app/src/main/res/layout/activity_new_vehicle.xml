@@ -334,11 +334,21 @@
                 android:text="@string/form_36" />
         </LinearLayout>
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fieldStorageImages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkboxContainer"
+            android:clipToPadding="false"
+            android:scrollbars="horizontal"
+            tools:listitem="@layout/item_image" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fieldImages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/checkboxContainer"
+            android:layout_below="@id/fieldStorageImages"
             android:clipToPadding="false"
             android:scrollbars="horizontal"
             tools:listitem="@layout/item_image" />
