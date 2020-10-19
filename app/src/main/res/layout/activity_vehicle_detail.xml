@@ -266,7 +266,6 @@
         android:layout_marginBottom="10dp">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -278,36 +277,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/documents" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textRC"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rc"
-                    app:drawableStartCompat="@drawable/ic_baseline_done_24" />
-
-                <TextView
-                    android:id="@+id/textForm35"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/form_35"
-                    app:drawableStartCompat="@drawable/ic_baseline_done_24" />
-
-                <TextView
-                    android:id="@+id/textForm36"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/form_36"
-                    app:drawableStartCompat="@drawable/ic_baseline_done_24" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textDocuments"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -341,8 +315,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/adView"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:paddingHorizontal="20dp"
@@ -388,5 +361,13 @@
 
     </LinearLayout>
 
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
 
 </RelativeLayout>

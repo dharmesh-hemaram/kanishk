@@ -6,10 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".BidActivity">
 
+    <LinearLayout
+        android:id="@+id/vehicleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textName"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp" />
+
+        <TextView
+            android:id="@+id/textPrice"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerVehicleBids"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@+id/biddingForm"
+        app:layout_constraintTop_toBottomOf="@+id/vehicleContainer"
         tools:listitem="@layout/item_bid" />
 
     <androidx.cardview.widget.CardView

@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#6A7BFF</color>
     <color name="colorAccent">#FF6A9C</color>
-
+    <color name="colorBackground">#f7f7f7</color>
 
     <color name="my_app_primary_color">#6A7BFF</color>
     <color name="my_app_secondary_color">#FF6A9C</color>
-    <color name="my_app_background_color">#f9f9fb</color>
+    <color name="my_app_background_color">#f7f7f7</color>
 
     <color name="my_app_error_color">#B00020</color>
     <color name="my_app_primary_variant_color">#6A7BFF</color>

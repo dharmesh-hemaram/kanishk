@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="440dp"
+    android:layout_height="380dp"
     android:layout_marginHorizontal="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +15,7 @@
 
         <TextView
             android:id="@+id/carName"
-            style="@style/Base.TextAppearance.AppCompat.Medium"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
@@ -23,22 +24,20 @@
             android:paddingEnd="10dp"
             android:paddingRight="10dp"
             android:textColor="@color/my_app_heading_color"
-            android:textStyle="bold"
+            android:textStyle="normal"
             tools:text="@string/vehicle_name" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="360dp">
+            android:layout_height="300dp">
 
             <ImageView
                 android:id="@+id/carImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/vehicle_image"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_baseline_photo_camera_24" />
-
-
         </RelativeLayout>
 
         <include

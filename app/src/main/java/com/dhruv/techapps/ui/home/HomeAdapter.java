@@ -68,6 +68,8 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Vehicle, HomeViewHolder
         FirebaseStorage.getInstance().getReference("images/" + postKey).listAll().addOnSuccessListener(listResult -> {
             if (listResult.getItems().size() > 0) {
                 GlideApp.with(Objects.requireNonNull(context)).load(listResult.getItems().get(0)).into(viewHolder.imageView);
+            } else {
+                GlideApp.with(Objects.requireNonNull(context)).load(R.drawable.ic_baseline_directions_bike_24).into(viewHolder.imageView);
             }
         });
         viewHolder.itemView.setOnClickListener(v -> {

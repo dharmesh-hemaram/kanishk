@@ -8,8 +8,11 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dhruv.techapps.adapter.BidAdapter;
+import com.dhruv.techapps.common.Common;
 import com.dhruv.techapps.databinding.ActivityBidBinding;
 import com.dhruv.techapps.models.Bid;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -17,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Objects;
 
 import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_KEY;
+import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_NAME;
 import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_PRICE;
 import static com.dhruv.techapps.common.Common.EXTRA_VEHICLE_TYPE;
 
@@ -29,7 +33,7 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
     private double vehiclePrice;
     private DatabaseReference mBiddingReference;
     private DatabaseReference mVehicleReference;
-
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,7 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
         vehicleKey = getIntent().getStringExtra(EXTRA_VEHICLE_KEY);
         vehicleType = getIntent().getStringExtra(EXTRA_VEHICLE_TYPE);
         vehiclePrice = getIntent().getDoubleExtra(EXTRA_VEHICLE_PRICE, 0);
+        String vehicleName = getIntent().getStringExtra(EXTRA_VEHICLE_NAME);
         if (null == vehicleKey || null == vehicleType) {
             throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
         }
@@ -53,6 +58,11 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
         mLayoutManager.setStackFromEnd(true);
         binding.recyclerVehicleBids.setLayoutManager(mLayoutManager);
         binding.buttonVehicleBidding.setOnClickListener(this);
+        binding.textName.setText(vehicleName);
+        binding.textPrice.setText(Common.formatCurrency(vehiclePrice));
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     @Override
@@ -111,6 +121,11 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
         if (mAdapter != null) {
             // Clean up comments listener
             mAdapter.cleanupListener();
+        }
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
         }
     }
 }

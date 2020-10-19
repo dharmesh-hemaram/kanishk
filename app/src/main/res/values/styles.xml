@@ -44,10 +44,16 @@
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
         <item name="materialButtonStyle">@style/AppTheme.MyButton</item>
         <item name="actionBarStyle">@style/AppTheme.MyActionBar</item>
+        <item name="cardViewStyle">@style/AppTheme.MyCardView</item>
     </style>
 
     <style name="AppTheme.MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.MyCardView" parent="CardView">
+        <item name="cardCornerRadius">5dp</item>
+        <item name="cardElevation">2dp</item>
     </style>
 
     <style name="AppTheme.MyButton" parent="Widget.MaterialComponents.Button">

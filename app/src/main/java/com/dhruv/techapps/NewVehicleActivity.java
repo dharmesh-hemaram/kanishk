@@ -403,7 +403,5 @@ public class NewVehicleActivity extends BaseActivity {
                 }
             }
         }
-
-
     }
 }

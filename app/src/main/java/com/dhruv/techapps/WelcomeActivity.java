@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dhruv.techapps.databinding.ActivityWelcomeBinding;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,6 +26,7 @@ public class WelcomeActivity extends AppCompatActivity {
         mBinding = ActivityWelcomeBinding.inflate(getLayoutInflater());
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         setContentView(mBinding.getRoot());
+        MobileAds.initialize(this);
     }
 
     @Override

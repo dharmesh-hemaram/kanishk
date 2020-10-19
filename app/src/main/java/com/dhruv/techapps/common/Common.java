@@ -24,6 +24,7 @@ public class Common {
     public static final String EXTRA_VEHICLE_TYPE = "vehicleType";
     public static final String EXTRA_VEHICLE_KEY = "vehicleKey";
     public static final String EXTRA_VEHICLE_PRICE = "vehiclePrice";
+    public static final String EXTRA_VEHICLE_NAME = "vehicleName";
     private static final String TAG = "Common";
 
     public static String formatCurrency(String currency) {
