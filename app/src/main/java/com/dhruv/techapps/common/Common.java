@@ -1,7 +1,5 @@
 package com.dhruv.techapps.common;
 
-import android.util.Log;
-
 import com.dhruv.techapps.models.Brand;
 
 import java.text.NumberFormat;
@@ -28,31 +26,24 @@ public class Common {
     private static final String TAG = "Common";
 
     public static String formatCurrency(String currency) {
-        Log.d(TAG, currency);
         double parsed = Double.parseDouble(currency + "00");
-        Log.d(TAG, currency);
         return NumberFormat.getCurrencyInstance(new Locale("en", "in")).format((parsed / 100));
     }
 
     public static String formatCurrency(double parsed) {
-        Log.d(TAG, parsed + "");
         return NumberFormat.getCurrencyInstance(new Locale("en", "in")).format(parsed);
     }
 
     public static String removeCurrencyFormatter(String currency) throws ParseException {
-        Log.d(TAG, currency);
         return Objects.requireNonNull(NumberFormat.getCurrencyInstance(new Locale("en", "in")).parse(currency)).toString();
     }
 
     public static String formatDecimal(String number) {
-        Log.d(TAG, number);
         double parsed = Double.parseDouble(number + "00");
-        Log.d(TAG, parsed + "");
         return NumberFormat.getInstance(new Locale("en", "in")).format((parsed / 100));
     }
 
     public static String formatDecimal(double parsed) {
-        Log.d(TAG, parsed + "");
         if (parsed > 99999d) {
             return ((int) parsed) / 100000 + " lakh";
         }
@@ -60,7 +51,6 @@ public class Common {
     }
 
     public static String removeDecimalFormatter(String number) throws ParseException {
-        Log.d(TAG, number);
         return Objects.requireNonNull(NumberFormat.getInstance(new Locale("en", "in")).parse(number)).toString();
     }
 

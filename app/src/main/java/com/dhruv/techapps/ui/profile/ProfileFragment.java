@@ -3,7 +3,6 @@ package com.dhruv.techapps.ui.profile;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,7 +61,6 @@ public class ProfileFragment extends Fragment {
         if (firebaseUser != null) {
             profileName.setText(firebaseUser.getDisplayName());
             if (firebaseUser.getPhotoUrl() != null) {
-                Log.d(TAG, firebaseUser.getPhotoUrl().toString());
                 GlideApp.with(this)
                         .load(firebaseUser.getPhotoUrl())
                         .into(profileImage);

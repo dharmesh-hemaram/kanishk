@@ -27,29 +27,20 @@ public class BidAdapter extends RecyclerView.Adapter<BidAdapter.BidViewHolder> {
 
     private static final String TAG = "BidAdapter";
     public List<Bid> mBids = new ArrayList<>();
-    private Context mContext;
-    private DatabaseReference mDatabaseReference;
-    private ChildEventListener mChildEventListener;
+    private final Context mContext;
+    private final DatabaseReference mDatabaseReference;
+    private final ChildEventListener mChildEventListener;
 
     public BidAdapter(final Context context, DatabaseReference ref) {
         mContext = context;
         mDatabaseReference = ref;
 
-        // Create child event listener
-        // [START child_event_listener_recycler]
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-
-                // A new comment has been added, add it to the displayed list
                 Bid bid = dataSnapshot.getValue(Bid.class);
-
-                // [START_EXCLUDE]
-                // Update RecyclerView
                 mBids.add(bid);
                 notifyItemInserted(mBids.size() - 1);
-                // [END_EXCLUDE]
             }
 
             @Override
