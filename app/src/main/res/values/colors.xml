@@ -8,7 +8,8 @@
     <color name="my_app_secondary_color">#FF6A9C</color>
     <color name="my_app_background_color">#f7f7f7</color>
 
-    <color name="my_app_error_color">#B00020</color>
+    <color name="my_app_error_color">#dc3545</color>
+    <color name="my_app_success_color">#28a745</color>
     <color name="my_app_primary_variant_color">#6A7BFF</color>
     <color name="my_app_secondary_variant_color">#FF6A9C</color>
     <color name="my_app_surface_color">#FFFFFF</color>

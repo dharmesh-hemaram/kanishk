@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -15,10 +14,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,10 +28,9 @@ import static com.dhruv.techapps.common.Common.EXTRA_VERIFICATION_ID;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
     private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
-    ActivityLoginBinding mBinding;
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    FirebaseAuth firebaseAuth;
-    Resources resources;
+    private ActivityLoginBinding mBinding;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private Resources resources;
     private boolean mVerificationInProgress = false;
 
     @Override
@@ -40,7 +38,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         mBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        firebaseAuth = FirebaseAuth.getInstance();
         mBinding.buttonNext.setOnClickListener(this);
         mBinding.fieldPhoneNumber.requestFocus();
         resources = getResources();
@@ -73,7 +70,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                Log.d(TAG, "onVerificationCompleted:" + credential);
                 mVerificationInProgress = false;
             }
 
@@ -88,8 +84,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
                 mVerificationInProgress = false;
-                Log.w(TAG, "onVerificationFailed", e);
                 mBinding.fieldPhoneNumber.setEnabled(true);
                 mBinding.buttonNext.setEnabled(true);
                 mBinding.progressBarLogin.setVisibility(View.GONE);

@@ -2,7 +2,6 @@ package com.dhruv.techapps;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        mAdView.setAdUnitId(getResources().getString(R.string.banner_ad_unit_id));
     }
 
     @Override
@@ -56,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
                     User user = snapshot.getValue(User.class);
                     if (user != null && user.isAdmin) {
                         DataHolder.getInstance().setIsAdmin(true);
-                    } else {
-                        Log.d(TAG, "Not Admin");
                     }
                 }
 

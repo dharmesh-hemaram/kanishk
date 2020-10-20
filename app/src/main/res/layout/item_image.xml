@@ -31,7 +31,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:visibility="gone"
-        app:icon="@drawable/ic_baseline_remove_circle_24" />
+        app:icon="@drawable/ic_baseline_remove_circle_24"
+        app:iconTint="@color/my_app_error_color" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fieldImageDone"
@@ -41,5 +42,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:visibility="gone"
-        app:icon="@drawable/ic_baseline_check_circle_24" />
+        app:icon="@drawable/ic_baseline_check_circle_24"
+        app:iconTint="@color/my_app_success_color" />
 </RelativeLayout>

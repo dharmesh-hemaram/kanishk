@@ -28,7 +28,6 @@ public class LandingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-
     public void onClick(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         if (v.getId() == R.id.buttonBikes) {

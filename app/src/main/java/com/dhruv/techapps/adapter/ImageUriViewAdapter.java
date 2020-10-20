@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhruv.techapps.R;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -42,9 +42,7 @@ public class ImageUriViewAdapter extends RecyclerView.Adapter<ImageUriViewAdapte
     }
 
     public void addItem(Uri uri) {
-        Log.d(TAG, uri.getLastPathSegment());
         this.uris.add(uri);
-        Log.d(TAG, uris.size() + "addITEM");
         notifyDataSetChanged();
     }
 
@@ -52,7 +50,6 @@ public class ImageUriViewAdapter extends RecyclerView.Adapter<ImageUriViewAdapte
     @Override
     @NotNull
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder");
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.item_image, parent, false);
         return new ViewHolder(listItem);
@@ -61,7 +58,6 @@ public class ImageUriViewAdapter extends RecyclerView.Adapter<ImageUriViewAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         try {
-            Log.d(TAG, position + " onBindViewHolder");
             Uri uri = uris.get(position);
             Bitmap bitmap = MediaStore
                     .Images
@@ -69,13 +65,14 @@ public class ImageUriViewAdapter extends RecyclerView.Adapter<ImageUriViewAdapte
                     .getBitmap(contentResolver, uri);
             holder.imageView.setImageBitmap(bitmap);
             holder.progressBar.setVisibility(View.VISIBLE);
-            mStorage.child(mVehicleKey + "/" + uri.getLastPathSegment()).putFile(uri).addOnProgressListener(snapshot -> {
-                double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                holder.progressBar.setProgress((int) progress);
-            }).addOnCompleteListener(task -> {
+            mStorage.child(mVehicleKey + "/" + uri.getLastPathSegment()).putFile(uri)
+                    .addOnProgressListener(snapshot -> {
+                        double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                        holder.progressBar.setProgress((int) progress);
+                    }).addOnCompleteListener(task -> {
                 holder.progressBar.setVisibility(View.GONE);
                 holder.doneButton.setVisibility(View.VISIBLE);
-            });
+            }).addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,7 +81,6 @@ public class ImageUriViewAdapter extends RecyclerView.Adapter<ImageUriViewAdapte
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, uris.size() + "SIZE");
         return uris.size();
     }
 

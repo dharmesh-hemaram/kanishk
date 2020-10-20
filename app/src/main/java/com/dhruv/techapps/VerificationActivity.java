@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -89,11 +90,9 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success");
                         if (task.getResult() != null) {
                             FirebaseUser user = task.getResult().getUser();
                             if (user != null) {
-                                Log.d(TAG, user.getUid());
                                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                                 intent.putExtra(EXTRA_VERIFICATION_ID, user.getUid());
                                 startActivityForResult(intent, REQUEST_CODE_PROFILE);
@@ -101,9 +100,11 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
                         }
                         mBinding.progressBarVerify.setVisibility(View.GONE);
                     } else {
+                        if (task.getException() != null) {
+                            FirebaseCrashlytics.getInstance().recordException(task.getException());
+                        }
                         mBinding.progressBarVerify.setVisibility(View.GONE);
                         // Sign in failed, display a message and update the UI
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                             new MaterialAlertDialogBuilder(this)
                                     .setMessage("The code you entered is incorrect. Please try again in 1 minute.")
@@ -137,7 +138,6 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
 
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                Log.d(TAG, "onVerificationCompleted:" + credential);
 
             }
 
@@ -151,6 +151,7 @@ public class VerificationActivity extends AppCompatActivity implements PinEntryE
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 Log.w(TAG, "onVerificationFailed", e);
+                FirebaseCrashlytics.getInstance().recordException(e);
             }
         };
     }

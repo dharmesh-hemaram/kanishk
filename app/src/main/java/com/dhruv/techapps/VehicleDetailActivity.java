@@ -14,6 +14,7 @@ import com.dhruv.techapps.databinding.ActivityVehicleDetailBinding;
 import com.dhruv.techapps.models.Vehicle;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,6 +65,7 @@ public class VehicleDetailActivity extends BaseActivity {
 
         AdRequest adRequest = new AdRequest.Builder().build();
         binding.adView.loadAd(adRequest);
+        binding.adView.setAdUnitId(getResources().getString(R.string.banner_ad_unit_id));
     }
 
     @Override
@@ -114,12 +116,15 @@ public class VehicleDetailActivity extends BaseActivity {
                         documents += "Form 36";
                     }
                     binding.textDocuments.setText(documents);
-                    FirebaseStorage.getInstance().getReference("/images/" + vehicleKey).listAll().addOnSuccessListener(listResult -> adapter.renewItems(listResult.getItems()));
+                    FirebaseStorage.getInstance().getReference("/images/" + vehicleKey).listAll()
+                            .addOnSuccessListener(listResult -> adapter.renewItems(listResult.getItems()))
+                            .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrashlytics.getInstance().log(databaseError.getMessage());
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                 // [START_EXCLUDE]

@@ -1,7 +1,6 @@
 package com.dhruv.techapps;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -62,14 +61,13 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
         binding.textName.setText(vehicleName);
         binding.textPrice.setText(Common.formatCurrency(vehiclePrice));
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         // Listen for comments
         mAdapter = new BidAdapter(this, mBiddingReference);
         binding.recyclerVehicleBids.setAdapter(mAdapter);
@@ -102,7 +100,6 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
         double biddingAmount = Double.parseDouble(binding.fieldBiddingAmount.getText().toString());
         double maxPrice = getMaxPrice();
         if (Double.compare(biddingAmount, maxPrice) > 0) {
-
             String authorName = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName();
             Bid bid = new Bid(uid, authorName, biddingAmount);
             // Push the comment, it will appear in the list
@@ -111,7 +108,6 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
             // Clear the field
             binding.fieldBiddingAmount.setText(null);
         } else {
-            Log.d(TAG, "Bidding error");
             Toast.makeText(this, "Bidding price should be higher", Toast.LENGTH_LONG).show();
         }
     }
@@ -125,8 +121,6 @@ public class BidActivity extends BaseActivity implements View.OnClickListener {
         }
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.");
         }
     }
 }

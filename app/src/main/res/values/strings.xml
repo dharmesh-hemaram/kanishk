@@ -86,4 +86,7 @@
     <string name="sold_out">Sold Out</string>
     <string name="message">*%1$s*\n---------------------------\n```Price:```\t\t*%2$s*\n```High Bid:```\t\t*%3$s*\n```Reg:```\t\t*%4$s*\n```Year:```\t\t*%5$d*\n```KM:```\t\t*%6$s*\n```Engine:```\t\t*%7$s*\n```Status:```\t\t*%8$s*\n```Insurance:```\t\t*%9$s*\n```Location:```\t\t*%10$s*\n```Color:```\t\t*%11$s*\nRC:\t\t*%12$s*\nFORM 35:\t\t*%13$s*\nFORM 36:\t\t*%14$s*\n</string>
     <string name="comma">,</string>
+    <string name="banner_ad_unit_id">ca-app-pub-6638520082075335/9461681223</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-6638520082075335/1203260717</string>
+    <string name="test_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
 </resources>

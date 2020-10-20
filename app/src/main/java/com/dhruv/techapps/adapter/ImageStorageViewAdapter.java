@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhruv.techapps.R;
 import com.dhruv.techapps.module.GlideApp;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -55,7 +56,7 @@ public class ImageStorageViewAdapter extends RecyclerView.Adapter<ImageStorageVi
                             notifyDataSetChanged();
                             Toast.makeText(context, "Image removed!", Toast.LENGTH_LONG).show();
                         })
-                        .addOnFailureListener(Throwable::printStackTrace));
+                        .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e)));
     }
 
 
